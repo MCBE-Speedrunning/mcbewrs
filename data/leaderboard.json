@@ -1,37 +1,52 @@
 {
-	"idbababa": {
-		"name": "AnInternetTroll",
-		"time": 10,
-		"link": "https://www.twitch.tv/kitboga"
-	},
-	"idlala": {
-		"name": "MangoMan",
-		"time": 20,
-		"link": "https://www.twitch.tv/mango"
-	},
-	"idlalala": {
-		"name": "dotalottroller",
-		"time": 60,
-		"link": "https://www.twitch.tv/mango"
-	},
-	"DOrVq": {
-		"name": "DotAlotTroller",
-		"time": "111",
-		"link": "google.com"
-	},
-	"RweyD": {
-		"name": "PepeWasHere",
-		"time": "111",
-		"link": "google.com"
-	},
-	"P0fag": {
-		"name": "skye",
-		"time": "69",
-		"link": "https://github.com/skycloudd"
-	},
-	"ueyPL": {
-		"name": "PepeWasHere",
-		"time": "420",
-		"link": "http://youtube.com"
-	}
+    "zp4wljgz": {
+        "date": "18-11-2019",
+        "time": "59:54",
+        "video": "https://youtu.be/u1UVE7qoPi0",
+        "player": "theRealSheep",
+        "nation": "🇦🇺",
+        "platform": "Windows 10",
+        "version": "1.13.1",
+        "duration": 102
+    },
+    "z574gvjm": {
+        "date": "28-02-2020",
+        "time": "46:58",
+        "video": "https://youtu.be/81ZDh0EdnhU",
+        "player": "ElTreago",
+        "nation": "🇦🇺",
+        "platform": "Windows 10",
+        "version": "1.14.30",
+        "duration": 3
+    },
+    "znrldq7y": {
+        "date": "02-03-2020",
+        "time": "32:19",
+        "video": "https://www.twitch.tv/videos/560789659",
+        "player": "Khalooody",
+        "nation": "🇧🇭",
+        "platform": "Windows 10",
+        "version": "1.5.2",
+        "duration": 1
+    },
+    "z01gepey": {
+        "date": "03-03-2020",
+        "time": "21:28",
+        "video": "https://youtu.be/iCT8dADusqw",
+        "player": "Khalooody",
+        "nation": "🇧🇭",
+        "platform": "Windows 10",
+        "version": "1.5.2",
+        "duration": 114
+    },
+    "y906r9ny": {
+        "date": "25-06-2020",
+        "time": "14:44",
+        "video": "https://youtu.be/XMsnKdwLSI8",
+        "player": "leezaard",
+        "nation": "🇺🇸",
+        "platform": "Windows 10",
+        "version": "1.16.0",
+        "duration": 1
+    }
 }

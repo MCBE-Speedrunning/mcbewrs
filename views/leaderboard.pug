@@ -1,16 +1,27 @@
 extends layout
 
 block content
-	div.leaderboard
-		h1 Pagetitle: #{pageName}
-		table
-			tr
-				th Name
-				th Time
-				th Link
-			each run in leaderboard
-				tr
-					th=run.name
-					th=run.time
-					th 
-						a(href=run.link) Link
+    div.leaderboard
+        h1 Pagetitle: #{pageName}
+        table
+            tr
+                th Date
+                th Time+Video
+                th Player
+                th Nation
+                th Platform
+                th Version
+                th Duration
+                th SR.C
+            each run, id in leaderboard
+                tr
+                    td=run.date
+                    td
+                        a(href=run.video) #{run.time}
+                    td=run.player
+                    td(class="nationality")=run.nation
+                    td=run.platform
+                    td=run.version
+                    td=run.duration
+                    td
+                        a(href=`https://www.speedrun.com/run/${id}`) Link
