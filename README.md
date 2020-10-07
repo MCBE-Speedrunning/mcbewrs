@@ -1,3 +1,9 @@
+# Minecraft: Bedrock Edition World Records
+
+## About
+
+Minecraft: Bedrock Edition World Records (mcbewrs) is a world record history site for [Minecraft: Bedrock Edition speedrunning](https://www.speedrun.com/mcbe) heavily inspired by Cole Gilberts [mkwrs](https://www.mkwrs.com/) and [fzerowrs](https://www.fzerowrs.com).
+
 ## Usage
 
 To start the website you must first install all dependencies, then you can just start the server
