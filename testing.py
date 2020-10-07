@@ -11,11 +11,15 @@ async def add(session: aiohttp.client.ClientSession, run: dict = {}) -> dict:
         ) as r:
             return await r.json()
     else:
-        async with session.post("https://127.0.0.1/api/run/add", data=run, verify_ssl=False) as r:
+        async with session.post(
+            "https://127.0.0.1/api/run/add", data=run, verify_ssl=False
+        ) as r:
             return await r.json()
 
 
-async def edit(session: aiohttp.client.ClientSession, runID: str, run: dict = {}) -> dict:
+async def edit(
+    session: aiohttp.client.ClientSession, runID: str, run: dict = {}
+) -> dict:
     if not run:
         async with session.patch(
             f"https://127.0.0.1/api/run/{runID}",
@@ -28,6 +32,7 @@ async def edit(session: aiohttp.client.ClientSession, runID: str, run: dict = {}
 async def main():
     async with aiohttp.ClientSession() as session:
         r = await edit(session, "ueyPL")
+
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
