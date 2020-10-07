@@ -142,15 +142,29 @@ body {
 			text-align: right;
 		}
 	}
-	.footer {
-		display: block;
-		position: fixed;
-		margin-left: auto;
-		margin-right: auto;
-		bottom: 1px;
-		width: 98%;
-		height: 3rem;
-		text-align: center;
-		font-size: 10px;
-	}
+}
+
+table {
+    border-collapse: collapse;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+
+    td {
+        border: 1px solid black;
+    }
+}
+
+.nationality {
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+a {
+    color: #00F;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }

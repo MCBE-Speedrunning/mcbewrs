@@ -18,4 +18,10 @@ router.get("/leaderboard", function (req, res, next) {
 	});
 });
 
+router.get("/about", function (req, res, next) {
+    res.render("about", {
+        pageName: "About MCBEWRS",
+    });
+});
+
 module.exports = router;
