@@ -60,5 +60,8 @@ typings/
 # next.js build output
 .next
 
-# CSS uncompiled files 
+# CSS uncompiled files
 *.css*
+
+# Test script
+run.sh
