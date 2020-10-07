@@ -1,0 +1,15 @@
+nav
+	div.nav
+		- var pages = {"Home": "/", "Leaderboard": "/leaderboard", "About": "/about"}
+		each menu, key in pages
+			if (key == pageName)
+				div.active.left.nav-item
+					a(href=`${menu}`)= key
+			else
+				div.left.nav-item
+					a(href=`${menu}`)= key
+		div.right.nav-item
+			a.switchA
+				label.switch
+					input(type="checkbox", id="colorPreferance")
+					span.slider.round(id=slider)

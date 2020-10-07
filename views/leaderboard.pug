@@ -1,0 +1,16 @@
+extends layout
+
+block content
+	div.leaderboard
+		h1 Pagetitle: #{pageName}
+		table
+			tr
+				th Name
+				th Time
+				th Link
+			each run in leaderboard
+				tr
+					th=run.name
+					th=run.time
+					th 
+						a(href=run.link) Link

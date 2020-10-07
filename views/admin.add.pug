@@ -1,0 +1,15 @@
+extends layout
+
+block content
+	div.home
+		h1 #{pageName}
+		form(action="/api/run/add", method="POST")
+			label Name
+			input(name="name", type="text", value="")
+			label Time
+			input(name="time", type="number", value=0)
+			label Link
+			input(name="link", type="text", value="")
+			button(type="submit")
+				| Submit
+		script(src="/javascripts/login.js")

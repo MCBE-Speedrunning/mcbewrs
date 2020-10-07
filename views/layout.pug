@@ -1,0 +1,14 @@
+doctype html
+html(lang="en")
+	head
+		title= pageName
+		meta(charset="utf-8")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		meta(property="og:title" content=pageName)
+		link(rel='stylesheet', href='/stylesheets/style.css')
+		div(id="colorScheme")
+	body(style={"background-image": background_image})
+		include nav.pug
+		block content
+		include footer.pug
+		script(src="/javascripts/main.js", defer="")
