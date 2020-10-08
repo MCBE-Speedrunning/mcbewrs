@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-
 function makeid(length) {
 	var result = "";
 	var characters =

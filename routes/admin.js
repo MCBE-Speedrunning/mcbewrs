@@ -38,5 +38,4 @@ router.get("/add", function (req, res, next) {
 	res.render("admin.add.pug");
 });
 
-
 module.exports = router;
