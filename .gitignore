@@ -63,5 +63,8 @@ typings/
 # CSS uncompiled files
 *.css*
 
+# Private key
+server.key
+
 # Test script
 run.sh
