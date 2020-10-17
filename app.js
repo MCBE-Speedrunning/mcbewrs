@@ -8,16 +8,14 @@ const logger = require("morgan");
 const compression = require("compression");
 const sassMiddleware = require("node-sass-middleware");
 const fs = require("fs");
-
-const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users");
-const apiRouter = require("./routes/api");
-const adminRouter = require("./routes/admin");
+var sqlite3 = require("sqlite3").verbose();
 
 const app = express();
+const leaderboard = new sqlite3.Database("./data/leaderboard");
 
+app.set("leaderboard", leaderboard);
 app.set("users", []);
-
+/*
 const valiadator = {
 	get: (target, key) => {
 		if (typeof target[key] === "object" && target[key] !== null) {
@@ -54,6 +52,7 @@ fs.readFile("./data/leaderboard.json", (err, data) => {
 	dataProxy = new Proxy(data, valiadator);
 	app.set("leaderboard", dataProxy);
 });
+*/
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -93,10 +92,10 @@ app.use(function (req, res, next) {
 	next();
 });
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
-app.use("/api", apiRouter);
-app.use("/admin", adminRouter);
+app.use("/", require("./routes/index"));
+app.use("/users", require("./routes/users"));
+app.use("/api", require("./routes/api"));
+app.use("/admin", require("./routes/admin"));
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
 	next(createError(404));

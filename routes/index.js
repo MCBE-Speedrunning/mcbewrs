@@ -12,16 +12,19 @@ router.get("/home", function (req, res, next) {
 });
 
 router.get("/leaderboard", function (req, res, next) {
-	res.render("leaderboard", {
-		pageName: "Leaderboard",
-		leaderboard: req.app.get("leaderboard"),
+	const db = req.app.get("leaderboard");
+	db.all("SELECT rowid, * FROM runner", function (err, rows) {
+		res.render("leaderboard", {
+			pageName: "Leaderboard",
+			leaderboard: rows,
+		});
 	});
 });
 
 router.get("/about", function (req, res, next) {
-    res.render("about", {
-        pageName: "About MCBEWRS",
-    });
+	res.render("about", {
+		pageName: "About MCBEWRS",
+	});
 });
 
 module.exports = router;

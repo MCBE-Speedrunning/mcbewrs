@@ -13,13 +13,13 @@ block content
                 th Version
                 th Duration
                 th SR.C
-            each run, id in leaderboard
+            each run in leaderboard
                 tr
-                    td=run.date
+                    td=run.rowid
                     td
                         a(href=run.video) #{run.time}
-                    td=run.player
-                    td(class="nationality")=run.nation
+                    td=run.name
+                    td(class="nationality")=run.nationality
                     td=run.platform
                     td=run.version
                     td=run.duration
