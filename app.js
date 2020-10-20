@@ -11,7 +11,7 @@ const fs = require("fs");
 var sqlite3 = require("sqlite3").verbose();
 
 const app = express();
-const leaderboard = new sqlite3.Database("./data/leaderboard");
+const leaderboard = new sqlite3.Database("./data/leaderboard.db");
 
 app.set("leaderboard", leaderboard);
 app.set("users", []);
