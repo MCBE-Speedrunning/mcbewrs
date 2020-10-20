@@ -29,10 +29,10 @@ router.get("/home", function (req, res, next) {
 	res.redirect("/");
 });
 
-router.get("/leaderboard", function (req, res, next) {
+router.get("/leaderboard/:cat", function (req, res, next) {
 	const db = req.app.get("leaderboard");
 	db.all(
-		"SELECT date, time, name, nationality, platform, version, link FROM runner, pairs, run WHERE runner.rowid = runner_id AND run.rowid = run_id ORDER BY date ASC",
+		"SELECT date, time, name, nationality, platform, version, link FROM runner, pairs, run WHERE runner.rowid = runner_id AND run.rowid = run_id AND category = ? ORDER BY date ASC", [req.params.cat],
 		function (err, rows) {
 			// Calculate the duration of each run
 			for (i = 0, len = rows.length; i < len; i++) {
@@ -57,7 +57,7 @@ router.get("/leaderboard", function (req, res, next) {
 			}
 
 			res.render("leaderboard", {
-				pageName: "Leaderboard",
+				category: req.params.cat,
 				leaderboard: rows,
 			});
 		}
