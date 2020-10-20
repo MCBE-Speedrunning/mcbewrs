@@ -2,7 +2,8 @@ extends layout
 
 block content
     div.leaderboard
-        h1 Pagetitle: #{pageName}
+        h1 #{category}
+        h1 History
         table
             tr
                 th Date
@@ -11,7 +12,7 @@ block content
                 th Nation
                 th Platform
                 th Version
-                th Duration
+                th Duration (Days)
             each run in leaderboard
                 tr
                     td=run.date
