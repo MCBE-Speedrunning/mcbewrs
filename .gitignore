@@ -67,5 +67,7 @@ typings/
 server.key
 server.cert
 
-# Test script
+# Test files
 run.sh
+test.js
+testing.py
