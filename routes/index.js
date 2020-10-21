@@ -33,7 +33,8 @@ router.get("/leaderboard/:cat?", function (req, res, next) {
 	const db = req.app.get("leaderboard");
 
 	if (typeof req.params.cat === "undefined") {
-		res.render("leaderboardhome");
+		res.send(req.headers)
+		//res.render("leaderboardhome");
 	}
 
 	db.all(
@@ -52,7 +53,8 @@ router.get("/leaderboard/:cat?", function (req, res, next) {
 				}
 				// Properly format the runs date, time, and duration
 				rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(
-					"en-GB"
+					req.headers["accept-language"].substr(0, 5)
+					//"en-GB"
 				);
 				rows[i].time = timeFormat(rows[i].time);
 				rows[i].duration = Math.trunc(rows[i].duration / 86400);
