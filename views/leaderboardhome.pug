@@ -3,4 +3,19 @@ extends layout
 block content
     div.leaderboardhome
         h1 Minecraft: Bedrock Edition
-        p Just a placeholder for now.
+        h2 Recent World Records
+        table
+            tr
+                th Date
+                th Category
+                th Time+Video
+                th Player
+                th Nation
+            each run in recent
+                tr
+                    td=run.date
+                    td=run.readable
+                    td
+                        a(href=run.link) #{run.time}
+                    td=run.name
+                    td(class="nationality")=run.nationality
