@@ -33,12 +33,12 @@ router.get("/leaderboard/:cat?", function (req, res, next) {
 	const db = req.app.get("leaderboard");
 
 	if (typeof req.params.cat === "undefined") {
-		res.send(req.headers)
+		res.send(req.headers);
 		//res.render("leaderboardhome");
 	}
 
 	db.all(
-		"SELECT date, time, name, nationality, platform, version, link FROM runner, pairs, run WHERE runner.rowid = runner_id AND run.rowid = run_id AND category = ? ORDER BY date ASC",
+		"SELECT date, time, name, nationality, platform, version, link FROM runners, runs, pairs WHERE runners.rowid = runner_id AND runs.rowid = run_id AND category = ? ORDER BY date ASC",
 		[req.params.cat],
 		function (err, rows) {
 			// Calculate the duration of each run
@@ -64,10 +64,16 @@ router.get("/leaderboard/:cat?", function (req, res, next) {
 				}
 			}
 
-			res.render("leaderboard", {
-				category: req.params.cat,
-				leaderboard: rows,
-			});
+			db.get(
+				"SELECT name FROM categories WHERE abbreviation = ?",
+				[req.params.cat],
+				function (err, category) {
+					res.render("leaderboard", {
+						category: category.name,
+						leaderboard: rows,
+					});
+				}
+			);
 		}
 	);
 });
