@@ -42,7 +42,7 @@ router.get("/leaderboard/:cat?", function (req, res, next) {
 	// Get recent WRs
 	function getRecent(cat_type, callback) {
 		db.all(
-			"SELECT date, readable, time, name, nationality FROM runners, runs, pairs, categories WHERE runners.rowid = runner_id AND runs.rowid = run_id AND abbreviation = category AND type = ? ORDER BY date DESC LIMIT 10",
+			"SELECT date, category, readable, link, time, name, nationality FROM runners, runs, pairs, categories WHERE runners.rowid = runner_id AND runs.rowid = run_id AND abbreviation = category AND type = ? ORDER BY date DESC LIMIT 10",
 			[cat_type],
 			function (err, recent) {
 				// For each run, format the date and time appropriately
@@ -118,7 +118,7 @@ router.get("/leaderboard/:cat?", function (req, res, next) {
 					[req.params.cat],
 					function (err, category) {
 						res.render("leaderboard", {
-							category: category.name,
+							category: category.readable,
 							leaderboard: rows,
 						});
 					}
