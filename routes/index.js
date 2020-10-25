@@ -16,6 +16,14 @@ function timeFormat(duration) {
 	output += minutes + ":" + (seconds < 10 ? "0" : "");
 	output += seconds;
 
+	// Check if the time has milliseconds
+	if (!isNaN(duration) && duration.toString().indexOf(".") != -1) {
+		// Slice off the last digit of the milliseconds
+		// This is because every time with milliseconds has .0001 added to it
+		// This allows you to ensure trailing 0's with sqlite3
+		output += "." + duration.toString().split(".")[1].slice(0, -1);
+	}
+
 	return output;
 }
 
