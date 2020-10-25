@@ -4,20 +4,21 @@ const fetch = require("node-fetch");
 
 // Convert seconds to human readable time
 function timeFormat(duration) {
-	const hours = ~~(duration / 3600);
+    const hours = ~~(duration / 3600);
 	const minutes = ~~((duration % 3600) / 60);
 	const seconds = ~~duration % 60;
 	let output = "";
 
 	if (hours > 0) {
-		output += "" + hours + ":" + (minutes < 10 ? "0" : "");
+		output += hours + ":" + (minutes < 10 ? "0" : "");
 	}
 
-	output += "" + minutes + ":" + (seconds < 10 ? "0" : "");
-	output += "" + seconds;
+	output += minutes + ":" + (seconds < 10 ? "0" : "");
+	output += seconds;
 
-	return output;
+    return output;
 }
+
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -31,27 +32,46 @@ router.get("/home", function (req, res, next) {
 router.get("/leaderboard/:cat?", function (req, res, next) {
 	const db = req.app.get("leaderboard");
 
+    // Get recent WRs
+    function getRecent(cat_type, callback) {
+        db.all(
+            "SELECT date, readable, time, name, nationality FROM runners, runs, pairs, categories WHERE runners.rowid = runner_id AND runs.rowid = run_id AND abbreviation = category AND type = ? ORDER BY date DESC LIMIT 10",
+            [cat_type],
+            function (err, recent) {
+                // For each run, format the date and time appropriately
+                for (i = 0, len = recent.length; i < len; i++) {
+                    recent[i].date = new Date(recent[i].date * 1000).toLocaleDateString(
+                        req.headers["accept-language"].substr(0, 5) // "en-GB"
+                    );
+
+                    recent[i].time = timeFormat(recent[i].time);
+                }
+
+                callback(recent);
+            }
+        );
+    }
+
 	// If no category is specified, go to the leaderboard home page
 	if (typeof req.params.cat === "undefined") {
-		// Get the 10 most recent world record runs, sorted by date
-		db.all(
-			"SELECT date, readable, time, name, nationality FROM runners, runs, pairs, categories WHERE runners.rowid = runner_id AND runs.rowid = run_id AND abbreviation = category ORDER BY date DESC LIMIT 10",
-			[],
-			function (err, recent) {
-				// For each run, format the date and time appropriately
-				for (i = 0, len = recent.length; i < len; i++) {
-					recent[i].date = new Date(recent[i].date * 1000).toLocaleDateString(
-						req.headers["accept-language"].substr(0, 5)
-					);
+		// Get the 10 most recent main world record runs, sorted by date
+        getRecent("main", returnedValue => {
+            main = returnedValue;
+        });
 
-					recent[i].time = timeFormat(recent[i].time);
-				}
+        getRecent("il", returnedValue => {
+            il = returnedValue;
+        });
 
-				res.render("leaderboardhome", {
-					recent: recent,
-				});
-			}
-		);
+        getRecent("catext", returnedValue => {
+            catext = returnedValue;
+        });
+
+        res.render("leaderboardhome", {
+            main: main,
+            il: il,
+            catext: catext,
+        });
 	} else {
 		// Query all the runs for the specified category, sorted by date
 		db.all(
