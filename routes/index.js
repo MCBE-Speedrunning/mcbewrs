@@ -19,8 +19,7 @@ function timeFormat(duration) {
 	// Check if the time has milliseconds
 	if (!isNaN(duration) && duration.toString().indexOf(".") != -1) {
 		// Slice off the last digit of the milliseconds
-		// This is because every time with milliseconds has .0001 added to it
-		// This allows you to ensure trailing 0's with sqlite3
+		// Every IL has .0001 added to it to ensure trailing 0's with sqlite3
 		output += "." + duration.toString().split(".")[1].slice(0, -1);
 	}
 
@@ -36,8 +35,8 @@ router.get("/home", function (req, res, next) {
 	res.redirect("/");
 });
 
-router.get("/leaderboard/:cat?", function (req, res, next) {
-	const db = req.app.get("leaderboard");
+router.get("/history/:cat?", function (req, res, next) {
+	const db = req.app.get("history");
 
 	// Get recent WRs
 	function getRecent(cat_type, callback) {
@@ -59,7 +58,7 @@ router.get("/leaderboard/:cat?", function (req, res, next) {
 		);
 	}
 
-	// If no category is specified, go to the leaderboard home page
+	// If no category is specified, go to the history home page
 	if (typeof req.params.cat === "undefined") {
 		// Get the 10 most recent main world record runs, sorted by date
 		getRecent("main", (returnedValue) => {
@@ -74,7 +73,7 @@ router.get("/leaderboard/:cat?", function (req, res, next) {
 			catext = returnedValue;
 		});
 
-		res.render("leaderboardhome", {
+		res.render("historyhome", {
 			main: main,
 			il: il,
 			catext: catext,
@@ -117,9 +116,9 @@ router.get("/leaderboard/:cat?", function (req, res, next) {
 					"SELECT readable FROM categories WHERE abbreviation = ?",
 					[req.params.cat],
 					function (err, category) {
-						res.render("leaderboard", {
+						res.render("history", {
 							category: category.readable,
-							leaderboard: rows,
+							history: rows,
 						});
 					}
 				);
