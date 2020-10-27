@@ -36,7 +36,7 @@ router.get("/home", function (req, res, next) {
 });
 
 router.get("/history/:cat?", function (req, res, next) {
-	const db = req.app.get("history");
+	const db = req.app.get("leaderboard");
 
 	// Get recent WRs
 	function getRecent(cat_type, callback) {
@@ -125,6 +125,49 @@ router.get("/history/:cat?", function (req, res, next) {
 			}
 		);
 	}
+});
+
+router.get("/profile/:player?", function (req, res, next) {
+	const db = req.app.get("leaderboard");
+
+	db.all(
+		"SELECT date, readable, link, time, platform, version FROM runs, categories, pairs WHERE pairs.run_id = runs.rowid AND pairs.runner_id = ? AND runs.category = categories.abbreviation ORDER BY date",
+		[req.params.player],
+		function (err, runs) {
+			for (i = 0, len = runs.length; i < len; i++) {
+				runs[i].date = new Date(runs[i].date * 1000).toLocaleDateString(
+					req.headers["accept-language"].substr(0, 5) // "en-GB"
+				);
+
+				runs[i].time = timeFormat(runs[i].time);
+			}
+
+			db.get(
+				"SELECT COUNT(DISTINCT category) AS count, COUNT(DISTINCT abbreviation) AS total FROM runs, pairs, categories WHERE runs.rowid = run_id AND runner_id = ?",
+				[req.params.player],
+				function (err, count) {
+					unique_cats_count = count.count;
+					total_cats = count.total;
+				}
+			);
+
+			db.get(
+				"SELECT name FROM runners WHERE rowid = ?",
+				[req.params.player],
+				function (err, runner) {
+					res.render("profile", {
+						player: runner.name,
+						current_wrs: 0,
+						total_wrs: runs.length,
+						unique_cats: unique_cats_count + " / " + total_cats,
+						total_duration: 0,
+						days_with_wr: 0,
+						runs: runs,
+					});
+				}
+			);
+		}
+	);
 });
 
 router.get("/about", function (req, res, next) {
