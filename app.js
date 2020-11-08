@@ -1,3 +1,4 @@
+const cors = require("cors");
 const createError = require("http-errors");
 const express = require("express");
 const minify = require("express-minify");
@@ -6,6 +7,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const compression = require("compression");
+const fs = require("fs");
 const sassMiddleware = require("node-sass-middleware");
 const session = require("express-session");
 const sqlite3 = require("sqlite3").verbose();
@@ -13,46 +15,10 @@ const sqlite3 = require("sqlite3").verbose();
 const app = express();
 const leaderboard = new sqlite3.Database("./data/leaderboard.db");
 
+const config = JSON.parse(fs.readFileSync("./data/config.json"));
+
 app.set("leaderboard", leaderboard);
 app.set("users", []);
-/*
-const valiadator = {
-	get: (target, key) => {
-		if (typeof target[key] === "object" && target[key] !== null) {
-			return new Proxy(target[key], valiadator);
-		}
-		return target[key] || undefined;
-	},
-	set: (target, key, value) => {
-		if (typeof target[key] === "object" && target[key] !== null) {
-			return new Proxy(target[key], valiadator);
-		}
-		console.log(`${key} set to ${value}`);
-		target[key] = value;
-		fs.writeFile(
-			"./data/leaderboard.json",
-			JSON.stringify(app.get("leaderboard"), null, (space = "\t")),
-			(err) => {}
-		);
-		return true;
-	},
-	deleteProperty: (target, key) => {
-		let output = delete target[key];
-		fs.writeFile(
-			"./data/leaderboard.json",
-			JSON.stringify(app.get("leaderboard"), null, (space = "\t")),
-			(err) => {}
-		);
-		return output;
-	},
-};
-
-fs.readFile("./data/leaderboard.json", (err, data) => {
-	data = JSON.parse(data);
-	dataProxy = new Proxy(data, valiadator);
-	app.set("leaderboard", dataProxy);
-});
-*/
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -62,7 +28,6 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(compression());
-app.use(cookieParser());
 app.use(
 	sassMiddleware({
 		src: path.join(__dirname, "public"),
@@ -81,14 +46,15 @@ app.use(
 );
 app.use(minify({ cache: true }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(cors());
 app.use(
 	session({
 		resave: false, // don't save session if unmodified
 		saveUninitialized: false, // don't create session until something stored
-		secret: "shhhh, very secret",
+		secret: config.db_secret,
 	})
 );
-
+app.use(cookieParser());
 app.use(function (req, res, next) {
 	logs = req.app.get("users");
 	logs.push({

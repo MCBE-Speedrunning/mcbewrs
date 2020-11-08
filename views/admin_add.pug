@@ -1,0 +1,24 @@
+extends layout
+
+block content
+	div.home
+		h1 #{pageName}
+		form()
+			label Name(s)
+			input(name="name", type="text", value="")
+			label Category
+			select(name="category")
+				option(value="anyg-ss-pc") anyg-ss-pc
+			label Date
+			input(name="date", type="number", value=0)
+			label Time
+			input(name="time", type="number", value=0)
+			label Platform
+			input(name="platform", type="text", value="")
+			label Version
+			input(name="version", type="text", value="")
+			label Link
+			input(name="link", type="text", value="")
+			button(id="add")
+				| Submit
+		script(src="/javascripts/add_run.js", defer)
