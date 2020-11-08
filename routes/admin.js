@@ -6,12 +6,23 @@ const sqlite3 = require("sqlite3").verbose();
 const router = express.Router();
 const db = new sqlite3.Database("./data/auth.db");
 
-function newUser(username, password) {
+function newUser(username, password, fn) {
 	hash({ password: password }, (err, pass, salt, hash) => {
-		if (err) throw err;
+		if (err) return fn(new Error("Error during hashing"));
 		// store the salt & hash in the "db"
-		db.run(`INSERT INTO users VALUES(?, ?, ?); `, [username, hash, salt]);
+		db.run(`INSERT INTO users VALUES(?, ?, ?); `, [username, hash, salt], (err) => {
+			if (err) return fn(new Error("Error during insertion"));	
+		});
 	});
+}
+
+function restrict(req, res, next) {
+	if (req.session.user) {
+		next();
+	} else {
+		req.session.error = "Access denied!";
+		res.redirect("/admin/login");
+	}
 }
 
 function authenticate(name, pass, fn) {
@@ -19,8 +30,8 @@ function authenticate(name, pass, fn) {
 	//const user = users[name];
 	db.get("SELECT * FROM users WHERE username=?; ", name, (err, user) => {
 		// query the db for the given username
-		console.log(name); // Luca
-		console.log(user); // Unidentified
+		console.log(name);
+		console.log(user);
 
 		if (!user) return fn(new Error("cannot find user"));
 		// apply the same algorithm to the POSTed password, applying
@@ -36,7 +47,7 @@ function authenticate(name, pass, fn) {
 
 /* GET users listing. */
 router.get("/login", (req, res) => {
-	res.render("admin", { pageName: "Login", session: req.session });
+	res.render("admin", { session: req.session });
 });
 
 router.post("/login", (req, res) => {
@@ -65,6 +76,17 @@ router.get("/logout", (req, res) => {
 	req.session.destroy(() => {
 		res.redirect("/admin/login");
 	});
+});
+
+router.get("/register", restrict, (req, res) => {
+	res.render("register");
+});
+
+router.post("/register", (req, res) => {
+	newUser(req.body.username, req.body.password, (err) => {
+		res.render("register", {err: err})
+	});
+	res.render("admin", { session: req.session });
 });
 
 module.exports = router;
