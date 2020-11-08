@@ -1,41 +1,73 @@
 const express = require("express");
-const router = express.Router();
-const auths = [];
+const { use } = require(".");
+const hash = require("pbkdf2-password")();
+const sqlite3 = require("sqlite3").verbose();
 
-function makeid(length) {
-	var result = "";
-	var characters =
-		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-	var charactersLength = characters.length;
-	for (var i = 0; i < length; i++) {
-		result += characters.charAt(Math.floor(Math.random() * charactersLength));
-	}
-	return result;
+const router = express.Router();
+const db = new sqlite3.Database("./data/auth.db");
+
+function newUser(username, password) {
+	hash({ password: password }, (err, pass, salt, hash) => {
+		if (err) throw err;
+		// store the salt & hash in the "db"
+		db.run(`INSERT INTO users VALUES(?, ?, ?); `, [username, hash, salt]);
+	});
 }
 
+function authenticate(name, pass, fn) {
+	if (!module.parent) console.log("authenticating %s:%s", name, pass);
+	//const user = users[name];
+		db.get("SELECT * FROM users WHERE username=?; ", name, (err, user) => {
+			// query the db for the given username
+			console.log(name); // Luca
+			console.log(user); // Unidentified 
+
+			if (!user) return fn(new Error("cannot find user"));
+			// apply the same algorithm to the POSTed password, applying
+			// the hash against the pass / salt, if there is a match we
+			// found the user
+			hash({ password: pass, salt: user.salt }, (err, pass, salt, hash) => {
+				if (err) return fn(err);
+				if (hash === user.password) return fn(null, user);
+				fn(new Error("invalid password"));
+			});
+		});
+}
+
+
 /* GET users listing. */
-router.get("/", function (req, res, next) {
-	res.render("admin");
+router.get("/login", (req, res) => {
+	res.render("admin", { pageName: "Login" , session: req.session});
 });
 
-router.post("/login", function (req, res, next) {
-	console.log(req.body);
-	if (req.body.password == "lalala") {
-		let auth = makeid(10);
-		auths.push(auth);
-		res.json({ auth });
-	}
+router.post("/login", (req, res) => {
+	authenticate(req.body.username, req.body.password, (err, user) => {
+		if (user) {
+			// Regenerate session when signing in
+			// to prevent fixation
+			req.session.regenerate(() => {
+				// Store the user's primary key
+				// in the session store to be retrieved,
+				// or in this case the entire user object
+				req.session.user = user;
+				req.session.success =
+					`Welcome, ${user.username}!`;
+				res.redirect("back");
+			});
+		} else {
+			req.session.error =
+				`Authentication failed, please check your username and password.`;
+			res.redirect("/admin/login");
+		}
+	});
 });
 
-router.post("/verify", function (req, res, next) {
-	console.log(req.body);
-	if (req.body.auth in auths) {
-		res.status(200).send("Authentificated");
-	}
-});
-
-router.get("/add", function (req, res, next) {
-	res.render("admin.add.pug");
+router.get("/logout", (req, res) => {
+	// destroy the user's session to log them out
+	// will be re-created next request
+	req.session.destroy(() => {
+		res.redirect("/admin/login");
+	});
 });
 
 module.exports = router;

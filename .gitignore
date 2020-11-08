@@ -71,3 +71,6 @@ server.cert
 run.sh
 test.js
 testing.py
+
+# Sensitive info
+auth.db

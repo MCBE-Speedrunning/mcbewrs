@@ -7,8 +7,8 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const compression = require("compression");
 const sassMiddleware = require("node-sass-middleware");
-const fs = require("fs");
-var sqlite3 = require("sqlite3").verbose();
+const session = require("express-session");
+const sqlite3 = require("sqlite3").verbose();
 
 const app = express();
 const leaderboard = new sqlite3.Database("./data/leaderboard.db");
@@ -81,6 +81,13 @@ app.use(
 );
 app.use(minify({ cache: true }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+	session({
+		resave: false, // don't save session if unmodified
+		saveUninitialized: false, // don't create session until something stored
+		secret: "shhhh, very secret",
+	})
+);
 
 app.use(function (req, res, next) {
 	logs = req.app.get("users");
