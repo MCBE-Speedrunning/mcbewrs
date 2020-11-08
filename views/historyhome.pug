@@ -1,0 +1,57 @@
+extends layout
+
+block content
+    div.leaderboardhome
+        h1 Minecraft: Bedrock Edition
+        h2 Recent World Records
+        h3 Full Game Runs
+        table
+            tr
+                th Date
+                th Category
+                th Time+Video
+                th Player
+                th Nation
+            each run in main
+                tr
+                    td=run.date
+                    td
+                        a(href="/leaderboard/" + run.category) #{run.readable}
+                    td
+                        a(href=run.link target="_blank") #{run.time}
+                    td=run.name
+                    td(class="nationality")=run.nationality
+        h3 Individual Levels
+        table
+            tr
+                th Date
+                th Category
+                th Time+Video
+                th Player
+                th Nation
+            each run in il
+                tr
+                    td=run.date
+                    td
+                        a(href="/leaderboard/" + run.category) #{run.readable}
+                    td
+                        a(href=run.link target="_blank") #{run.time}
+                    td=run.name
+                    td(class="nationality")=run.nationality
+        h3 Category Extensions
+        table
+            tr
+                th Date
+                th Category
+                th Time+Video
+                th Player
+                th Nation
+            each run in catext
+                tr
+                    td=run.date
+                    td
+                        a(href="/leaderboard/" + run.category) #{run.readable}
+                    td
+                        a(href=run.link target="_blank") #{run.time}
+                    td=run.name
+                    td(class="nationality")=run.nationality
