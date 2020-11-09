@@ -97,7 +97,6 @@ router.get("/add", restrict, (req, res) => {
 router.post("/add", restrict, (req, res) => {
 	const run = req.body;
 	leaderboard.serialize(() => {
-		console.log(req.body);
 		leaderboard.run("INSERT INTO runs VALUES(?, ?, ?, ?, ?, ?)", [
 			run.category,
 			run.date,

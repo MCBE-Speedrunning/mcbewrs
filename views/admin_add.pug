@@ -2,8 +2,8 @@ extends layout
 
 block content
 	div.home
-		h1 #{pageName}
-		form()
+		h1 Hi
+		form(method="POST" and action="/admin/add")
 			label Name(s)
 			input(name="name", type="text", value="")
 			label Category
@@ -19,6 +19,5 @@ block content
 			input(name="version", type="text", value="")
 			label Link
 			input(name="link", type="text", value="")
-			button(id="add")
+			button(type="submit", id="add")
 				| Submit
-		script(src="/javascripts/add_run.js", defer)
