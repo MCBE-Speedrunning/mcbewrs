@@ -1,38 +1,38 @@
 extends layout
 
 block content
-    div.leaderboard
-        h1 #{player}
-        h1 Stats
-        table
-            tr
-                th Current WRs
-                th Total WRs
-                th Unique Categories
-                th Total Duration (Days)
-                th Days having at Least 1 WR (From LB creation)
-            tr
-                td=current_wrs
-                td=total_wrs
-                td=unique_cats
-                td=total_duration
-                td=days_with_wr
-        h1 Official WRs
-        table
-            tr
-                th Date
-                th Category
-                th Time+Video
-                th Platform
-                th Version
-                th Duration (Days)
-            each run in runs
-                tr
-                    td=run.date
-                    td
-                        a(href="#") #{run.readable}
-                    td
-                        a(href=run.link target="_blank") #{run.time}
-                    td=run.platform
-                    td=run.version
-                    td=run.duration
+	.leaderboard
+		h1 #{player}
+		h1 Stats
+		table
+			tr
+				th Current WRs
+				th Total WRs
+				th Unique Categories
+				th Total Duration (Days)
+				th Days having at Least 1 WR (From LB creation)
+			tr
+				td= current_wrs
+				td= total_wrs
+				td= unique_cats
+				td= total_duration
+				td= days_with_wr
+		h1 Official WRs
+		table
+			tr
+				th Date
+				th Category
+				th Time+Video
+				th Platform
+				th Version
+				th Duration (Days)
+			each run in runs
+				tr
+					td= run.date
+					td
+						a(href="#") #{run.readable}
+					td
+						a(href=run.link, target="_blank") #{run.time}
+					td= run.platform
+					td= run.version
+					td= run.duration

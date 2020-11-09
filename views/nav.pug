@@ -1,15 +1,15 @@
 nav
-	div.nav
-		- var pages = {"Home": "/", "History": "/history", "About": "/about"}
+	.nav
+		- var pages = { Home: '/', History: '/history', About: '/about' };
 		each menu, key in pages
 			if (key == pageName)
-				div.active.left.nav-item
+				.active.left.nav-item
 					a(href=`${menu}`)= key
 			else
-				div.left.nav-item
+				.left.nav-item
 					a(href=`${menu}`)= key
-		div.right.nav-item
+		.right.nav-item
 			a.switchA
 				label.switch
-					input(type="checkbox", id="colorPreferance")
+					input#colorPreferance(type="checkbox")
 					span.slider.round(id=slider)

@@ -72,6 +72,9 @@ run.sh
 test.js
 testing.py
 
+# Trash
+cache/
+
 # Sensitive info
 auth.db
 config.json

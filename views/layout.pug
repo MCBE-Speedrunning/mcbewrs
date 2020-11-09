@@ -1,14 +1,17 @@
 doctype html
 html(lang="en")
-    head
-        title="MCBE WR History"
-        meta(charset="utf-8")
-        meta(name="viewport" content="width=device-width, initial-scale=1.0")
-        meta(property="og:title" content=pageName)
-        link(rel='stylesheet', href='/stylesheets/style.css')
-        div(id="colorScheme")
-    body(style={"background-image": background_image})
-        include nav.pug
-        block content
-        script(src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js", crossorigin="anonymous")
-        script(src="/javascripts/main.js", defer="")
+	head
+		title= 'MCBE WR History'
+		meta(charset="utf-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		meta(property="og:title", content=pageName)
+		link(rel="stylesheet", href="/stylesheets/style.css")
+		#colorScheme
+	body(style={ 'background-image': background_image })
+		include nav.pug
+		block content
+		script(
+			src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js",
+			crossorigin="anonymous"
+		)
+		script(src="/javascripts/main.js", defer="")

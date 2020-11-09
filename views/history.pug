@@ -1,25 +1,25 @@
 extends layout
 
 block content
-    div.leaderboard
-        h1 #{category}
-        h1 History
-        table
-            tr
-                th Date
-                th Time+Video
-                th Player
-                th Nation
-                th Platform
-                th Version
-                th Duration (Days)
-            each run in history
-                tr
-                    td=run.date
-                    td
-                        a(href=run.link target="_blank") #{run.time}
-                    td=run.name
-                    td(class="nationality")=run.nationality
-                    td=run.platform
-                    td=run.version
-                    td=run.duration
+	.leaderboard
+		h1 #{category}
+		h1 History
+		table
+			tr
+				th Date
+				th Time+Video
+				th Player
+				th Nation
+				th Platform
+				th Version
+				th Duration (Days)
+			each run in history
+				tr
+					td= run.date
+					td
+						a(href=run.link, target="_blank") #{run.time}
+					td= run.name
+					td.nationality= run.nationality
+					td= run.platform
+					td= run.version
+					td= run.duration

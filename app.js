@@ -10,8 +10,18 @@ const compression = require("compression");
 const fs = require("fs");
 const sassMiddleware = require("node-sass-middleware");
 const session = require("express-session");
-const sqlite3 = require("sqlite3").verbose();
-
+if (process.env.NODE_ENV === "development") {
+	var sqlite3 = require("sqlite3").verbose();
+	var debug = true;
+} else {
+	var sqlite3 = require("sqlite3");
+	var debug = false;
+}
+try {
+	fs.mkdirSync("./cache/");
+} catch (EEXIST) {
+	console.log("Cache folder already exists, skipping...");
+}
 const app = express();
 const leaderboard = new sqlite3.Database("./data/leaderboard.db");
 
@@ -32,7 +42,7 @@ app.use(
 	sassMiddleware({
 		src: path.join(__dirname, "public"),
 		dest: path.join(__dirname, "public"),
-		debug: true,
+		debug: debug,
 		outputStyle: "compressed",
 		//indentedSyntax: true, // true = .sass and false = .scss
 		sourceMap: true,
@@ -44,7 +54,7 @@ app.use(
 		max: 10000, // limit each IP to 10 000 requests per windowMs
 	})
 );
-app.use(minify({ cache: true }));
+app.use(minify({ cache: "./cache/" }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 app.use(
@@ -55,7 +65,7 @@ app.use(
 	})
 );
 app.use(cookieParser());
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
 	logs = req.app.get("users");
 	logs.push({
 		ip: req.ip,

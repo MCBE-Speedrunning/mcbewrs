@@ -1,23 +1,50 @@
 extends layout
 
 block content
-	div.home
-		h1 Hi
-		form(method="POST" and action="/admin/add")
-			label Name(s)
-			input(name="name", type="text", value="")
-			label Category
-			select(name="category")
-				option(value="anyg-ss-pc") anyg-ss-pc
-			label Date
-			input(name="date", type="number", value=0)
-			label Time
-			input(name="time", type="number", value=0)
-			label Platform
-			input(name="platform", type="text", value="")
-			label Version
-			input(name="version", type="text", value="")
-			label Link
-			input(name="link", type="text", value="")
-			button(type="submit", id="add")
+	.home
+		h1 Add a new run
+		form(method="POST", and, action="/admin/add")
+			p
+				label Name(s)
+				input(
+					name="name",
+					type="text",
+					value="",
+					placeholder="Runner's name",
+					required
+				)
+			p
+				label Category
+					select(name="category")
+						- for(cat in categories)
+							option(value=categories[cat].abbreviation) #{categories[cat].readable}
+			p
+				label Date
+				input(name="date" type="date", value=0, required)
+				label Time
+				input(name="date_time" type="time", required)
+			p
+				label Time
+				p
+					label Hours
+					input(name="hour" type="number", value=0)
+					label Minutes
+					input(name="minutes" type="number", value=0)
+					br
+					br
+					label Seconds
+					input(name="seconds" type="number", value=0)
+					label Milliseconds
+					input(name="milliseconds" type="number", value=0)
+
+			p
+				label Platform
+				input(name="platform" type="text" value="", required)
+			p
+				label Version
+				input(name="version" type="text" value="", required)
+			p
+				label Link
+				input(name="link" type="text" value="")
+			button#add(type="submit")
 				| Submit

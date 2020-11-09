@@ -1,18 +1,18 @@
 extends layout
 
 block content
-	div.home
+	.home
 		h1 Login
 		if session.error
 			h2 #{session.error}
-		else 
+		else
 			h2 #{session.success}
 		form(method="POST", action="/admin/login")
 			p
-				label Username:	
+				label Username:
 				input(type="text", name="username")
 			p
-				label Password:	
+				label Password:
 				input(type="text", name="password")
 			p
 				input(type="submit", value="Login")

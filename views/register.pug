@@ -1,16 +1,16 @@
 extends layout
 
 block content
-	div.home
+	.home
 		h1 #{pageName}
 		if err
 			h2 #{err}
 		form(method="POST", action="/admin/register")
 			p
-				label Username:	
+				label Username:
 				input(type="text", name="username")
 			p
-				label Password:	
+				label Password:
 				input(type="text", name="password")
 			p
 				input(type="submit", value="Register")

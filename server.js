@@ -6,47 +6,27 @@
 
 const app = require("./app");
 const debug = require("debug")("puppies:server");
-const http = require("spdy");
+const http = require("http");
 const fs = require("fs");
 
 /**
  * Get port from environment and store in Express.
  */
 
-const portHttp = normalizePort(process.env.portHttp || "80");
-const port = normalizePort(process.env.PORT || "443");
+const config = JSON.parse(fs.readFileSync("./data/config.json"));
+
+const port = normalizePort(process.env.PORT || config.port || "2909");
 app.set("port", port);
 
 /**
- * Create HTTP(s) server.
- */
-
-const server = http.createServer(
-	{
-		key: fs.readFileSync("server.key"),
-		cert: fs.readFileSync("server.cert"),
-	},
-	app
-);
-/**
  * Listen on provided port, on all network interfaces.
+ * Create HTTP server.
  */
-
+const server = http.createServer(app);
 server.listen(port);
 server.on("error", onError);
 server.on("listening", onListening);
-
-// Redirect from http
-let httpBackup = require("http");
-httpBackup
-	.createServer(function (req, res) {
-		res.writeHead(301, {
-			Location: "https://" + req.headers["host"] + req.url,
-		});
-		res.end();
-	})
-	.listen(portHttp);
-
+/*
 /**
  * Normalize a port into a number, string, or false.
  */

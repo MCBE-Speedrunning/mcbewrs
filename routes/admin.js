@@ -1,5 +1,4 @@
 const express = require("express");
-const { use } = require(".");
 const hash = require("pbkdf2-password")();
 const sqlite3 = require("sqlite3").verbose();
 
@@ -46,7 +45,6 @@ function authenticate(name, pass, fn) {
 	});
 }
 
-/* GET users listing. */
 router.get("/login", (req, res) => {
 	res.render("admin", { session: req.session });
 });
@@ -91,11 +89,28 @@ router.post("/register", restrict, (req, res) => {
 });
 
 router.get("/add", restrict, (req, res) => {
-	res.render("admin_add");
+	leaderboard.all("SELECT * FROM categories", (err, rows) => {
+		res.render("admin_add", { categories: rows });
+	});
 });
 
 router.post("/add", restrict, (req, res) => {
 	const run = req.body;
+	// Multiple runners can be input by seperating them with ,
+	run.name = run.name.trim().split(",");
+	// Convert html date format to epoch ms then convert to seconds
+	run.date = new Date(run.date).valueOf() / 1000;
+	// run.date_time =
+	// run.time = parseFloat(run.time + 0.0001);
+
+	// All input from the client comes as a string, so everything must be parsed as an int
+	run.time =
+		parseInt(run.hour, 10) * 60 * 60 +
+		parseInt(run.minutes, 10) * 60 +
+		parseInt(run.seconds, 10);
+	if (parseInt(run.milliseconds, 10)) {
+		run.time += parseInt(run.milliseconds, 10) / 1000 + 0.0001;
+	}
 	leaderboard.serialize(() => {
 		leaderboard.run("INSERT INTO runs VALUES(?, ?, ?, ?, ?, ?)", [
 			run.category,
@@ -106,11 +121,15 @@ router.post("/add", restrict, (req, res) => {
 			run.link,
 		]);
 		for (let player in run.players) {
+			// Get the ID of the run you just added with
 			leaderboard.get("SELECT Count() FROM runs", (err, runid) => {
+				// To get the player ID
 				leaderboard.get(
 					"SELECT rowid FROM runner WHERE name = ?",
 					player,
 					(err, playerid) => {
+						// And finally you can insert the run/runner pairs
+						// into the DB with this command where the first ? is the run id and the second is the runner id
 						leaderboard.run("INSERT INTO pairs VALUES(?, ?)", [
 							runid,
 							playerid,
