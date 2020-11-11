@@ -100,39 +100,43 @@ router.post("/add", restrict, (req, res) => {
 	run.name = run.name.trim().split(",");
 	// Convert html date format to epoch ms then convert to seconds
 	run.date = new Date(run.date).valueOf() / 1000;
-	// run.date_time =
-	// run.time = parseFloat(run.time + 0.0001);
 
 	// All input from the client comes as a string, so everything must be parsed as an int
 	run.time =
 		parseInt(run.hour, 10) * 60 * 60 +
 		parseInt(run.minutes, 10) * 60 +
 		parseInt(run.seconds, 10);
+
+	// Add 0.0001 to the end of runs that time with milliseconds
+	// This ensures that the site will display 3 significant figures
 	if (parseInt(run.milliseconds, 10)) {
 		run.time += parseInt(run.milliseconds, 10) / 1000 + 0.0001;
 	}
+
 	leaderboard.serialize(() => {
-		leaderboard.run("INSERT INTO runs VALUES(?, ?, ?, ?, ?, ?)", [
+		leaderboard.run("INSERT INTO runs VALUES(?, ?, ?, ?, ?, ?, ?)", [
 			run.category,
 			run.date,
 			run.time,
+			"",
 			run.platform,
 			run.version,
 			run.link,
 		]);
-		for (let player in run.players) {
-			// Get the ID of the run you just added with
-			leaderboard.get("SELECT Count() FROM runs", (err, runid) => {
-				// To get the player ID
+
+		// TODO: Make page stop loading when done!
+		for (let player in run.name) {
+			// Get the ID of the run that was just added
+			leaderboard.get("SELECT Count() AS id FROM runs", (err, runid) => {
+				// Get the runners ID
 				leaderboard.get(
-					"SELECT rowid FROM runner WHERE name = ?",
-					player,
+					"SELECT rowid FROM runners WHERE name = ?",
+					run.name[player],
 					(err, playerid) => {
-						// And finally you can insert the run/runner pairs
-						// into the DB with this command where the first ? is the run id and the second is the runner id
+						// Insert the run/runner pair
 						leaderboard.run("INSERT INTO pairs VALUES(?, ?)", [
-							runid,
-							playerid,
+							runid.id,
+							playerid.rowid,
 						]);
 					}
 				);
