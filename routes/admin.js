@@ -97,7 +97,7 @@ router.get("/add", restrict, (req, res) => {
 router.post("/add", restrict, (req, res) => {
 	const run = req.body;
 	// Multiple runners can be input by seperating them with ,
-	run.name = run.name.trim().split(",");
+	run.runners = run.runners.trim().split(",");
 	// Convert html date format to epoch ms then convert to seconds
 	run.date = new Date(run.date).valueOf() / 1000;
 
@@ -125,13 +125,13 @@ router.post("/add", restrict, (req, res) => {
 		]);
 
 		// TODO: Make page stop loading when done!
-		for (let player in run.name) {
+		for (let i in run.runners) {
 			// Get the ID of the run that was just added
 			leaderboard.get("SELECT Count() AS id FROM runs", (err, runid) => {
 				// Get the runners ID
 				leaderboard.get(
 					"SELECT rowid FROM runners WHERE name = ?",
-					run.name[player],
+					run.runners[i],
 					(err, playerid) => {
 						// Insert the run/runner pair
 						leaderboard.run("INSERT INTO pairs VALUES(?, ?)", [
