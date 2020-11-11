@@ -35,13 +35,6 @@ router.get("/home", function (req, res, next) {
 	res.redirect("/");
 });
 
-router.get("/leaderboard/:cat", function (req, res, next) {
-	const db = req.app.get("leaderboard");
-
-	if (typeof req.params.cat === "undefined") {
-		res.render("leaderboardhome");
-	}
-});
 router.get("/history/:cat?", function (req, res, next) {
 	const db = req.app.get("leaderboard");
 

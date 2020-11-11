@@ -32,9 +32,9 @@ function restrict(req, res, next) {
 
 function authenticate(name, pass, fn) {
 	db.get("SELECT * FROM users WHERE username=?; ", name, (err, user) => {
-		// query the db for the given username
+		// Query the db for the given username
 		if (!user) return fn(new Error("cannot find user"));
-		// apply the same algorithm to the POSTed password, applying
+		// Apply the same algorithm to the POSTed password, applying
 		// the hash against the pass / salt, if there is a match we
 		// found the user
 		hash({ password: pass, salt: user.salt }, (err, pass, salt, hash) => {
@@ -85,6 +85,7 @@ router.post("/register", restrict, (req, res) => {
 	newUser(req.body.username, req.body.password, (err) => {
 		res.render("register", { err: err });
 	});
+
 	res.render("admin", { session: req.session });
 });
 
@@ -125,7 +126,7 @@ router.post("/add", restrict, (req, res) => {
 		]);
 
 		// TODO: Make page stop loading when done!
-		for (let i in run.runners) {
+		for (let i = 0, len = run.runners.length; i < len; i++) {
 			// Get the ID of the run that was just added
 			leaderboard.get("SELECT Count() AS id FROM runs", (err, runid) => {
 				// Get the runners ID

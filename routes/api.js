@@ -5,15 +5,18 @@ function makeid(length) {
 	var result = "";
 	var characters =
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-	var charactersLength = characters.length;
+	var characters_length = characters.length;
+
 	for (var i = 0; i < length; i++) {
-		result += characters.charAt(Math.floor(Math.random() * charactersLength));
+		result += characters.charAt(Math.floor(Math.random() * characters_length));
 	}
+
 	return result;
 }
 
 router.get("/leaderboard", function (req, res, next) {
 	leaderboard = req.app.get("leaderboard");
+
 	if (req.headers == "application/json") {
 		res.json(leaderboard);
 	} else {
@@ -27,10 +30,12 @@ router.get("/leaderboard", function (req, res, next) {
 
 router.post("/run/add", function (req, res, next) {
 	leaderboard = req.app.get("leaderboard");
+
 	if (req.body) {
 		do {
 			id = makeid(5);
 		} while (!id in leaderboard);
+
 		leaderboard[id] = req.body;
 		res.json(leaderboard);
 	}
@@ -49,10 +54,12 @@ router.delete("/run/:runid", function (req, res, next) {
 
 router.patch("/run/:runid", function (req, res, next) {
 	leaderboard = req.app.get("leaderboard");
+
 	if (req.body) {
 		for (key in req.body) {
 			leaderboard[req.params.runid][key] = req.body[key];
 		}
+
 		res.json(leaderboard);
 	}
 });
