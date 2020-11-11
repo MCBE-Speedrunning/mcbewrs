@@ -125,6 +125,11 @@ router.post("/add", restrict, (req, res) => {
 			run.link,
 		]);
 
+		// Prevents DoS
+		if (!(run.runners instanceof Array)) {
+			return [];
+		}
+
 		// TODO: Make page stop loading when done!
 		for (let i = 0, len = run.runners.length; i < len; i++) {
 			// Get the ID of the run that was just added
