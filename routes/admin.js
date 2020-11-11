@@ -115,12 +115,14 @@ router.post("/add", restrict, (req, res) => {
 	}
 
 	leaderboard.serialize(() => {
-		leaderboard.run("INSERT INTO runs VALUES(?, ?, ?, ?, ?, ?, ?)", [
+		leaderboard.run("INSERT INTO runs VALUES(?, ?, ?, ?, ?, ?, ?, ?)", [
 			run.category,
 			run.date,
 			run.time,
 			"",
+			//run.duration,
 			run.platform,
+			run.seed,
 			run.version,
 			run.link,
 		]);
