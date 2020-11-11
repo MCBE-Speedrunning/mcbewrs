@@ -2,7 +2,7 @@
 	"name": "mcbewrs",
 	"version": "0.0.0",
 	"scripts": {
-		"start": "export NODE_ENV=production && nodemon ./server.js",
+		"start": "export NODE_ENV=development && nodemon ./server.js",
 		"start-production": "node ./server.js",
 		"format": "prettier --write ."
 	},
@@ -18,7 +18,6 @@
 		"express-session": "^1.17.1",
 		"http-errors": "~1.6.3",
 		"morgan": "~1.9.1",
-		"node-fetch": "^2.6.1",
 		"node-sass-middleware": "0.11.0",
 		"nodemon": "^2.0.4",
 		"pbkdf2-password": "^1.2.1",
