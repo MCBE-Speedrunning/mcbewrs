@@ -1,6 +1,7 @@
 const express = require("express");
 const hash = require("pbkdf2-password")();
 const sqlite3 = require("sqlite3").verbose();
+const { exec } = require("child_process");
 
 const router = express.Router();
 const db = new sqlite3.Database("./data/auth.db");
@@ -140,6 +141,13 @@ router.post("/add", restrict, (req, res) => {
 				run.runners[i],
 			]);
 		}
+	});
+});
+
+router.get("/pull", restrict, (req, res) => {
+	exec("git pull", (error, stdout, stderr) => {
+		if (error) throw err;
+		res.send(`Pulling complete \n ${stderr} \n ${stdout}`);
 	});
 });
 

@@ -85,5 +85,9 @@ document.getElementById("dropdown").addEventListener("click", () => {
 
 // Use twemoji's
 window.addEventListener("load", () => {
-	twemoji.parse(document.body);
+	if (screen.height >= 720) {
+		twemoji.parse(document.body, { ext: ".svg", folder: "svg" });
+	} else {
+		twemoji.parse(document.body);
+	}
 });
