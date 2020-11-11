@@ -20,31 +20,31 @@ block content
 							option(value=categories[cat].abbreviation) #{categories[cat].readable}
 			p
 				label Date
-				input(name="date" type="date", value=0, required)
+				input(name="date", type="date", value=0, required)
 				label Time
-				input(name="date_time" type="time", required)
+				input(name="date_time", type="time", required)
 			p
 				label Time
 				p
 					label Hours
-					input(name="hour" type="number", value=0)
+					input(name="hour", type="number", value=0)
 					label Minutes
-					input(name="minutes" type="number", value=0)
+					input(name="minutes", type="number", value=0)
 					br
 					br
 					label Seconds
-					input(name="seconds" type="number", value=0)
+					input(name="seconds", type="number", value=0)
 					label Milliseconds
-					input(name="milliseconds" type="number", value=0)
+					input(name="milliseconds", type="number", value=0)
 
 			p
 				label Platform
-				input(name="platform" type="text" value="", required)
+				input(name="platform", type="text", value="", required)
 			p
 				label Version
-				input(name="version" type="text" value="", required)
+				input(name="version", type="text", value="", required)
 			p
 				label Link
-				input(name="link" type="text" value="")
+				input(name="link", type="text", value="")
 			button#add(type="submit")
 				| Submit
