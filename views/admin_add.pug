@@ -16,7 +16,7 @@ block content
 			p
 				label Category
 					select(name="category")
-						- for(cat in categories)
+						- for (cat in categories)
 							option(value=categories[cat].abbreviation) #{categories[cat].readable}
 			p
 				label Date

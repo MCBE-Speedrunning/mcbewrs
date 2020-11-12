@@ -37,7 +37,7 @@ router.get("/history/:cat?", (req, res) => {
 
 	// If no category is specified, go to the history home page
 	if (typeof req.params.cat === "undefined") {
-		// Get the 10 most recent main world record runs, sorted by date
+		// Get the 10 most recent world record runs, for all 3 category types
 		getRecent("main", (returned_value) => {
 			main = returned_value;
 			getRecent("il", (returned_value) => {
@@ -81,9 +81,7 @@ router.get("/history/:cat?", (req, res) => {
 					rows[i].time = timeFormat(rows[i].time);
 					rows[i].duration = Math.trunc(rows[i].duration / 86400);
 
-					if (rows[i].duration === 0) {
-						rows[i].duration = "<1";
-					}
+					if (rows[i].duration === 0) rows[i].duration = "<1";
 				}
 
 				// Get the category name
