@@ -500,8 +500,27 @@ function getFlag(code) {
 		case "ZM":
 			return "🇿🇲";
 		default:
-			return "🏳";
+			return "❓";
 	}
 }
 
-module.exports = { getFlag };
+// Convert seconds to human readable time
+function timeFormat(duration) {
+	const hours = ~~(duration / 3600);
+	const minutes = ~~((duration % 3600) / 60);
+	const seconds = ~~duration % 60;
+	let output = "";
+
+	if (hours > 0) output += hours + ":" + (minutes < 10 ? "0" : "");
+
+	output += minutes + ":" + (seconds < 10 ? "0" : "");
+	output += seconds;
+
+	// Check if the time has milliseconds, and remove the trailing .0001
+	if (!isNaN(duration) && duration.toString().indexOf(".") != -1)
+		output += "." + duration.toString().split(".")[1].slice(0, -1);
+
+	return output;
+}
+
+module.exports = { getFlag, timeFormat };
