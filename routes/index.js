@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getFlag, timeFormat } = require("../utils.js");
+const { getFlag, timeFormat } = require("../utils/functions.js");
 
 /* GET home page. */
 router.get("/", (req, res) => {
