@@ -500,8 +500,8 @@ function getFlag(code) {
 		case "ZM":
 			return "🇿🇲";
 		default:
-			return "🏳";
+			return "❓";
 	}
 }
 
-module.exports = {getFlag};
+module.exports = { getFlag };
