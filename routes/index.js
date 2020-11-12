@@ -40,20 +40,17 @@ router.get("/history/:cat?", (req, res) => {
 		// Get the 10 most recent main world record runs, sorted by date
 		getRecent("main", (returned_value) => {
 			main = returned_value;
-		});
-
-		getRecent("il", (returned_value) => {
-			il = returned_value;
-		});
-
-		getRecent("catext", (returned_value) => {
-			catext = returned_value;
-		});
-
-		res.render("historyhome", {
-			main: main,
-			il: il,
-			catext: catext,
+			getRecent("il", (returned_value) => {
+				il = returned_value;
+				getRecent("catext", (returned_value) => {
+					catext = returned_value;
+					res.render("historyhome", {
+						main: main,
+						il: il,
+						catext: catext,
+					});
+				});
+			});
 		});
 	} else {
 		// Query all the runs for the specified category, sorted by date

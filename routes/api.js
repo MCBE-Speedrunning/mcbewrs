@@ -7,7 +7,7 @@ const { safeDump } = require("js-yaml");
 const db = new sqlite3.Database("./data/leaderboard.db");
 
 function parseData(req, res, rows) {
-	switch (req.headers['content-type']) {
+	switch (req.headers["content-type"]) {
 		case "application/json":
 			res.jsonp({ data: rows });
 			break;
