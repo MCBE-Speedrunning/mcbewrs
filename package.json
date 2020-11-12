@@ -17,6 +17,7 @@
 		"express-rate-limit": "^5.1.3",
 		"express-session": "^1.17.1",
 		"http-errors": "~1.6.3",
+		"js-yaml": "^3.14.0",
 		"morgan": "~1.9.1",
 		"node-sass-middleware": "0.11.0",
 		"nodemon": "^2.0.4",
@@ -24,7 +25,8 @@
 		"prettier": "^2.1.2",
 		"pug": "^3.0.0",
 		"spdy": "^4.0.2",
-		"sqlite3": "^5.0.0"
+		"sqlite3": "^5.0.0",
+		"xml": "^1.0.1"
 	},
 	"prettier": {
 		"useTabs": true

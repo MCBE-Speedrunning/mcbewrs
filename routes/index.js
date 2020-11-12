@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {getFlag} = require("../utils.js")
+const { getFlag } = require("../utils.js");
 
 // Convert seconds to human readable time
 function timeFormat(duration) {

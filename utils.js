@@ -504,4 +504,4 @@ function getFlag(code) {
 	}
 }
 
-module.exports = {getFlag};
+module.exports = { getFlag };

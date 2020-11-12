@@ -10,6 +10,7 @@ const compression = require("compression");
 const fs = require("fs");
 const sassMiddleware = require("node-sass-middleware");
 const session = require("express-session");
+
 if (process.env.NODE_ENV === "development") {
 	var sqlite3 = require("sqlite3").verbose();
 	var debug = true;

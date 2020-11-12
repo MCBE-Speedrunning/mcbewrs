@@ -137,9 +137,10 @@ router.post("/add", restrict, (req, res) => {
 		// TODO: Make page stop loading when done!
 		// Insert the run/runner pairs
 		for (let i = 0, len = run.runners.length; i < len; i++) {
-			leaderboard.run("INSERT INTO pairs VALUES((SELECT Count() FROM runs), (SELECT rowid FROM runners WHERE name = ?))", [
-				run.runners[i],
-			]);
+			leaderboard.run(
+				"INSERT INTO pairs VALUES((SELECT Count() FROM runs), (SELECT rowid FROM runners WHERE name = ?))",
+				[run.runners[i]]
+			);
 		}
 	});
 });

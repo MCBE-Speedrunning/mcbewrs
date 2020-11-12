@@ -1,67 +1,62 @@
 const express = require("express");
 const router = express.Router();
+const sqlite3 = require("sqlite3").verbose();
+const xml = require("xml");
+const { safeDump } = require("js-yaml");
 
-function makeid(length) {
-	var result = "";
-	var characters =
-		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-	var characters_length = characters.length;
+const db = new sqlite3.Database("./data/leaderboard.db");
 
-	for (var i = 0; i < length; i++) {
-		result += characters.charAt(Math.floor(Math.random() * characters_length));
+function parseData(req, res, rows) {
+	switch (req.headers['content-type']) {
+		case "application/json":
+			res.jsonp({ data: rows });
+			break;
+		case "application/xml":
+			res.set("Content-Type", "text/xml");
+			res.send(xml({ data: rows }));
+			break;
+		case "application/yaml":
+			res.set("Content-Type", "text/yaml");
+			res.send(safeDump({ data: rows }));
+			break;
+		default:
+			res.jsonp({ data: rows });
+			break;
 	}
-
-	return result;
 }
 
-router.get("/leaderboard", function (req, res, next) {
-	leaderboard = req.app.get("leaderboard");
-
-	if (req.headers == "application/json") {
-		res.json(leaderboard);
-	} else {
-		/* WIP
-		res.set('Content-Type', 'text/xml');
-		res.send(xml(JSON.stringify(leaderboard)))
-		*/
-		res.json(leaderboard);
-	}
-});
-
-router.post("/run/add", function (req, res, next) {
-	leaderboard = req.app.get("leaderboard");
-
-	if (req.body) {
-		do {
-			id = makeid(5);
-		} while (!id in leaderboard);
-
-		leaderboard[id] = req.body;
-		res.json(leaderboard);
-	}
-});
-
-router.get("/run/:runid", function (req, res, next) {
-	leaderboard = req.app.get("leaderboard");
-	res.json(leaderboard[req.params.runid]);
-});
-
-router.delete("/run/:runid", function (req, res, next) {
-	leaderboard = req.app.get("leaderboard");
-	delete leaderboard[req.params.runid];
-	res.json(leaderboard);
-});
-
-router.patch("/run/:runid", function (req, res, next) {
-	leaderboard = req.app.get("leaderboard");
-
-	if (req.body) {
-		for (key in req.body) {
-			leaderboard[req.params.runid][key] = req.body[key];
+router.get("/history", (req, res) => {
+	console.log(req.headers);
+	db.all(
+		"SELECT * FROM runs WHERE rowid >= ? AND rowid <= ?;",
+		[req.query.min || 0, req.query.max || 10],
+		(err, rows) => {
+			if (err) throw err;
+			parseData(req, res, rows);
 		}
+	);
+});
 
-		res.json(leaderboard);
-	}
+router.get("/categories", (req, res) => {
+	db.all(
+		"SELECT * FROM categories WHERE rowid >= ? AND rowid <= ?;",
+		[req.query.min || 0, req.query.max || 10],
+		(err, rows) => {
+			if (err) throw err;
+			parseData(req, res, rows);
+		}
+	);
+});
+
+router.get("/runners", (req, res) => {
+	db.all(
+		"SELECT * FROM runners WHERE rowid >= ? AND rowid <= ?;",
+		[req.query.min || 0, req.query.max || 10],
+		(err, rows) => {
+			if (err) throw err;
+			parseData(req, res, rows);
+		}
+	);
 });
 
 module.exports = router;
