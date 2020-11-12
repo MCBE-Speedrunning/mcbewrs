@@ -63,7 +63,6 @@ router.get("/history/:cat?", (req, res) => {
 					// Check all the more recent records until a faster one is found
 					// Can't just check the very next because of the possibility of ties
 					for (j = i + 1; j <= len; j++) {
-						rows[i].nationality = getFlag(rows[i].nationality);
 						// Check if the record is current
 						if (j === len) {
 							rows[i].duration = Date.now() / 1000 - rows[i].date;
@@ -73,6 +72,7 @@ router.get("/history/:cat?", (req, res) => {
 						}
 					}
 
+					rows[i].nationality = getFlag(rows[i].nationality);
 					// Properly format the runs date, time, and duration
 					rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(
 						req.headers["accept-language"].substr(0, 5) // "en-GB"
