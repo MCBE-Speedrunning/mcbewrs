@@ -55,7 +55,7 @@ router.get("/history/:cat?", (req, res) => {
 	} else {
 		// Query all the runs for the specified category, sorted by date
 		db.all(
-			"SELECT date, time, name, nationality, platform, version, link FROM runners, runs, pairs WHERE runners.rowid = runner_id AND runs.rowid = run_id AND category = ? ORDER BY date ASC",
+			"SELECT date, time, name, nationality, platform, input, version, seed, link FROM runners, runs, pairs WHERE runners.rowid = runner_id AND runs.rowid = run_id AND category = ? ORDER BY date ASC",
 			req.params.cat,
 			function (err, rows) {
 				// Calculate the duration of each run

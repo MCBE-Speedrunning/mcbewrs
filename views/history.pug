@@ -11,7 +11,9 @@ block content
 				th Player
 				th Nation
 				th Platform
+				th Input
 				th Version
+				th Seed
 				th Duration (Days)
 			each run in history
 				tr
@@ -21,5 +23,7 @@ block content
 					td= run.name
 					td.nationality= run.nationality
 					td= run.platform
+					td= run.input
 					td= run.version
+					td= run.seed
 					td= run.duration
