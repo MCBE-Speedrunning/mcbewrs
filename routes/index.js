@@ -1,30 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getFlag } = require("../utils.js");
-
-// Convert seconds to human readable time
-function timeFormat(duration) {
-	const hours = ~~(duration / 3600);
-	const minutes = ~~((duration % 3600) / 60);
-	const seconds = ~~duration % 60;
-	let output = "";
-
-	if (hours > 0) {
-		output += hours + ":" + (minutes < 10 ? "0" : "");
-	}
-
-	output += minutes + ":" + (seconds < 10 ? "0" : "");
-	output += seconds;
-
-	// Check if the time has milliseconds
-	if (!isNaN(duration) && duration.toString().indexOf(".") != -1) {
-		// Slice off the last digit of the milliseconds
-		// Every IL has .0001 added to it to ensure trailing 0's with sqlite3
-		output += "." + duration.toString().split(".")[1].slice(0, -1);
-	}
-
-	return output;
-}
+const { getFlag, timeFormat } = require("../utils.js");
 
 /* GET home page. */
 router.get("/", (req, res) => {
