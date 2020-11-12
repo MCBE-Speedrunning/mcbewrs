@@ -51,7 +51,7 @@ router.get("/history/:cat?", (req, res) => {
 					);
 
 					recent[i].time = timeFormat(recent[i].time);
-					recent[i].nationality = getFlag(recent[i].nationality.slice(0, -1));
+					recent[i].nationality = getFlag(recent[i].nationality);
 				}
 
 				callback(recent);
@@ -62,16 +62,16 @@ router.get("/history/:cat?", (req, res) => {
 	// If no category is specified, go to the history home page
 	if (typeof req.params.cat === "undefined") {
 		// Get the 10 most recent main world record runs, sorted by date
-		getRecent("main", (returnedValue) => {
-			main = returnedValue;
+		getRecent("main", (returned_value) => {
+			main = returned_value;
 		});
 
-		getRecent("il", (returnedValue) => {
-			il = returnedValue;
+		getRecent("il", (returned_value) => {
+			il = returned_value;
 		});
 
-		getRecent("catext", (returnedValue) => {
-			catext = returnedValue;
+		getRecent("catext", (returned_value) => {
+			catext = returned_value;
 		});
 
 		res.render("historyhome", {
@@ -90,7 +90,7 @@ router.get("/history/:cat?", (req, res) => {
 					// Check all the more recent records until a faster one is found
 					// Can't just check the very next because of the possibility of ties
 					for (j = i + 1; j <= len; j++) {
-						rows[i].nationality = getFlag(rows[i].nationality.slice(0, -1));
+						rows[i].nationality = getFlag(rows[i].nationality);
 						// Check if the record is current
 						if (j === len) {
 							rows[i].duration = Date.now() / 1000 - rows[i].date;

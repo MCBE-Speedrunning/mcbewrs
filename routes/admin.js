@@ -116,13 +116,16 @@ router.post("/add", restrict, (req, res) => {
 	}
 
 	leaderboard.serialize(() => {
-		leaderboard.run("INSERT INTO runs VALUES(?, ?, ?, ?, ?, ?, ?)", [
+		leaderboard.run("INSERT INTO runs VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", [
 			run.category,
 			run.date,
 			run.time,
 			"",
+			//run.duration,
 			run.platform,
+			run.seed,
 			run.version,
+			run.input,
 			run.link,
 		]);
 
@@ -132,22 +135,11 @@ router.post("/add", restrict, (req, res) => {
 		}
 
 		// TODO: Make page stop loading when done!
+		// Insert the run/runner pairs
 		for (let i = 0, len = run.runners.length; i < len; i++) {
-			// Get the ID of the run that was just added
-			leaderboard.get("SELECT Count() AS id FROM runs", (err, runid) => {
-				// Get the runners ID
-				leaderboard.get(
-					"SELECT rowid FROM runners WHERE name = ?",
-					run.runners[i],
-					(err, playerid) => {
-						// Insert the run/runner pair
-						leaderboard.run("INSERT INTO pairs VALUES(?, ?)", [
-							runid.id,
-							playerid.rowid,
-						]);
-					}
-				);
-			});
+			leaderboard.run("INSERT INTO pairs VALUES((SELECT Count() FROM runs), (SELECT rowid FROM runners WHERE name = ?))", [
+				run.runners[i],
+			]);
 		}
 	});
 });
