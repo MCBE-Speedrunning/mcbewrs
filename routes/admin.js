@@ -47,7 +47,7 @@ function authenticate(name, pass, fn) {
 }
 
 router.get("/login", (req, res) => {
-	res.render("admin", { session: req.session });
+	res.render("login", { session: req.session });
 });
 
 router.post("/login", (req, res) => {
@@ -87,7 +87,7 @@ router.post("/register", restrict, (req, res) => {
 		res.render("register", { err: err });
 	});
 
-	res.render("admin", { session: req.session });
+	res.render("login", { session: req.session });
 });
 
 router.get("/add", restrict, (req, res) => {
