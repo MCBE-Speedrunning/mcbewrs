@@ -75,6 +75,5 @@ testing.py
 # Trash
 cache/
 
-# Sensitive info
-auth.db
-config.json
+# Data that doesn't need to be in the repo
+data/

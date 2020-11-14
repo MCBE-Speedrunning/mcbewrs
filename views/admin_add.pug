@@ -16,7 +16,7 @@ block content
 			p
 				label Category
 					select(name="category")
-						- for(cat in categories)
+						- for (cat in categories)
 							option(value=categories[cat].abbreviation) #{categories[cat].readable}
 			p
 				label Date
@@ -48,7 +48,13 @@ block content
 				input(name="version", type="text", value="", required)
 			p
 				label Input Method
-				input(name="input", type="text", value="", required)
+					select(name="input")
+						option(value="Keyboard & Mouse") Keyboard & Mouse
+						option(value="Controller") Controller
+						option(value="Touchscreen") Touchscreen
+						option(value="Hybrid (C&TS)") Hybrid (C&TS)
+						option(value="Hybrid (C&KM)") Hybrid (C&KM)
+						option(value="Hybrid (KM&TS)") Hybrid (KM&TS)
 			p
 				label Link
 				input(name="link", type="text", value="")

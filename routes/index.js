@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getFlag, timeFormat } = require("../utils.js");
+const { getFlag, timeFormat } = require("../utils/functions.js");
 
 /* GET home page. */
 router.get("/", (req, res) => {
@@ -37,7 +37,7 @@ router.get("/history/:cat?", (req, res) => {
 
 	// If no category is specified, go to the history home page
 	if (typeof req.params.cat === "undefined") {
-		// Get the 10 most recent main world record runs, sorted by date
+		// Get the 10 most recent world record runs, for all 3 category types
 		getRecent("main", (returned_value) => {
 			main = returned_value;
 			getRecent("il", (returned_value) => {
@@ -55,7 +55,7 @@ router.get("/history/:cat?", (req, res) => {
 	} else {
 		// Query all the runs for the specified category, sorted by date
 		db.all(
-			"SELECT date, time, name, nationality, platform, version, link FROM runners, runs, pairs WHERE runners.rowid = runner_id AND runs.rowid = run_id AND category = ? ORDER BY date ASC",
+			"SELECT date, time, name, nationality, platform, input, version, seed, link FROM runners, runs, pairs WHERE runners.rowid = runner_id AND runs.rowid = run_id AND category = ? ORDER BY date ASC",
 			req.params.cat,
 			function (err, rows) {
 				// Calculate the duration of each run
@@ -63,7 +63,6 @@ router.get("/history/:cat?", (req, res) => {
 					// Check all the more recent records until a faster one is found
 					// Can't just check the very next because of the possibility of ties
 					for (j = i + 1; j <= len; j++) {
-						rows[i].nationality = getFlag(rows[i].nationality);
 						// Check if the record is current
 						if (j === len) {
 							rows[i].duration = Date.now() / 1000 - rows[i].date;
@@ -73,6 +72,7 @@ router.get("/history/:cat?", (req, res) => {
 						}
 					}
 
+					rows[i].nationality = getFlag(rows[i].nationality);
 					// Properly format the runs date, time, and duration
 					rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(
 						req.headers["accept-language"].substr(0, 5) // "en-GB"
@@ -81,9 +81,7 @@ router.get("/history/:cat?", (req, res) => {
 					rows[i].time = timeFormat(rows[i].time);
 					rows[i].duration = Math.trunc(rows[i].duration / 86400);
 
-					if (rows[i].duration === 0) {
-						rows[i].duration = "<1";
-					}
+					if (rows[i].duration === 0) rows[i].duration = "<1";
 				}
 
 				// Get the category name

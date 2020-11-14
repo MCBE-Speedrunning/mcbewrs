@@ -111,9 +111,8 @@ router.post("/add", restrict, (req, res) => {
 
 	// Add 0.0001 to the end of runs that time with milliseconds
 	// This ensures that the site will display 3 significant figures
-	if (parseInt(run.milliseconds, 10)) {
+	if (parseInt(run.milliseconds, 10))
 		run.time += parseInt(run.milliseconds, 10) / 1000 + 0.0001;
-	}
 
 	leaderboard.serialize(() => {
 		leaderboard.run("INSERT INTO runs VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", [
@@ -130,18 +129,15 @@ router.post("/add", restrict, (req, res) => {
 		]);
 
 		// Prevents DoS
-		if (!(run.runners instanceof Array)) {
-			return [];
-		}
+		if (!(run.runners instanceof Array)) return [];
 
 		// TODO: Make page stop loading when done!
 		// Insert the run/runner pairs
-		for (let i = 0, len = run.runners.length; i < len; i++) {
+		for (let i = 0, len = run.runners.length; i < len; i++)
 			leaderboard.run(
 				"INSERT INTO pairs VALUES((SELECT Count() FROM runs), (SELECT rowid FROM runners WHERE name = ?))",
 				[run.runners[i]]
 			);
-		}
 	});
 });
 
