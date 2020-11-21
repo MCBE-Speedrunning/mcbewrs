@@ -3,11 +3,32 @@ extends layout
 block content
 	.home
 		h1 Home
-		p Welcome to the Minecraft Bedrock Edition (otherwise known as Pocket Edition) world record history website
-		p If you are interested in the up to date leaderboard please check out
-			a(href="https://www.speedrun.com/mcbe") speedrun.com
-		p If you are interested in the speedrunning community we have
-			a(href="https://discord.gg/d5PKmBJ") a Discord server
-			| and an
-			a(href="irc://aninternettroll.xyz/mcbe") IRC channel
-			| #mcbe in the aninternettroll.xyz server port 6667
+		.row
+			.card.col-sm-12
+				img.card-img-top(src="/assets/card_fullGame.png", alt="Full game image")
+				.card-body
+					h5.card-title Full Game
+					p.card-text
+					| Full game WR history
+					p
+						a.btn.btn-primary(href="#") Full game history
+		.row
+			.card.col-sm-6
+				img.card-img-top(
+					src="/assets/card_individualLevels.png",
+					alt="Individual levels image"
+				)
+				.card-body
+					h5.card-title Individual levels
+					p.card-text
+					| Individual levels WR history
+					p
+						a.btn.btn-primary(href="/history/") Individual levels history
+			.card.col-sm-6
+				img.card-img-top(src="/assets/card_catExt.png", alt="Category Extensions")
+				.card-body
+					h5.card-title Category Extensions
+					p.card-text
+					| Category Extensions WR history
+					p
+						a.btn.btn-primary(href="/history/") Category Extensions history

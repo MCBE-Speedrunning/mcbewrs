@@ -10,14 +10,14 @@ function colorChange() {
 }
 
 //Fancy transition between dark mode and light mode
-const trans = () => {
+function trans() {
 	//Add class
 	document.documentElement.classList.add("transition");
 	//Wait for the animation to finish then remove the class
 	window.setTimeout(() => {
 		document.documentElement.classList.remove("transition");
 	}, 1000);
-};
+}
 
 // This function is used whenever dark preferance is used
 function preferesDark() {
@@ -38,6 +38,10 @@ function preferesDark() {
 		el.classList.remove("navbar-light");
 		el.classList.add("navbar-dark");
 	});
+	document.querySelectorAll(".card").forEach((el) => {
+		el.classList.remove("bg-light");
+		el.classList.add("bg-dark");
+	});
 }
 
 // This function is used whenever light preferance is used
@@ -56,6 +60,10 @@ function preferesLight() {
 	document.querySelectorAll("nav").forEach((el) => {
 		el.classList.remove("navbar-dark");
 		el.classList.add("navbar-light");
+	});
+	document.querySelectorAll(".card").forEach((el) => {
+		el.classList.remove("bg-dark");
+		el.classList.add("bg-light");
 	});
 }
 

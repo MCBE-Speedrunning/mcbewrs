@@ -29,10 +29,7 @@ const app = express();
 const leaderboard = new sqlite3.Database("./data/leaderboard.db");
 
 const config = JSON.parse(fs.readFileSync("./data/config.json"));
-
 app.set("leaderboard", leaderboard);
-app.set("users", []);
-
 // View engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
@@ -73,18 +70,8 @@ app.use(
 	})
 );
 app.use(cookieParser());
-app.use((req, res, next) => {
-	logs = req.app.get("users");
-	logs.push({
-		ip: req.ip,
-		time: Date.now(),
-		url: req.url,
-	});
-	next();
-});
 
 app.use("/", require("./routes/index"));
-app.use("/users", require("./routes/users"));
 app.use("/api", require("./routes/api"));
 app.use("/admin", require("./routes/admin"));
 // Catch 404 and forward to error handler

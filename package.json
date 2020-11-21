@@ -36,7 +36,8 @@
 		"verbose": true,
 		"ignore": [
 			"data/*",
-			"public/*"
+			"public/*",
+			".git/"
 		]
 	}
 }

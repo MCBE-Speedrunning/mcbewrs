@@ -22,8 +22,8 @@ router.get("/history/:cat?", (req, res) => {
 			function (err, recent) {
 				// For each run, format the date and time appropriately
 				for (let i in recent) {
-					switch (req.acceptsLanguages(["en", "en-US"])) {
-						case "en":
+					switch (req.acceptsLanguages(["en-GB", "en-US", "en", "es-ES"])) {
+						case "en-GB":
 							recent[i].date = new Date(
 								recent[i].date * 1000
 							).toLocaleDateString("en-GB");
@@ -33,16 +33,17 @@ router.get("/history/:cat?", (req, res) => {
 								recent[i].date * 1000
 							).toLocaleDateString("en");
 							break;
+						case "es-ES":
+							recent[i].date = new Date(
+								recent[i].date * 1000
+							).toLocaleDateString("es-ES");
+							break;
 						default:
 							recent[i].date = new Date(
 								recent[i].date * 1000
 							).toLocaleDateString("en");
 							break;
 					}
-					/*recent[i].date = new Date(recent[i].date * 1000).toLocaleDateString(
-						req.headers["accept-language"].substr(0, 5) // "en-GB"
-					);*/
-
 					recent[i].time = timeFormat(recent[i].time);
 					recent[i].nationality = getFlag(recent[i].nationality);
 				}
@@ -91,8 +92,8 @@ router.get("/history/:cat?", (req, res) => {
 
 					rows[i].nationality = getFlag(rows[i].nationality);
 					// Properly format the runs date, time, and duration
-					switch (req.acceptsLanguages(["en", "en-US"])) {
-						case "en":
+					switch (req.acceptsLanguages(["en-GB", "en-US", "en", "es-ES"])) {
+						case "en-GB":
 							rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(
 								"en-GB"
 							);
@@ -100,6 +101,11 @@ router.get("/history/:cat?", (req, res) => {
 						case "en-US":
 							rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(
 								"en"
+							);
+							break;
+						case "es-ES":
+							rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(
+								"es-ES"
 							);
 							break;
 						default:
@@ -120,6 +126,8 @@ router.get("/history/:cat?", (req, res) => {
 					"SELECT readable FROM categories WHERE abbreviation = ?",
 					req.params.cat,
 					function (err, category) {
+						if (err) throw err;
+						if (!category) res.send("No category found");
 						res.render("history", {
 							category: category.readable,
 							history: rows,

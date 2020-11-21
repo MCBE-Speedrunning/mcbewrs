@@ -15,6 +15,9 @@ html(lang="en")
 		link(rel="stylesheet", href="/stylesheets/style.css")
 		#colorScheme
 	body
+		.alert.alert-danger.alert-dismissible.fade.show(role="alert") This website is in beta
+			button.close(type="button", data-dismiss="alert", aria-label="Close")
+				span(aria-hidden="true") &times;
 		include nav.pug
 		.container
 			block content
@@ -33,4 +36,8 @@ html(lang="en")
 			integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"
 		)
 		script(src="/javascripts/main.js", defer="")
-		script(async, src="https://cdn.jsdelivr.net/npm/pwacompat", crossorigin="anonymous")
+		script(
+			async,
+			src="https://cdn.jsdelivr.net/npm/pwacompat",
+			crossorigin="anonymous"
+		)
