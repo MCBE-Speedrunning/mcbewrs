@@ -30,6 +30,14 @@ function preferesDark() {
 	//Add the dark mode css
 	document.getElementById("colorScheme").innerHTML =
 		'<link rel="stylesheet" type="text/css" href="/stylesheets/dark.css">';
+	document.querySelectorAll(".table").forEach((el) => {
+		el.classList.remove("table-light");
+		el.classList.add("table-dark");
+	});
+	document.querySelectorAll("nav").forEach((el) => {
+		el.classList.remove("navbar-light");
+		el.classList.add("navbar-dark");
+	});
 }
 
 // This function is used whenever light preferance is used
@@ -41,6 +49,14 @@ function preferesLight() {
 	document.getElementById("colorPreferance").checked = false;
 	document.getElementById("colorScheme").innerHTML =
 		'<link rel="stylesheet" type="text/css" href="/stylesheets/light.css">';
+	document.querySelectorAll(".table").forEach((el) => {
+		el.classList.remove("table-dark");
+		el.classList.add("table-light");
+	});
+	document.querySelectorAll("nav").forEach((el) => {
+		el.classList.remove("navbar-dark");
+		el.classList.add("navbar-light");
+	});
 }
 
 //When the user changes their native color scheme make sure to change too
@@ -70,18 +86,6 @@ if (preferedColorScheme == "Dark") {
 document
 	.getElementById("colorPreferance")
 	.addEventListener("click", colorChange, true);
-
-/*
-// Dropdown
-const dropdown_menu = document.getElementById("dropdown_menu");
-document.getElementById("dropdown").addEventListener("click", () => {
-	if (dropdown_menu.style.display == "block") {
-		dropdown_menu.style.display = "none";
-	} else if (dropdown_menu.style.display == "none") {
-		dropdown_menu.style.display = "block";
-	}
-});
-*/
 
 // Use twemoji's
 window.addEventListener("load", () => {

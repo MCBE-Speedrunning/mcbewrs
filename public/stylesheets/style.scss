@@ -6,57 +6,10 @@ html.transition *:after {
 	transition-delay: 0;
 }
 body {
-	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 	background-repeat: no-repeat;
 	background-size: cover;
 	nav {
-		div.nav {
-			display: inline-block;
-			position: relative;
-			margin: 0;
-			padding: 0;
-			background-color: #333;
-			width: 100%;
-			/* Safari */
-			position: -webkit-sticky;
-			position: sticky;
-			-webkit-user-select: none; /* Safari */
-			-moz-user-select: none; /* Firefox */
-			-ms-user-select: none; /* IE10+/Edge */
-			user-select: none; /* Standard */
-			top: 0;
-		}
-		div.left {
-			float: left;
-		}
-		div.right {
-			float: right;
-		}
-		div.nav-item {
-			cursor: pointer;
-			a {
-				display: inline-block;
-				color: white;
-				text-align: center;
-				padding: 14px 16px;
-				text-decoration: none;
-			}
-			a:hover {
-				background-color: #111;
-			}
-			#dropdown_menu {
-				position: relative;
-				background-color: #333;
-				a {
-					display: block;
-				}
-			}
-		}
-		.active {
-			background-color: #4caf50;
-		}
-		/* Button color preferance start */
-
+		backdrop-filter: blur(5px);
 		.switchA {
 			padding: 5px !important;
 			/* The switch - the box around the slider */
@@ -142,16 +95,11 @@ body {
 			text-align: right;
 		}
 	}
-}
-
-table {
-	border-collapse: collapse;
-	width: 80%;
-	margin-left: auto;
-	margin-right: auto;
-
-	td {
-		border: 1px solid black;
+	.input-group {
+		width: 50%;
+	}
+	.form-control {
+		width: auto;
 	}
 }
 

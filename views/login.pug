@@ -8,11 +8,12 @@ block content
 		else
 			h2 #{session.success}
 		form(method="POST", action="/admin/login")
-			p
-				label Username:
-				input(type="text", name="username")
-			p
-				label Password:
-				input(type="password", name="password")
-			p
-				input(type="submit", value="Login")
+			.form-group
+				p
+					label Username:
+					input.form-control(type="text", name="username", required)
+				p
+					label Password:
+					input.form-control(type="password", name="password", required)
+				p
+					input.btn.btn-primary(type="submit", value="Login")

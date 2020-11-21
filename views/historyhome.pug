@@ -5,53 +5,59 @@ block content
 		h1 Minecraft: Bedrock Edition
 		h2 Recent World Records
 		h3 Full Game Runs
-		table
-			tr
-				th Date
-				th Category
-				th Time+Video
-				th Player
-				th Nation
-			each run in main
+		table.table.table-hover.table-sm.table-striped
+			thead
 				tr
-					td= run.date
-					td
-						a(href='/history/' + run.category) #{run.readable}
-					td
-						a(href=run.link, target="_blank") #{run.time}
-					td= run.name
-					td.nationality= run.nationality
+					th(scope="col") Date
+					th(scope="col") Category
+					th(scope="col") Time+Video
+					th(scope="col") Player
+					th(scope="col") Nation
+			tbody
+				each run in main
+					tr
+						td= run.date
+						td
+							a(href='/history/' + run.category) #{run.readable}
+						td
+							a(href=run.link, target="_blank") #{run.time}
+						td= run.name
+						td.nationality= run.nationality
 		h3 Individual Levels
-		table
-			tr
-				th Date
-				th Category
-				th Time+Video
-				th Player
-				th Nation
-			each run in il
+		table.table.table-hover.table-sm.table-striped
+			thead
 				tr
-					td= run.date
-					td
-						a(href='/history/' + run.category) #{run.readable}
-					td
-						a(href=run.link, target="_blank") #{run.time}
-					td= run.name
-					td.nationality= run.nationality
+					th(scope="col") Date
+					th(scope="col") Category
+					th(scope="col") Time+Video
+					th(scope="col") Player
+					th(scope="col") Nation
+			tbody
+				each run in il
+					tr
+						td= run.date
+						td
+							a(href='/history/' + run.category) #{run.readable}
+						td
+							a(href=run.link, target="_blank") #{run.time}
+						td= run.name
+						td.nationality= run.nationality
 		h3 Category Extensions
-		table
-			tr
-				th Date
-				th Category
-				th Time+Video
-				th Player
-				th Nation
-			each run in catext
+		table.table.table-hover.table-sm.table-striped
+			thead
 				tr
-					td= run.date
-					td
-						a(href='/history/' + run.category) #{run.readable}
-					td
-						a(href=run.link, target="_blank") #{run.time}
-					td= run.name
-					td.nationality= run.nationality
+					th(scope="col") Date
+					th(scope="col") Category
+					th(scope="col") Time+Video
+					th(scope="col") Player
+					th(scope="col") Nation
+			tbody
+				each run in catext
+					tr
+						td= run.date
+						td
+							a(href='/history/' + run.category) #{run.readable}
+						td
+							a(href=run.link, target="_blank") #{run.time}
+						td= run.name
+						td.nationality= run.nationality

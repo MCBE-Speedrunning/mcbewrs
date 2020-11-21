@@ -3,60 +3,89 @@ extends layout
 block content
 	.home
 		h1 Add a new run
-		form(method="POST", and, action="/admin/add")
-			p
-				label Name(s)
-				input(
-					name="runners",
-					type="text",
-					value="",
-					placeholder="Runner's name",
-					required
-				)
-			p
-				label Category
-					select(name="category")
-						- for (cat in categories)
-							option(value=categories[cat].abbreviation) #{categories[cat].readable}
-			p
-				label Date
-				input(name="date", type="date", value=0, required)
-				label Time
-				input(name="date_time", type="time", required)
-			p
-				label Time
+		.form-group
+			form(method="POST", and, action="/admin/add")
 				p
-					label Hours
-					input(name="hour", type="number", value=0)
-					label Minutes
-					input(name="minutes", type="number", value=0)
-					br
-					br
-					label Seconds
-					input(name="seconds", type="number", value=0)
-					label Milliseconds
-					input(name="milliseconds", type="number", value=0)
-
-			p
-				label Platform
-				input(name="platform", type="text", value="", required)
-			p
-				label Seed
-				input(name="seed", type="text", value="")
-			p
-				label Version
-				input(name="version", type="text", value="", required)
-			p
-				label Input Method
-					select(name="input")
-						option(value="Keyboard & Mouse") Keyboard & Mouse
-						option(value="Controller") Controller
-						option(value="Touchscreen") Touchscreen
-						option(value="Hybrid (C&TS)") Hybrid (C&TS)
-						option(value="Hybrid (C&KM)") Hybrid (C&KM)
-						option(value="Hybrid (KM&TS)") Hybrid (KM&TS)
-			p
-				label Link
-				input(name="link", type="text", value="")
-			button#add(type="submit")
-				| Submit
+					label Name(s)
+					input.form-control(
+						name="runners",
+						type="text",
+						value="",
+						placeholder="Runner's name",
+						required
+					)
+				p
+					label Category
+						select.form-control(name="category")
+							- for (cat in categories)
+								option(value=categories[cat].abbreviation) #{categories[cat].readable}
+				p
+					label Date
+					input(name="date", type="date", value=0, required)
+					label Time
+					input(name="date_time", type="time", required)
+				p
+					label Time
+					.input-group
+						.input-group-prepend
+							span.input-group-text h
+						input.form-control(
+							name="hour",
+							type="number",
+							value=0,
+							min=0,
+							aria-label="Hours"
+						)
+						.input-group-prepend
+							span.input-group-text m
+						input.form-control(
+							name="minutes",
+							type="number",
+							value=0,
+							min=0,
+							max=59,
+							aria-label="Minutes"
+						)
+						.input-group-prepend
+							span.input-group-text s
+						input.form-control(
+							name="seconds",
+							type="number",
+							value=0,
+							min=0,
+							max=59,
+							aria-label="Seconds"
+						)
+						.input-group-prepend
+							span.input-group-text ms
+						input.form-control(
+							name="milliseconds",
+							type="number",
+							value=0,
+							min=0,
+							max=999,
+							aria-label="Miliseconds"
+						)
+				p
+					label Platform
+					input.form-control(name="platform", type="text", value="", required)
+				p
+					label Seed
+					input.form-control(name="seed", type="text", value="")
+				p
+					label Version
+					input.form-control(name="version", type="text", value="", required)
+				p
+					label Input Method
+						select.form-control(name="input")
+							option(value="Keyboard & Mouse") Keyboard & Mouse
+							option(value="Controller") Controller
+							option(value="Touchscreen") Touchscreen
+							option(value="Hybrid (C&TS)") Hybrid (C&TS)
+							option(value="Hybrid (C&KM)") Hybrid (C&KM)
+							option(value="Hybrid (KM&TS)") Hybrid (KM&TS)
+				p
+					label Link
+					input.form-control(name="link", type="text", value="")
+				button#add.btn.btn-primary(type="submit")
+					| Submit

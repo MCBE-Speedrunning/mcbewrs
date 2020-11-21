@@ -98,6 +98,7 @@ router.get("/add", restrict, (req, res) => {
 
 router.post("/add", restrict, (req, res) => {
 	const run = req.body;
+	console.log(req.body);
 	// Multiple runners can be input by seperating them with ,
 	run.runners = run.runners.trim().split(",");
 	// Convert html date format to epoch ms then convert to seconds
@@ -113,7 +114,7 @@ router.post("/add", restrict, (req, res) => {
 	// This ensures that the site will display 3 significant figures
 	if (parseInt(run.milliseconds, 10))
 		run.time += parseInt(run.milliseconds, 10) / 1000 + 0.0001;
-
+	console.log(run);
 	leaderboard.serialize(() => {
 		leaderboard.run("INSERT INTO runs VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", [
 			run.category,
@@ -133,7 +134,7 @@ router.post("/add", restrict, (req, res) => {
 
 		// TODO: Make page stop loading when done!
 		// Insert the run/runner pairs
-		for (let i = 0, len = run.runners.length; i < len; i++)
+		for (let i = 0; i < run.runners.length - 1; i++)
 			leaderboard.run(
 				"INSERT INTO pairs VALUES((SELECT Count() FROM runs), (SELECT rowid FROM runners WHERE name = ?))",
 				[run.runners[i]]
@@ -144,7 +145,7 @@ router.post("/add", restrict, (req, res) => {
 router.get("/pull", restrict, (req, res) => {
 	exec("git pull", (error, stdout, stderr) => {
 		if (error) throw err;
-		res.send(`Pulling complete \n ${stderr} \n ${stdout}`);
+		res.send(`Pulling complete \n ${stderr}`);
 	});
 });
 

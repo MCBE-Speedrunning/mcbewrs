@@ -22,9 +22,26 @@ router.get("/history/:cat?", (req, res) => {
 			function (err, recent) {
 				// For each run, format the date and time appropriately
 				for (let i in recent) {
-					recent[i].date = new Date(recent[i].date * 1000).toLocaleDateString(
+					switch (req.acceptsLanguages(["en", "en-US"])) {
+						case "en":
+							recent[i].date = new Date(
+								recent[i].date * 1000
+							).toLocaleDateString("en-GB");
+							break;
+						case "en-US":
+							recent[i].date = new Date(
+								recent[i].date * 1000
+							).toLocaleDateString("en");
+							break;
+						default:
+							recent[i].date = new Date(
+								recent[i].date * 1000
+							).toLocaleDateString("en");
+							break;
+					}
+					/*recent[i].date = new Date(recent[i].date * 1000).toLocaleDateString(
 						req.headers["accept-language"].substr(0, 5) // "en-GB"
-					);
+					);*/
 
 					recent[i].time = timeFormat(recent[i].time);
 					recent[i].nationality = getFlag(recent[i].nationality);
@@ -74,9 +91,23 @@ router.get("/history/:cat?", (req, res) => {
 
 					rows[i].nationality = getFlag(rows[i].nationality);
 					// Properly format the runs date, time, and duration
-					rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(
-						req.headers["accept-language"].substr(0, 5) // "en-GB"
-					);
+					switch (req.acceptsLanguages(["en", "en-US"])) {
+						case "en":
+							rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(
+								"en-GB"
+							);
+							break;
+						case "en-US":
+							rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(
+								"en"
+							);
+							break;
+						default:
+							rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(
+								"en"
+							);
+							break;
+					}
 
 					rows[i].time = timeFormat(rows[i].time);
 					rows[i].duration = Math.trunc(rows[i].duration / 86400);

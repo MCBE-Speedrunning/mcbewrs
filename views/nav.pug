@@ -1,15 +1,30 @@
-nav
-	.nav
-		- var pages = { Home: '/', History: '/history', About: '/about' };
-		each menu, key in pages
-			if (key == pageName)
-				.active.left.nav-item
-					a(href=`${menu}`)= key
-			else
-				.left.nav-item
-					a(href=`${menu}`)= key
-		.right.nav-item
-			a.switchA
-				label.switch
-					input#colorPreferance(type="checkbox")
-					span.slider.round(id=slider)
+nav.navbar.navbar-expand-lg.navbar-dark.sticky-top
+	.container-fluid
+		a.navbar-brand(href="/") mcbewrs
+		button.navbar-toggler(
+			type="button",
+			data-toggle="collapse",
+			data-target="#navbarSupportedContent",
+			aria-controls="navbarSupportedContent",
+			aria-expanded="false",
+			aria-label="Toggle navigation"
+		)
+			span.navbar-toggler-icon
+		#navbarSupportedContent.collapse.navbar-collapse
+			- const links = [{name: "Home", link: "/"}, {name: "About", link: "/about"}, {name: "History", link: "/history"}, {name: "Players", link: "/players", disabled: true}];
+				ul.navbar-nav.mr-auto.mb-2.mb-lg-0
+					each i in links
+						if !i.disabled
+							li.nav-item
+								//if location.pathname == i.link
+								//a.nav-link.active(aria-current=i.name, href=i.link)=i.name
+								//else
+								a.nav-link(aria-current=i.name, href=i.link)= i.name
+						else
+							li.nav-item
+								a.nav-link.disabled(href=i.link, tabindex="-1", aria-disabled="true")= i.name
+			.right.nav-item
+				a.switchA
+					label.switch
+						input#colorPreferance(type="checkbox")
+						span.slider.round(id=slider)

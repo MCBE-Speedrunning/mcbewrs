@@ -1,6 +1,15 @@
 body {
 	background-color: #ffffff;
+	background-image: url("/assets/light_bg.png");
 	color: #000000;
+	nav {
+		background-color: #f8f9fa96;
+	}
+	table {
+		/* Important to overide bootstrap's variables */
+		--bs-table-bg: #f8f9fa96 !important;
+		--bs-table-striped-bg: #ecedee96 !important;
+	}
 	.footer {
 		color: #ffffff;
 		background-color: #333333ff;

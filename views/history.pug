@@ -4,26 +4,28 @@ block content
 	.leaderboard
 		h1 #{category}
 		h1 History
-		table
-			tr
-				th Date
-				th Time+Video
-				th Player
-				th Nation
-				th Platform
-				th Input
-				th Version
-				th Seed
-				th Duration (Days)
-			each run in history
+		table.table.table-hover.table-sm.table-striped
+			thead
 				tr
-					td= run.date
-					td
-						a(href=run.link, target="_blank") #{run.time}
-					td= run.name
-					td.nationality= run.nationality
-					td= run.platform
-					td= run.input
-					td= run.version
-					td= run.seed
-					td= run.duration
+					th(scope="col") Date
+					th(scope="col") Time
+					th(scope="col") Player
+					th(scope="col") Nation
+					th(scope="col") Platform
+					th(scope="col") Input
+					th(scope="col") Version
+					th(scope="col") Seed
+					th(scope="col") Duration (Days)
+			tbody
+				each run in history
+					tr
+						td= run.date
+						td
+							a(href=run.link, target="_blank") #{run.time}
+						td= run.name
+						td.nationality= run.nationality
+						td= run.platform
+						td= run.input
+						td= run.version
+						td= run.seed
+						td= run.duration

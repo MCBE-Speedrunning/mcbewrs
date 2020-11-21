@@ -5,7 +5,7 @@
  */
 
 const app = require("./app");
-const debug = require("debug")("puppies:server");
+const debug = require("debug")("mcbewrs:server");
 const http = require("http");
 const fs = require("fs");
 

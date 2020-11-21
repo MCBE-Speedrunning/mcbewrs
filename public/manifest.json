@@ -1,0 +1,14 @@
+{
+	"start_url": "/",
+	"name": "mcbe WR History",
+	"manifest_version": 0,
+	"background_color": "#4a4a4d",
+	"theme_color": "#007bff",
+	"short_name": "mcbewrs",
+	"display": "fullscreen",
+	"description": "WR History of mcbe",
+	"lang": "en",
+	"scope": "/",
+	"orientation": "portrait-primary",
+	"dir": "ltr"
+}
