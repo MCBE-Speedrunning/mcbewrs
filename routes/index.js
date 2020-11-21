@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 const { getFlag, timeFormat } = require("../utils/functions.js");
 
-/* GET home page. */
+/*
+ * Home page
+ */
 router.get("/", (req, res) => {
 	res.render("index", { pageName: "Home" });
 });
@@ -11,10 +13,16 @@ router.get("/home", (req, res) => {
 	res.redirect("/");
 });
 
+/*
+ * World record history
+ */
 router.get("/history/:cat?", (req, res) => {
 	const db = req.app.get("leaderboard");
 
-	// Get recent WRs
+	/*
+	 * Get the 10 most recent world records
+	 * for each of the category types
+	 */
 	function getRecent(cat_type, callback) {
 		db.all(
 			"SELECT date, category, readable, link, time, name, nationality FROM runners, runs, pairs, categories WHERE runners.rowid = runner_id AND runs.rowid = run_id AND abbreviation = category AND type = ? ORDER BY date DESC LIMIT 10",
@@ -28,22 +36,26 @@ router.get("/history/:cat?", (req, res) => {
 								recent[i].date * 1000
 							).toLocaleDateString("en-GB");
 							break;
+
 						case "en-US":
 							recent[i].date = new Date(
 								recent[i].date * 1000
 							).toLocaleDateString("en");
 							break;
+
 						case "es-ES":
 							recent[i].date = new Date(
 								recent[i].date * 1000
 							).toLocaleDateString("es-ES");
 							break;
+
 						default:
 							recent[i].date = new Date(
 								recent[i].date * 1000
 							).toLocaleDateString("en");
 							break;
 					}
+
 					recent[i].time = timeFormat(recent[i].time);
 					recent[i].nationality = getFlag(recent[i].nationality);
 				}
@@ -91,6 +103,7 @@ router.get("/history/:cat?", (req, res) => {
 					}
 
 					rows[i].nationality = getFlag(rows[i].nationality);
+
 					// Properly format the runs date, time, and duration
 					switch (req.acceptsLanguages(["en-GB", "en-US", "en", "es-ES"])) {
 						case "en-GB":
@@ -98,16 +111,19 @@ router.get("/history/:cat?", (req, res) => {
 								"en-GB"
 							);
 							break;
+
 						case "en-US":
 							rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(
 								"en"
 							);
 							break;
+
 						case "es-ES":
 							rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(
 								"es-ES"
 							);
 							break;
+
 						default:
 							rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(
 								"en"
@@ -139,6 +155,9 @@ router.get("/history/:cat?", (req, res) => {
 	}
 });
 
+/*
+ * Player profiles
+ */
 router.get("/profile/:player?", (req, res) => {
 	const db = req.app.get("leaderboard");
 

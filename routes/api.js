@@ -12,18 +12,22 @@ function parseData(req, res, rows) {
 		case "application/json":
 			res.jsonp({ data: rows });
 			break;
+
 		case "application/xml":
 			res.set("Content-Type", "text/xml");
 			res.send(xml({ data: rows }));
 			break;
+
 		case "application/yaml":
 			res.set("Content-Type", "text/yaml");
 			res.send(safeDump({ data: rows }));
 			break;
+
 		case "application/toml":
 			res.set("Content-Type", "text/toml");
 			res.send(toToml({ data: rows }, { space: 4 }));
 			break;
+
 		default:
 			res.jsonp({ data: rows });
 			break;

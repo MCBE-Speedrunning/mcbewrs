@@ -11,7 +11,7 @@ const leaderboard = new sqlite3.Database("./data/leaderboard.db");
 function newUser(username, password, fn) {
 	hash({ password: password }, (err, pass, salt, hash) => {
 		if (err) return fn(new Error("Error during hashing"));
-		// store the salt & hash in the "db"
+		// Store the salt & hash in the "db"
 		db.run(
 			`INSERT INTO users VALUES(?, ?, ?); `,
 			[username, hash, salt],
@@ -71,7 +71,7 @@ router.post("/login", (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
-	// destroy the user's session to log them out
+	// Destroy the user's session to log them out;
 	// will be re-created next request
 	req.session.destroy(() => {
 		res.redirect("/admin/login");
