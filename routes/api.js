@@ -3,8 +3,7 @@ const router = express.Router();
 const sqlite3 = require("sqlite3").verbose();
 const xml = require("xml");
 const { safeDump } = require("js-yaml");
-var { toToml } = require('tomlify-j0.4');
-
+var { toToml } = require("tomlify-j0.4");
 
 const db = new sqlite3.Database("./data/leaderboard.db");
 
@@ -23,7 +22,7 @@ function parseData(req, res, rows) {
 			break;
 		case "application/toml":
 			res.set("Content-Type", "text/toml");
-			res.send(toToml({ data: rows }, {space: 4}));
+			res.send(toToml({ data: rows }, { space: 4 }));
 			break;
 		default:
 			res.jsonp({ data: rows });
