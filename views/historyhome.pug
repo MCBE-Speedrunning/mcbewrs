@@ -1,63 +1,34 @@
 extends layout
 
 block content
-	.leaderboardhome
-		h1 Minecraft: Bedrock Edition
-		h2 Recent World Records
-		h3 Full Game Runs
-		table.table.table-hover.table-sm.table-striped
-			thead
-				tr
-					th(scope="col") Date
-					th(scope="col") Category
-					th(scope="col") Time+Video
-					th(scope="col") Player
-					th(scope="col") Nation
-			tbody
-				each run in main
-					tr
-						td= run.date
-						td
-							a(href='/history/' + run.category) #{run.readable}
-						td
-							a(href=run.link, target="_blank") #{run.time}
-						td= run.name
-						td= run.nationality
-		h3 Individual Levels
-		table.table.table-hover.table-sm.table-striped
-			thead
-				tr
-					th(scope="col") Date
-					th(scope="col") Category
-					th(scope="col") Time+Video
-					th(scope="col") Player
-					th(scope="col") Nation
-			tbody
-				each run in il
-					tr
-						td= run.date
-						td
-							a(href='/history/' + run.category) #{run.readable}
-						td
-							a(href=run.link, target="_blank") #{run.time}
-						td= run.name
-						td= run.nationality
-		h3 Category Extensions
-		table.table.table-hover.table-sm.table-striped
-			thead
-				tr
-					th(scope="col") Date
-					th(scope="col") Category
-					th(scope="col") Time+Video
-					th(scope="col") Player
-					th(scope="col") Nation
-			tbody
-				each run in catext
-					tr
-						td= run.date
-						td
-							a(href='/history/' + run.category) #{run.readable}
-						td
-							a(href=run.link, target="_blank") #{run.time}
-						td= run.name
-						td= run.nationality
+	.home
+		h1 World Record History
+		.row
+			.card.col-sm-12
+				img.card-img-top(src="/assets/card_fullGame.png", alt="Full game image")
+				.card-body
+					h5.card-title Full Game
+					p.card-text
+					| Full Game WR History
+					p
+						a.btn.btn-primary(href="#") View
+		.row
+			.card.col-sm-6
+				img.card-img-top(
+					src="/assets/card_individualLevels.png",
+					alt="Individual levels image"
+				)
+				.card-body
+					h5.card-title Individual Levels
+					p.card-text
+					| Individual Levels WR History
+					p
+						a.btn.btn-primary(href="/history/") View
+			.card.col-sm-6
+				img.card-img-top(src="/assets/card_catExt.png", alt="Category Extensions")
+				.card-body
+					h5.card-title Category Extensions
+					p.card-text
+					| Category Extensions WR History
+					p
+						a.btn.btn-primary(href="/history/") View

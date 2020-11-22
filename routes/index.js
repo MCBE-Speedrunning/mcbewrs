@@ -6,17 +6,6 @@ const { getFlag, timeFormat } = require("../utils/functions.js");
  * Home page
  */
 router.get("/", (req, res) => {
-	res.render("index", { pageName: "Home" });
-});
-
-router.get("/home", (req, res) => {
-	res.redirect("/");
-});
-
-/*
- * World record history
- */
-router.get("/history/:cat?", (req, res) => {
 	const db = req.app.get("leaderboard");
 
 	/*
@@ -65,23 +54,36 @@ router.get("/history/:cat?", (req, res) => {
 		);
 	}
 
-	// If no category is specified, go to the history home page
-	if (typeof req.params.cat === "undefined") {
-		// Get the 10 most recent world record runs, for all 3 category types
-		getRecent("main", (returned_value) => {
-			main = returned_value;
-			getRecent("il", (returned_value) => {
-				il = returned_value;
-				getRecent("catext", (returned_value) => {
-					catext = returned_value;
-					res.render("historyhome", {
-						main: main,
-						il: il,
-						catext: catext,
-					});
+	// Get the 10 most recent world record runs, for all 3 category types
+	getRecent("main", (returned_value) => {
+		main = returned_value;
+		getRecent("il", (returned_value) => {
+			il = returned_value;
+			getRecent("catext", (returned_value) => {
+				catext = returned_value;
+				res.render("index", {
+					main: main,
+					il: il,
+					catext: catext,
 				});
 			});
 		});
+	});
+});
+
+router.get("/home", (req, res) => {
+	res.redirect("/");
+});
+
+/*
+ * World record history
+ */
+router.get("/history/:cat?", (req, res) => {
+	const db = req.app.get("leaderboard");
+
+	// If no category is specified, go to the history home page
+	if (typeof req.params.cat === "undefined") {
+		res.render("historyhome");
 	} else {
 		// Query all the runs for the specified category, sorted by date
 		db.all(
