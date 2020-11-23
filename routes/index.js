@@ -52,19 +52,18 @@ function getRecent(db, cat_type, callback) {
  * Home page
  */
 router.get("/", (req, res) => {
-	res.render("index", { pageName: "Home" });
-});
-
-router.get("/home", (req, res) => {
 	const db = req.app.get("leaderboard");
+
+	
+
 	// Get the 10 most recent world record runs, for all 3 category types
-	getRecent(db, "main", (returned_value) => {
+	getRecent("main", (returned_value) => {
 		main = returned_value;
-		getRecent(db, "il", (returned_value) => {
+		getRecent("il", (returned_value) => {
 			il = returned_value;
-			getRecent(db, "catext", (returned_value) => {
+			getRecent("catext", (returned_value) => {
 				catext = returned_value;
-				res.render("historyhome", {
+				res.render("index", {
 					main: main,
 					il: il,
 					catext: catext,
@@ -74,31 +73,19 @@ router.get("/home", (req, res) => {
 	});
 });
 
+router.get("/home", (req, res) => {
+	res.redirect("/");
+});
+
 /*
  * World record history
  */
 router.get("/history/:cat?", (req, res) => {
 	const db = req.app.get("leaderboard");
 
-	
-
 	// If no category is specified, go to the history home page
 	if (typeof req.params.cat === "undefined") {
-		// Get the 10 most recent world record runs, for all 3 category types
-		getRecent(db, "main", (returned_value) => {
-			main = returned_value;
-			getRecent(db, "il", (returned_value) => {
-				il = returned_value;
-				getRecent(db, "catext", (returned_value) => {
-					catext = returned_value;
-					res.render("historyhome", {
-						main: main,
-						il: il,
-						catext: catext,
-					});
-				});
-			});
-		});
+		res.render("historyhome");
 	} else {
 		// Query all the runs for the specified category, sorted by date
 		db.all(
