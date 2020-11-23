@@ -8,6 +8,7 @@ html.transition *:after {
 body {
 	background-repeat: no-repeat;
 	background-size: cover;
+	background-attachment: fixed;
 	nav {
 		backdrop-filter: blur(5px);
 		.switchA {
