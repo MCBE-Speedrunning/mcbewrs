@@ -3,11 +3,9 @@
  */
 function colorChange() {
 	const color_preference = document.getElementById("colorPreferance");
-	if (colorPreferance.checked == true) {
-		preferesDark();
-	} else {
-		preferesLight();
-	}
+
+	if (colorPreferance.checked == true) preferesDark();
+	else preferesLight();
 }
 
 /*
@@ -87,11 +85,8 @@ function preferesLight() {
  * color scheme make sure to change too
  */
 function handleColorChange(event) {
-	if (event.matches) {
-		preferesDark();
-	} else {
-		preferesLight();
-	}
+	if (event.matches) preferesDark();
+	else preferesLight();
 }
 
 const mql = matchMedia("(prefers-color-scheme: dark)");
@@ -100,11 +95,8 @@ mql.onchange = handleColorChange;
 const preferedColorScheme = localStorage.getItem("colorMode");
 
 // If the user already has a preferance respect it
-if (preferedColorScheme == "Light") {
-	preferesLight();
-} else {
-	preferesDark();
-}
+if (preferedColorScheme == "Light") preferesLight();
+else preferesDark();
 
 document
 	.getElementById("colorPreferance")
@@ -112,9 +104,7 @@ document
 
 // Use twemoji's
 window.addEventListener("load", () => {
-	if (screen.width >= 1079) {
+	if (screen.width >= 1079)
 		twemoji.parse(document.body, { ext: ".svg", folder: "svg" });
-	} else {
-		twemoji.parse(document.body);
-	}
+	else twemoji.parse(document.body);
 });
