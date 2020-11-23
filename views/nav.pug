@@ -11,7 +11,7 @@ nav.navbar.navbar-expand-lg.navbar-dark.sticky-top
 		)
 			span.navbar-toggler-icon
 		#navbarSupportedContent.collapse.navbar-collapse
-			- const links = [{name: "Home", link: "/"}, {name: "History", link: "/history"}, {name: "About", link: "/about"}, {name: "Players", link: "/players", disabled: true},];
+			- const links = [{name: "Home", link: "/"}, {name: "History", link: "/history"}, {name: "Players", link: "/players", disabled: true}, {name: "About", link: "/about"},];
 				ul.navbar-nav.mr-auto.mb-2.mb-lg-0
 					each i in links
 						if !i.disabled
