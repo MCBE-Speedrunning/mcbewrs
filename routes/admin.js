@@ -139,7 +139,14 @@ router.post("/add", restrict, (req, res) => {
 				"INSERT INTO pairs VALUES((SELECT Count() FROM runs), (SELECT rowid FROM runners WHERE name = ?))",
 				[run.runners[i]]
 			);
+			res.render("admin_add", {banner: {text: "Run added succesfully", status: "success"}});
 	});
+});
+
+router.post("/add", restrict, (req, res) => {
+	if(req.body.name) name = req.body.name;
+	nationality = req.body.nationality || null;
+	db.run("INSERT INTO runners VALUES(?, ?)", [name, nationality]);
 });
 
 router.get("/pull", restrict, (req, res) => {

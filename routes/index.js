@@ -1,61 +1,58 @@
 const express = require("express");
 const router = express.Router();
 const { getFlag, timeFormat } = require("../utils/functions.js");
-
-/*
-* Get the 10 most recent world records
-* for each of the category types
-*/
-function getRecent(db, cat_type, callback) {
-	db.all(
-		"SELECT date, category, readable, link, time, name, nationality FROM runners, runs, pairs, categories WHERE runners.rowid = runner_id AND runs.rowid = run_id AND abbreviation = category AND type = ? ORDER BY date DESC LIMIT 10",
-		cat_type,
-		function (err, recent) {
-			// For each run, format the date and time appropriately
-			for (let i in recent) {
-				switch (req.acceptsLanguages(["en-GB", "en-US", "en", "es-ES"])) {
-					case "en-GB":
-						recent[i].date = new Date(
-							recent[i].date * 1000
-						).toLocaleDateString("en-GB");
-						break;
-
-					case "en-US":
-						recent[i].date = new Date(
-							recent[i].date * 1000
-						).toLocaleDateString("en");
-						break;
-
-					case "es-ES":
-						recent[i].date = new Date(
-							recent[i].date * 1000
-						).toLocaleDateString("es-ES");
-						break;
-
-					default:
-						recent[i].date = new Date(
-							recent[i].date * 1000
-						).toLocaleDateString("en");
-						break;
-				}
-
-				recent[i].time = timeFormat(recent[i].time);
-				recent[i].nationality = getFlag(recent[i].nationality);
-			}
-
-			callback(recent);
-		}
-	);
-}
+const sqlite3 = require("sqlite3").verbose();
+const db = new sqlite3.Database("./data/leaderboard.db");
 
 /*
  * Home page
  */
 router.get("/", (req, res) => {
-	const db = req.app.get("leaderboard");
-
+	/*
+	 * Get the 10 most recent world records
+	 * for each of the category types
+	 */
+	function getRecent(cat_type, callback) {
+		db.all(
+			"SELECT date, category, readable, link, time, name, nationality FROM runners, runs, pairs, categories WHERE runners.rowid = runner_id AND runs.rowid = run_id AND abbreviation = category AND type = ? ORDER BY date DESC LIMIT 10",
+			cat_type,
+			function (err, recent) {
+				// For each run, format the date and time appropriately
+				for (let i in recent) {
+					switch (req.acceptsLanguages(["en-GB", "en-US", "en", "es-ES"])) {
+						case "en-GB":
+							recent[i].date = new Date(recent[i].date * 1000).toLocaleDateString(
+								"en-GB"
+							);
+							break;
 	
-
+						case "en-US":
+							recent[i].date = new Date(recent[i].date * 1000).toLocaleDateString(
+								"en"
+							);
+							break;
+	
+						case "es-ES":
+							recent[i].date = new Date(recent[i].date * 1000).toLocaleDateString(
+								"es-ES"
+							);
+							break;
+	
+						default:
+							recent[i].date = new Date(recent[i].date * 1000).toLocaleDateString(
+								"en"
+							);
+							break;
+					}
+	
+					recent[i].time = timeFormat(recent[i].time);
+					recent[i].nationality = getFlag(recent[i].nationality);
+				}
+	
+				callback(recent);
+			}
+		);
+	}
 	// Get the 10 most recent world record runs, for all 3 category types
 	getRecent("main", (returned_value) => {
 		main = returned_value;
