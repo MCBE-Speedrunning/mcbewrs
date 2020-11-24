@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { getFlag, timeFormat } = require("../utils/functions.js");
+const {
+	getFlag,
+	timeFormat,
+	durationFormat,
+} = require("../utils/functions.js");
 const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database("./data/leaderboard.db");
 
@@ -14,7 +18,13 @@ router.get("/", (req, res) => {
 	 */
 	function getRecent(cat_type, callback) {
 		db.all(
-			"SELECT date, category, readable, link, time, name, nationality FROM runners, runs, pairs, categories WHERE runners.rowid = runner_id AND runs.rowid = run_id AND abbreviation = category AND type = ? ORDER BY date DESC LIMIT 10",
+			"SELECT date, category, readable, link, time, name, nationality \
+			FROM runners, runs, pairs, categories 							\
+			WHERE runners.rowid = runner_id 								\
+			AND runs.rowid = run_id 										\
+			AND abbreviation = category 									\
+			AND type = ? 													\
+			ORDER BY date DESC LIMIT 10",
 			cat_type,
 			(err, recent) => {
 				// For each run, format the date and time appropriately
@@ -53,6 +63,7 @@ router.get("/", (req, res) => {
 			}
 		);
 	}
+
 	// Get the 10 most recent world record runs, for all 3 category types
 	getRecent("main", (returned_value) => {
 		main = returned_value;
@@ -86,7 +97,12 @@ router.get("/history/:cat?", (req, res) => {
 	} else {
 		// Query all the runs for the specified category, sorted by date
 		db.all(
-			"SELECT date, time, name, nationality, platform, input, version, seed, duration link FROM runners, runs, pairs WHERE runners.rowid = runner_id AND runs.rowid = run_id AND category = ? ORDER BY date ASC",
+			"SELECT date, time, name, nationality, platform, input, version, seed, duration link \
+			FROM runners, runs, pairs 															 \
+			WHERE runners.rowid = runner_id 													 \
+			AND runs.rowid = run_id 															 \
+			AND category = ? 																	 \
+			ORDER BY date ASC",
 			req.params.cat,
 			(err, rows) => {
 				for (i = 0, len = rows.length; i < len; i++) {
@@ -149,11 +165,21 @@ router.get("/history/:cat?", (req, res) => {
 router.get("/profile/:player?", (req, res) => {
 	const db = req.app.get("leaderboard");
 
+	// Get all the players runs
 	db.all(
-		"SELECT date, readable, link, time, platform, version FROM runs, categories, pairs WHERE pairs.run_id = runs.rowid AND pairs.runner_id = ? AND runs.category = categories.abbreviation ORDER BY date",
+		"SELECT date, readable, link, time, platform, version, duration, wr \
+		FROM runs, categories, pairs 										\
+		WHERE pairs.run_id = runs.rowid 									\
+		AND pairs.runner_id = ? 											\
+		AND runs.category = categories.abbreviation 						\
+		ORDER BY date",
 		req.params.player,
 		(err, runs) => {
+			let current_wrs = 0;
+			let total_duration = 0;
+
 			for (i = 0, len = runs.length; i < len; i++) {
+				// Format the date according to the users browser settings
 				switch (req.acceptsLanguages(["en-GB", "en-US", "en", "es-ES"])) {
 					case "en-GB":
 						runs[i].date = new Date(runs[i].date * 1000).toLocaleDateString(
@@ -179,27 +205,38 @@ router.get("/profile/:player?", (req, res) => {
 						);
 						break;
 				}
+
+				// Update stats, and format the runs time and duration
+				total_duration += runs[i].duration;
+
 				runs[i].time = timeFormat(runs[i].time);
+				runs[i].duration = durationFormat(runs[i].duration);
+
+				if (runs[i].wr === 1) current_wrs++;
 			}
 
+			// Get the number of unique categories the player has had records in
 			db.get(
-				"SELECT COUNT(DISTINCT category) AS count, COUNT(DISTINCT abbreviation) AS total FROM runs, pairs, categories WHERE runs.rowid = run_id AND runner_id = ?",
+				"SELECT COUNT(DISTINCT category) AS count, COUNT(DISTINCT abbreviation) AS total \
+				FROM runs, pairs, categories 													 \
+				WHERE runs.rowid = run_id 													   	 \
+				AND runner_id = ?",
 				req.params.player,
 				(err, count) => {
 					unique_cats_count = count.count;
 					total_cats = count.total;
 
+					// Get the runners name and render the page
 					db.get(
-						"SELECT name FROM runners WHERE name = ?",
+						"SELECT name FROM runners WHERE rowid = ?",
 						req.params.player,
 						(err, runner) => {
 							res.render("profile", {
 								player: runner.name,
-								current_wrs: 0,
+								current_wrs: current_wrs,
 								total_wrs: runs.length,
 								unique_cats: unique_cats_count + " / " + total_cats,
-								total_duration: 0,
-								days_with_wr: 0,
+								total_duration: durationFormat(total_duration),
 								runs: runs,
 							});
 						}
@@ -210,6 +247,9 @@ router.get("/profile/:player?", (req, res) => {
 	);
 });
 
+/*
+ * About page
+ */
 router.get("/about", (req, res) => {
 	res.render("about", {
 		pageName: "About MCBEWRS",

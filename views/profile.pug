@@ -4,35 +4,37 @@ block content
 	.leaderboard
 		h1 #{player}
 		h1 Stats
-		table
-			tr
-				th Current WRs
-				th Total WRs
-				th Unique Categories
-				th Total Duration (Days)
-				th Days having at Least 1 WR
-			tr
-				td= current_wrs
-				td= total_wrs
-				td= unique_cats
-				td= total_duration
-				td= days_with_wr
-		h1 Official WRs
-		table
-			tr
-				th Date
-				th Category
-				th Time+Video
-				th Platform
-				th Version
-				th Duration (Days)
-			each run in runs
+		table.table.table-hover.table-sm.table-striped
+			thead
 				tr
-					td= run.date
-					td
-						a(href="#") #{run.readable}
-					td
-						a(href=run.link, target="_blank") #{run.time}
-					td= run.platform
-					td= run.version
-					td= run.duration
+					th Current WRs
+					th Total WRs
+					th Unique Categories
+					th Total Duration (Days)
+			tbody
+				tr
+					td= current_wrs
+					td= total_wrs
+					td= unique_cats
+					td= total_duration
+		h1 Official WRs
+		table.table.table-hover.table-sm.table-striped
+			thead
+				tr
+					th Date
+					th Category
+					th Time+Video
+					th Platform
+					th Version
+					th Duration (Days)
+			tbody
+				each run in runs
+					tr
+						td= run.date
+						td
+							a(href="#") #{run.readable}
+						td
+							a(href=run.link, target="_blank") #{run.time}
+						td= run.platform
+						td= run.version
+						td= run.duration
