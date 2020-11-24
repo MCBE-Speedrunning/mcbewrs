@@ -97,22 +97,29 @@ router.get("/login", authenticateToken, (req, res) => {
 });
 
 router.post("/login", (req, res) => {
-	auth.get("SELECT * FROM users WHERE username=?; ", req.body.username, (err, user) => {
-		// Query the db for the given username
-		if (!user) parseData(req, res, {error: "User not found"});
-		// Apply the same algorithm to the POSTed password, applying
-		// the hash against the pass / salt, if there is a match we
-		// found the user
-		hash({ password: req.body.password, salt: user.salt }, (err, pass, salt, hash) => {
-			if (err) parseData(req, res, err);
-			if (hash === user.password) {
-				const token = generateAccessToken({ username: req.body.username });
-				parseData(req, res, {token: token});
-				return;
-			}
-			parseData(req, res, {error: "Wrong passowrd"});;
-		});
-	});
+	auth.get(
+		"SELECT * FROM users WHERE username=?; ",
+		req.body.username,
+		(err, user) => {
+			// Query the db for the given username
+			if (!user) parseData(req, res, { error: "User not found" });
+			// Apply the same algorithm to the POSTed password, applying
+			// the hash against the pass / salt, if there is a match we
+			// found the user
+			hash(
+				{ password: req.body.password, salt: user.salt },
+				(err, pass, salt, hash) => {
+					if (err) parseData(req, res, err);
+					if (hash === user.password) {
+						const token = generateAccessToken({ username: req.body.username });
+						parseData(req, res, { token: token });
+						return;
+					}
+					parseData(req, res, { error: "Wrong passowrd" });
+				}
+			);
+		}
+	);
 });
 
 module.exports = router;

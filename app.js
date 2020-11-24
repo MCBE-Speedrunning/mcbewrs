@@ -10,7 +10,7 @@ const compression = require("compression");
 const fs = require("fs");
 const sassMiddleware = require("node-sass-middleware");
 const session = require("express-session");
-const csurf = require('csurf')
+const csurf = require("csurf");
 if (process.env.NODE_ENV === "development") {
 	var sqlite3 = require("sqlite3").verbose();
 	var debug = true;
@@ -98,7 +98,7 @@ app.use(
 	})
 );
 app.use(cookieParser());
-app.use(csurf({ cookie: true }))
+app.use(csurf({ cookie: true }));
 
 app.use("/", require("./routes/index"));
 app.use("/api", require("./routes/api"));
@@ -114,7 +114,7 @@ app.use(function (err, req, res, next) {
 	res.locals.message = err.message;
 	res.locals.error = req.app.get("env") === "development" ? err : {};
 
-	if(req.path.includes("/api")){
+	if (req.path.includes("/api")) {
 		res.status(err.status);
 		parseData(req, res, err);
 	} else {

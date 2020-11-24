@@ -141,7 +141,9 @@ router.post("/add", restrict, (req, res) => {
 				"INSERT INTO pairs VALUES((SELECT Count() FROM runs), (SELECT rowid FROM runners WHERE name = ?))",
 				[run.runners[i]]
 			);
-			res.render("admin_add", {banner: {text: "Run added succesfully", status: "success"}});
+		res.render("admin_add", {
+			banner: { text: "Run added succesfully", status: "success" },
+		});
 	});
 
 	// TODO: This does not update the duration for the last run
@@ -175,11 +177,13 @@ router.post("/add", restrict, (req, res) => {
 });
 
 router.post("/new_user", restrict, (req, _res) => {
-	if(req.body.name) name = req.body.name;
+	if (req.body.name) name = req.body.name;
 	nationality = req.body.nationality || null;
 	db.run("INSERT INTO runners VALUES(?, ?)", [name, nationality], (err) => {
 		if (err) next(err);
-		res.render("new_user", {banner: {text: "Runner added succesfully", status: "success"}})
+		res.render("new_user", {
+			banner: { text: "Runner added succesfully", status: "success" },
+		});
 	});
 });
 

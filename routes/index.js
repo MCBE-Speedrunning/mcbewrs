@@ -21,34 +21,34 @@ router.get("/", (req, res) => {
 				for (let i in recent) {
 					switch (req.acceptsLanguages(["en-GB", "en-US", "en", "es-ES"])) {
 						case "en-GB":
-							recent[i].date = new Date(recent[i].date * 1000).toLocaleDateString(
-								"en-GB"
-							);
+							recent[i].date = new Date(
+								recent[i].date * 1000
+							).toLocaleDateString("en-GB");
 							break;
-	
+
 						case "en-US":
-							recent[i].date = new Date(recent[i].date * 1000).toLocaleDateString(
-								"en"
-							);
+							recent[i].date = new Date(
+								recent[i].date * 1000
+							).toLocaleDateString("en");
 							break;
-	
+
 						case "es-ES":
-							recent[i].date = new Date(recent[i].date * 1000).toLocaleDateString(
-								"es-ES"
-							);
+							recent[i].date = new Date(
+								recent[i].date * 1000
+							).toLocaleDateString("es-ES");
 							break;
-	
+
 						default:
-							recent[i].date = new Date(recent[i].date * 1000).toLocaleDateString(
-								"en"
-							);
+							recent[i].date = new Date(
+								recent[i].date * 1000
+							).toLocaleDateString("en");
 							break;
 					}
-	
+
 					recent[i].time = timeFormat(recent[i].time);
 					recent[i].nationality = getFlag(recent[i].nationality);
 				}
-	
+
 				callback(recent);
 			}
 		);
@@ -189,22 +189,22 @@ router.get("/profile/:player?", (req, res) => {
 					unique_cats_count = count.count;
 					total_cats = count.total;
 
-
-			db.get(
-				"SELECT name FROM runners WHERE name = ?",
-				req.params.player,
-				(err, runner) => {
-					res.render("profile", {
-						player: runner.name,
-						current_wrs: 0,
-						total_wrs: runs.length,
-						unique_cats: unique_cats_count + " / " + total_cats,
-						total_duration: 0,
-						days_with_wr: 0,
-						runs: runs,
-					});
-				});}
-				
+					db.get(
+						"SELECT name FROM runners WHERE name = ?",
+						req.params.player,
+						(err, runner) => {
+							res.render("profile", {
+								player: runner.name,
+								current_wrs: 0,
+								total_wrs: runs.length,
+								unique_cats: unique_cats_count + " / " + total_cats,
+								total_duration: 0,
+								days_with_wr: 0,
+								runs: runs,
+							});
+						}
+					);
+				}
 			);
 		}
 	);
