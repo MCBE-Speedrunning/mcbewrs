@@ -1,4 +1,36 @@
 /*
+ * Convert seconds to human readable time
+ */
+function timeFormat(time) {
+	const hours = ~~(time / 3600);
+	const minutes = ~~((time % 3600) / 60);
+	const seconds = ~~time % 60;
+	let output = "";
+
+	if (hours > 0) output += hours + ":" + (minutes < 10 ? "0" : "");
+
+	output += minutes + ":" + (seconds < 10 ? "0" : "");
+	output += seconds;
+
+	// Check if the time has milliseconds, and remove the trailing .0001
+	if (!isNaN(time) && time.toString().indexOf(".") != -1)
+		output += "." + time.toString().split(".")[1].slice(0, -1);
+
+	return output;
+}
+
+/*
+ * Covert duration from unix timestamp
+ * to days
+ */
+function durationFormat(duration) {
+	const output = Math.trunc(duration / 86400);
+
+	if (output === 0) return "<1";
+	return output;
+}
+
+/*
  * Thank you vim!
  */
 function getFlag(code) {
@@ -755,25 +787,4 @@ function getFlag(code) {
 	}
 }
 
-/*
- * Convert seconds to human readable time
- */
-function timeFormat(duration) {
-	const hours = ~~(duration / 3600);
-	const minutes = ~~((duration % 3600) / 60);
-	const seconds = ~~duration % 60;
-	let output = "";
-
-	if (hours > 0) output += hours + ":" + (minutes < 10 ? "0" : "");
-
-	output += minutes + ":" + (seconds < 10 ? "0" : "");
-	output += seconds;
-
-	// Check if the time has milliseconds, and remove the trailing .0001
-	if (!isNaN(duration) && duration.toString().indexOf(".") != -1)
-		output += "." + duration.toString().split(".")[1].slice(0, -1);
-
-	return output;
-}
-
-module.exports = { getFlag, timeFormat };
+module.exports = { getFlag, timeFormat, durationFormat };
