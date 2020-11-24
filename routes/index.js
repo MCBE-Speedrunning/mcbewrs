@@ -87,23 +87,10 @@ router.get("/history/:cat?", (req, res) => {
 	} else {
 		// Query all the runs for the specified category, sorted by date
 		db.all(
-			"SELECT date, time, name, nationality, platform, input, version, seed, link FROM runners, runs, pairs WHERE runners.rowid = runner_id AND runs.rowid = run_id AND category = ? ORDER BY date ASC",
+			"SELECT date, time, name, nationality, platform, input, version, seed, duration link FROM runners, runs, pairs WHERE runners.rowid = runner_id AND runs.rowid = run_id AND category = ? ORDER BY date ASC",
 			req.params.cat,
 			function (err, rows) {
-				// Calculate the duration of each run
 				for (i = 0, len = rows.length; i < len; i++) {
-					// Check all the more recent records until a faster one is found
-					// Can't just check the very next because of the possibility of ties
-					for (j = i + 1; j <= len; j++) {
-						// Check if the record is current
-						if (j === len) {
-							rows[i].duration = Date.now() / 1000 - rows[i].date;
-						} else if (rows[j].time != rows[i].time) {
-							rows[i].duration = rows[j].date - rows[i].date;
-							break;
-						}
-					}
-
 					rows[i].nationality = getFlag(rows[i].nationality);
 
 					// Properly format the runs date, time, and duration
