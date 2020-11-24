@@ -114,14 +114,13 @@ router.post("/add", restrict, (req, res) => {
 	// This ensures that the site will display 3 significant figures
 	if (parseInt(run.milliseconds, 10))
 		run.time += parseInt(run.milliseconds, 10) / 1000 + 0.0001;
-	console.log(run);
+
 	leaderboard.serialize(() => {
 		leaderboard.run("INSERT INTO runs VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", [
 			run.category,
 			run.date,
 			run.time,
-			"",
-			//run.duration,
+			0,
 			run.platform,
 			run.seed,
 			run.version,
@@ -134,13 +133,41 @@ router.post("/add", restrict, (req, res) => {
 
 		// TODO: Make page stop loading when done!
 		// Insert the run/runner pairs
-		for (let i = 0; i < run.runners.length - 1; i++)
+		for (let i = 0; i < run.runners.length; i++)
 			leaderboard.run(
 				"INSERT INTO pairs VALUES((SELECT Count() FROM runs), (SELECT rowid FROM runners WHERE name = ?))",
 				[run.runners[i]]
 			);
 			res.render("admin_add", {banner: {text: "Run added succesfully", status: "success"}});
 	});
+
+	// TODO: This does not update the duration for the last run
+	// Calculate the duration of each run in the category just updated
+	leaderboard.all(
+		"SELECT rowid, date, time FROM runs WHERE category = ? ORDER BY date ASC",
+		[run.category],
+		function (err, rows) {
+			for (let i = 0, len = rows.length; i < len; i++) {
+				// Check every newer record until a faster one is found
+				// Can't just check the very next because of ties
+				for (let j = i + 1; j < len; j++) {
+					// Check if the record is current
+					if (j === len) {
+						rows[i].duration = Date.now() / 1000 - rows[i].date;
+					} else if (rows[j].time != rows[i].time) {
+						rows[i].duration = rows[j].date - rows[i].date;
+						break;
+					}
+				}
+
+				// Add the runs duration to the DB
+				leaderboard.run("UPDATE runs SET duration = ? WHERE rowid = ?", [
+					rows[i].duration,
+					rows[i].rowid,
+				]);
+			}
+		}
+	);
 });
 
 router.post("/add", restrict, (req, res) => {
