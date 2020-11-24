@@ -16,7 +16,7 @@ router.get("/", (req, res) => {
 		db.all(
 			"SELECT date, category, readable, link, time, name, nationality FROM runners, runs, pairs, categories WHERE runners.rowid = runner_id AND runs.rowid = run_id AND abbreviation = category AND type = ? ORDER BY date DESC LIMIT 10",
 			cat_type,
-			function (err, recent) {
+			(err, recent) => {
 				// For each run, format the date and time appropriately
 				for (let i in recent) {
 					switch (req.acceptsLanguages(["en-GB", "en-US", "en", "es-ES"])) {
@@ -88,7 +88,7 @@ router.get("/history/:cat?", (req, res) => {
 		db.all(
 			"SELECT date, time, name, nationality, platform, input, version, seed, duration link FROM runners, runs, pairs WHERE runners.rowid = runner_id AND runs.rowid = run_id AND category = ? ORDER BY date ASC",
 			req.params.cat,
-			function (err, rows) {
+			(err, rows) => {
 				for (i = 0, len = rows.length; i < len; i++) {
 					rows[i].nationality = getFlag(rows[i].nationality);
 
@@ -129,7 +129,7 @@ router.get("/history/:cat?", (req, res) => {
 				db.get(
 					"SELECT readable FROM categories WHERE abbreviation = ?",
 					req.params.cat,
-					function (err, category) {
+					(err, category) => {
 						if (err) throw err;
 						if (!category) res.send("No category found");
 						res.render("history", {
@@ -152,28 +152,48 @@ router.get("/profile/:player?", (req, res) => {
 	db.all(
 		"SELECT date, readable, link, time, platform, version FROM runs, categories, pairs WHERE pairs.run_id = runs.rowid AND pairs.runner_id = ? AND runs.category = categories.abbreviation ORDER BY date",
 		req.params.player,
-		function (err, runs) {
+		(err, runs) => {
 			for (i = 0, len = runs.length; i < len; i++) {
-				runs[i].date = new Date(runs[i].date * 1000).toLocaleDateString(
-					req.headers["accept-language"].substr(0, 5) // "en-GB"
-				);
+				switch (req.acceptsLanguages(["en-GB", "en-US", "en", "es-ES"])) {
+					case "en-GB":
+						runs[i].date = new Date(runs[i].date * 1000).toLocaleDateString(
+							"en-GB"
+						);
+						break;
 
+					case "en-US":
+						runs[i].date = new Date(runs[i].date * 1000).toLocaleDateString(
+							"en"
+						);
+						break;
+
+					case "es-ES":
+						runs[i].date = new Date(runs[i].date * 1000).toLocaleDateString(
+							"es-ES"
+						);
+						break;
+
+					default:
+						runs[i].date = new Date(runs[i].date * 1000).toLocaleDateString(
+							"en"
+						);
+						break;
+				}
 				runs[i].time = timeFormat(runs[i].time);
 			}
 
 			db.get(
 				"SELECT COUNT(DISTINCT category) AS count, COUNT(DISTINCT abbreviation) AS total FROM runs, pairs, categories WHERE runs.rowid = run_id AND runner_id = ?",
 				req.params.player,
-				function (err, count) {
+				(err, count) => {
 					unique_cats_count = count.count;
 					total_cats = count.total;
-				}
-			);
+
 
 			db.get(
-				"SELECT name FROM runners WHERE rowid = ?",
+				"SELECT name FROM runners WHERE name = ?",
 				req.params.player,
-				function (err, runner) {
+				(err, runner) => {
 					res.render("profile", {
 						player: runner.name,
 						current_wrs: 0,
@@ -183,7 +203,8 @@ router.get("/profile/:player?", (req, res) => {
 						days_with_wr: 0,
 						runs: runs,
 					});
-				}
+				});}
+				
 			);
 		}
 	);

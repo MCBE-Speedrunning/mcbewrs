@@ -9,7 +9,7 @@ const db = new sqlite3.Database("./data/auth.db");
 const leaderboard = new sqlite3.Database("./data/leaderboard.db");
 
 function newUser(username, password, fn) {
-	hash({ password: password }, (err, pass, salt, hash) => {
+	hash({ password: password }, (err, _pass, salt, hash) => {
 		if (err) return fn(new Error("Error during hashing"));
 		// Store the salt & hash in the "db"
 		db.run(
@@ -33,12 +33,13 @@ function restrict(req, res, next) {
 
 function authenticate(name, pass, fn) {
 	db.get("SELECT * FROM users WHERE username=?; ", name, (err, user) => {
+		if (err) next(err);
 		// Query the db for the given username
 		if (!user) return fn(new Error("cannot find user"));
 		// Apply the same algorithm to the POSTed password, applying
 		// the hash against the pass / salt, if there is a match we
 		// found the user
-		hash({ password: pass, salt: user.salt }, (err, pass, salt, hash) => {
+		hash({ password: pass, salt: user.salt }, (err, _pass, _salt, hash) => {
 			if (err) return fn(err);
 			if (hash === user.password) return fn(null, user);
 			fn(new Error("invalid password"));
@@ -52,6 +53,7 @@ router.get("/login", (req, res) => {
 
 router.post("/login", (req, res) => {
 	authenticate(req.body.username, req.body.password, (err, user) => {
+		if (err) next(err);
 		if (user) {
 			// Regenerate session when signing in
 			// to prevent fixation
@@ -78,7 +80,7 @@ router.get("/logout", (req, res) => {
 	});
 });
 
-router.get("/register", restrict, (req, res) => {
+router.get("/register", restrict, (_req, res) => {
 	res.render("register");
 });
 
@@ -90,8 +92,9 @@ router.post("/register", restrict, (req, res) => {
 	res.render("login", { session: req.session });
 });
 
-router.get("/add", restrict, (req, res) => {
+router.get("/add", restrict, (_req, res) => {
 	leaderboard.all("SELECT * FROM categories", (err, rows) => {
+		if (err) next(err);
 		res.render("admin_add", { categories: rows });
 	});
 });
@@ -146,7 +149,8 @@ router.post("/add", restrict, (req, res) => {
 	leaderboard.all(
 		"SELECT rowid, date, time FROM runs WHERE category = ? ORDER BY date ASC",
 		[run.category],
-		function (err, rows) {
+		(err, rows) => {
+			if (err) next(err);
 			for (let i = 0, len = rows.length; i < len; i++) {
 				// Check every newer record until a faster one is found
 				// Can't just check the very next because of ties
@@ -170,15 +174,18 @@ router.post("/add", restrict, (req, res) => {
 	);
 });
 
-router.post("/add", restrict, (req, res) => {
+router.post("/new_user", restrict, (req, _res) => {
 	if(req.body.name) name = req.body.name;
 	nationality = req.body.nationality || null;
-	db.run("INSERT INTO runners VALUES(?, ?)", [name, nationality]);
+	db.run("INSERT INTO runners VALUES(?, ?)", [name, nationality], (err) => {
+		if (err) next(err);
+		res.render("new_user", {banner: {text: "Runner added succesfully", status: "success"}})
+	});
 });
 
-router.get("/pull", restrict, (req, res) => {
-	exec("git pull", (error, stdout, stderr) => {
-		if (error) throw err;
+router.get("/pull", restrict, (_req, res, next) => {
+	exec("git pull", (error, _stdout, stderr) => {
+		if (error) next(err);
 		res.send(`Pulling complete \n ${stderr}`);
 	});
 });

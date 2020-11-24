@@ -29,6 +29,34 @@ const app = express();
 const leaderboard = new sqlite3.Database("./data/leaderboard.db");
 
 const config = JSON.parse(fs.readFileSync("./data/config.json"));
+
+function parseData(req, res, rows) {
+	switch (req.headers["content-type"]) {
+		case "application/json":
+			res.jsonp({ data: rows });
+			break;
+
+		case "application/xml":
+			res.set("Content-Type", "text/xml");
+			res.send(xml({ data: rows }));
+			break;
+
+		case "application/yaml":
+			res.set("Content-Type", "text/yaml");
+			res.send(safeDump({ data: rows }));
+			break;
+
+		case "application/toml":
+			res.set("Content-Type", "text/toml");
+			res.send(toToml({ data: rows }, { space: 4 }));
+			break;
+
+		default:
+			res.jsonp({ data: rows });
+			break;
+	}
+}
+
 app.set("leaderboard", leaderboard);
 // View engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -86,9 +114,14 @@ app.use(function (err, req, res, next) {
 	res.locals.message = err.message;
 	res.locals.error = req.app.get("env") === "development" ? err : {};
 
-	// Render the error page
-	res.status(err.status || 500);
-	res.render("error");
+	if(req.path.includes("/api")){
+		res.status(err.status);
+		parseData(req, res, err);
+	} else {
+		// Render the error page
+		res.status(err.status || 500);
+		res.render("error");
+	}
 });
 
 module.exports = app;
