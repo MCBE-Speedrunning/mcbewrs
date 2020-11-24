@@ -54,11 +54,11 @@ router.get("/", (req, res) => {
 		);
 	}
 	// Get the 10 most recent world record runs, for all 3 category types
-	getRecent(db, "main", (returned_value) => {
+	getRecent("main", (returned_value) => {
 		main = returned_value;
-		getRecent(db, "il", (returned_value) => {
+		getRecent("il", (returned_value) => {
 			il = returned_value;
-			getRecent(db, "catext", (returned_value) => {
+			getRecent("catext", (returned_value) => {
 				catext = returned_value;
 				res.render("index", {
 					main: main,
