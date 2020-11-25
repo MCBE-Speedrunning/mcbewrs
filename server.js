@@ -31,15 +31,11 @@ server.on("listening", onListening);
 function normalizePort(val) {
 	const port = parseInt(val, 10);
 
-	if (isNaN(port)) {
-		// Named pipe
-		return val;
-	}
+	// Named pipe
+	if (isNaN(port)) return val;
 
-	if (port >= 0) {
-		// Port number
-		return port;
-	}
+	// Port number
+	if (port >= 0) return port;
 
 	return false;
 }
@@ -48,9 +44,7 @@ function normalizePort(val) {
  * Event listener for HTTP server "error" event.
  */
 function onError(error) {
-	if (error.syscall !== "listen") {
-		throw error;
-	}
+	if (error.syscall !== "listen") throw error;
 
 	const bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 
