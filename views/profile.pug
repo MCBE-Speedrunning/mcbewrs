@@ -13,10 +13,10 @@ block content
 					th Total Duration (Days)
 			tbody
 				tr
-					td= current_wrs
-					td= total_wrs
-					td= unique_cats
-					td= total_duration
+					td #{current_wrs}
+					td #{total_wrs}
+					td #{unique_cats}
+					td #{total_duration}
 
 		h1 Official WRs
 		table.table.table-hover.table-sm.table-striped
@@ -31,11 +31,22 @@ block content
 			tbody
 				each run in runs
 					tr
-						td= run.date
-						td
-							a(href="#") #{run.readable}
-						td
-							a(href=run.link, target="_blank") #{run.time}
-						td= run.platform
-						td= run.version
-						td= run.duration
+						if run.wr
+							.wr
+								td <b>#{run.date}</b>
+								td
+									a(href="#") <b>#{run.readable}</b>
+								td
+									a(href=run.link, target="_blank") <b>#{run.time}</b>
+								td <b>#{run.platform}</b>
+								td <b>#{run.version}</b>
+								td <b>#{run.duration}</b>
+						else
+							td #{run.date}
+							td
+								a(href="#") #{run.readable}
+							td
+								a(href=run.link, target="_blank") #{run.time}
+							td #{run.platform}
+							td #{run.version}
+							td #{run.duration}
