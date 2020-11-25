@@ -130,7 +130,7 @@ router.post("/add", restrict, (req, res, next) => {
 		leaderboard.run(
 			"INSERT INTO runs VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 			[
-				run.category,
+				run.category_id,
 				run.date,
 				run.time,
 				// Run duration
@@ -168,7 +168,7 @@ router.post("/add", restrict, (req, res, next) => {
 		leaderboard.run(
 			`UPDATE runs
             SET wr = CASE WHEN time = (
-                SELECT id FROM runs
+                SELECT time FROM runs
                 WHERE category_id = ?
                 ORDER BY time ASC LIMIT 1
             )
@@ -212,6 +212,7 @@ router.post("/add", restrict, (req, res, next) => {
 				}
 			}
 		);
+
 		leaderboard.all("SELECT * FROM categories", (err, rows) => {
 			if (err) next(err);
 			res.render("admin_add", {
@@ -247,8 +248,8 @@ router.post("/new_user", restrict, (req, _res) => {
 });
 
 router.get("/pull", restrict, (_req, res, next) => {
-	exec("git pull", (error, _stdout, stderr) => {
-		if (error) next(err);
+	exec("git pull", (err, _stdout, stderr) => {
+		if (err) next(err);
 		res.send(`Pulling complete \n ${stderr}`);
 	});
 });
