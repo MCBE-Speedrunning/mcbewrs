@@ -1,5 +1,6 @@
 if (!sessionStorage.auth) {
 	let password = prompt("Type in the password");
+
 	fetch("/admin/login", {
 		method: "POST",
 		headers: {
@@ -17,10 +18,7 @@ if (!sessionStorage.auth) {
 		method: "POST",
 		body: { auth: sessionStorage.auth },
 	}).then((response) => {
-		if (!response.ok) {
-			alert("nonono");
-		} else {
-			alert("yesyesyes");
-		}
+		if (!response.ok) alert("nonono");
+		else alert("yesyesyes");
 	});
 }
