@@ -1,19 +1,23 @@
 body {
 	background-color: #555555;
-	background-image: url("/assets/dark_bg.png");
+	background-image: url("/assets/bg_end.png");
 	color: #ffffff;
+
 	a {
 		color: #c25cff;
 	}
+
 	nav {
 		background-color: #21252996 !important;
 	}
+
 	table {
 		--bs-table-bg: #21252996 !important;
 		--bs-table-striped-bg: #2c303496 !important;
 	}
+
 	.footer {
-		color: #ffffff;
 		background-color: #333333ff;
+		color: #ffffff;
 	}
 }

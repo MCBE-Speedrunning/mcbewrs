@@ -5,67 +5,84 @@ html.transition *:after {
 	transition: ease-in-out 200ms;
 	transition-delay: 0;
 }
+
 body {
+	background-attachment: fixed;
 	background-repeat: no-repeat;
 	background-size: cover;
-	background-attachment: fixed;
+
+	a {
+		text-decoration: none !important;
+	}
+
+	a:hover {
+		text-decoration: underline !important;
+	}
+
+	/* Nationality flags */
+	img.emoji {
+		height: 1.5em;
+		width: 1.5em;
+		vertical-align: -0.1em;
+	}
+
 	nav {
 		backdrop-filter: blur(5px);
 		.switchA {
 			padding: 5px !important;
 
-			/* The switch - the box around the slider */
-			.switch {
-				position: relative;
-				display: inline-block;
-				width: 60px;
-				height: 34px;
-
-				/* Hide default HTML checkbox */
-				input {
-					opacity: 0;
-					width: 0;
-					height: 0;
-				}
-
-				/* The slider */
-				.slider {
-					position: absolute;
-					cursor: pointer;
-					top: 0;
-					left: 0;
-					right: 0;
-					bottom: 0;
-					background-color: #ccc;
-					-webkit-transition: 0.4s;
-					transition: 0.4s;
-				}
-
-				.slider:before {
-					position: absolute;
-					content: "";
-					height: 26px;
-					width: 26px;
-					left: 4px;
-					bottom: 4px;
-					background-color: white;
-					-webkit-transition: 0.4s;
-					transition: 0.4s;
-				}
-			}
-
 			input:checked + .slider {
 				background-color: #2196f3;
+			}
+
+			input:checked + .slider:before {
+				-ms-transform: translateX(26px);
+				-webkit-transform: translateX(26px);
+				transform: translateX(26px);
 			}
 
 			input:focus + .slider {
 				box-shadow: 0 0 1px #2196f3;
 			}
 
-			input:checked + .slider:before {
-				-webkit-transform: translateX(26px);
-				-ms-transform: translateX(26px);
-				transform: translateX(26px);
+			/* The switch - the box around the slider */
+			.switch {
+				display: inline-block;
+				height: 34px;
+				position: relative;
+				width: 60px;
+
+				/* Hide default HTML checkbox */
+				input {
+					height: 0;
+					opacity: 0;
+					width: 0;
+				}
+
+				/* The slider */
+				.slider {
+					-webkit-transition: 0.4s;
+					background-color: #ccc;
+					bottom: 0;
+					cursor: pointer;
+					left: 0;
+					position: absolute;
+					right: 0;
+					top: 0;
+					transition: 0.4s;
+				}
+
+				.slider:before {
+					-webkit-transition: 0.4s;
+					background-color: white;
+					bottom: 4px;
+					content: "";
+					height: 26px;
+					left: 4px;
+					position: absolute;
+					transition: 0.4s;
+					width: 26px;
+				}
 			}
 
 			/* Rounded sliders */
@@ -79,21 +96,15 @@ body {
 		}
 	}
 
-	.home {
-		margin-right: auto;
-		margin-left: auto;
-		width: 75%;
-	}
-
 	.about {
 		margin-left: auto;
 		margin-right: auto;
 		width: 75%;
 
 		img {
-			width: 30vw;
-			height: auto;
 			float: left;
+			height: auto;
+			width: 30vw;
 		}
 
 		h1 {
@@ -105,26 +116,17 @@ body {
 		}
 	}
 
-	.input-group {
-		width: 50%;
-	}
-
 	.form-control {
 		width: auto;
 	}
-}
 
-img.emoji {
-	height: 1.5em;
-	width: 1.5em;
-	vertical-align: -0.1em;
-}
+	.home {
+		margin-left: auto;
+		margin-right: auto;
+		width: 75%;
+	}
 
-a {
-	color: #00f;
-	text-decoration: none;
-}
-
-a:hover {
-	text-decoration: underline;
+	.input-group {
+		width: 50%;
+	}
 }
