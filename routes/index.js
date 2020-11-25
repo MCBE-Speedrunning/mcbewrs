@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
+const sqlite3 = require("sqlite3").verbose();
+const db = new sqlite3.Database("./data/leaderboard.db");
 const {
 	getFlag,
 	timeFormat,
 	durationFormat,
 } = require("../utils/functions.js");
-const sqlite3 = require("sqlite3").verbose();
-const db = new sqlite3.Database("./data/leaderboard.db");
 
 /*
  * Home page

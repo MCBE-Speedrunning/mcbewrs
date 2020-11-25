@@ -1,18 +1,19 @@
+const compression = require("compression");
 const cors = require("cors");
 const createError = require("http-errors");
+const csurf = require("csurf");
 const express = require("express");
-const minify = require("express-minify");
-const rateLimit = require("express-rate-limit");
-const path = require("path");
-const logger = require("morgan");
-const compression = require("compression");
 const fs = require("fs");
+const logger = require("morgan");
+const minify = require("express-minify");
+const path = require("path");
+const rateLimit = require("express-rate-limit");
 const sassMiddleware = require("node-sass-middleware");
 const session = require("express-session");
-const csurf = require("csurf");
 const xml = require("xml");
 const { safeDump } = require("js-yaml");
 const { toToml } = require("tomlify-j0.4");
+
 if (process.env.NODE_ENV === "development") {
 	var sqlite3 = require("sqlite3").verbose();
 	var debug = true;
@@ -28,9 +29,8 @@ try {
 }
 
 const app = express();
-const leaderboard = new sqlite3.Database("./data/leaderboard.db");
-
 const config = JSON.parse(fs.readFileSync("./data/config.json"));
+const leaderboard = new sqlite3.Database("./data/leaderboard.db");
 
 function parseError(req, res, err) {
 	switch (req.acceptsLanguages(["json", "xml", "yaml", "toml"])) {
@@ -60,6 +60,7 @@ function parseError(req, res, err) {
 }
 
 app.set("leaderboard", leaderboard);
+
 // View engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
@@ -74,16 +75,13 @@ app.use(
 		dest: path.join(__dirname, "public"),
 		debug: debug,
 		outputStyle: "compressed",
-		// true = .sass and false = .scss
-		// indentedSyntax: true,
 		sourceMap: true,
 	})
 );
 app.use(
+	// Limit each IP to 10,000 requests per 15 minutes
 	rateLimit({
-		// 15 Minutes
 		windowMs: 15 * 60 * 1000,
-		// Limit each IP to 10,000 requests per windowMs
 		max: 10000,
 	})
 );
