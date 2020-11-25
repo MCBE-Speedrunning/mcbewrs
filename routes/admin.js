@@ -57,7 +57,7 @@ function authenticate(name, pass, fn) {
 }
 
 router.get("/login", (req, res) => {
-	res.render("login", { session: req.session });
+	res.render("login", { session: req.session, csrfToken: req.csrfToken() });
 });
 
 router.post("/login", (req, res) => {
@@ -90,7 +90,7 @@ router.get("/logout", (req, res) => {
 });
 
 router.get("/register", restrict, (_req, res) => {
-	res.render("register");
+	res.render("register", { csrfToken: req.csrfToken() });
 });
 
 router.post("/register", restrict, (req, res) => {
@@ -98,17 +98,17 @@ router.post("/register", restrict, (req, res) => {
 		res.render("register", { err: err });
 	});
 
-	res.render("login", { session: req.session });
+	res.render("login", { session: req.session, csrfToken: req.csrfToken() });
 });
 
-router.get("/add", restrict, (_req, res) => {
+router.get("/add", restrict, (req, res, next) => {
 	leaderboard.all("SELECT * FROM categories", (err, rows) => {
 		if (err) next(err);
-		res.render("admin_add", { categories: rows });
+		res.render("admin_add", { categories: rows, csrfToken: req.csrfToken() });
 	});
 });
 
-router.post("/add", restrict, (req, res) => {
+router.post("/add", restrict, (req, res, next) => {
 	const run = req.body;
 	// Multiple runners can be input by seperating them with ,
 	run.runners = run.runners.trim().split(",");
@@ -142,7 +142,10 @@ router.post("/add", restrict, (req, res) => {
 				run.link,
 				// WR flag
 				0,
-			]
+			],
+			(err) => {
+				if (err) next(err);
+			}
 		);
 
 		// Prevents DoS
@@ -155,7 +158,10 @@ router.post("/add", restrict, (req, res) => {
                     (SELECT MAX(id) FROM runs),
                     (SELECT id FROM runners WHERE name = ?)
                 )`,
-				[run.runners[i]]
+				[run.runners[i]],
+				(err) => {
+					if (err) next(err);
+				}
 			);
 
 		// Update the WR flags
@@ -168,7 +174,10 @@ router.post("/add", restrict, (req, res) => {
             )
             THEN 1 ELSE 0
             END`,
-			[run.category_id]
+			[run.category_id],
+			(err) => {
+				if (err) next(err);
+			}
 		);
 
 		// Calculate the duration of each run in the category just updated
@@ -193,16 +202,27 @@ router.post("/add", restrict, (req, res) => {
 					}
 
 					// Add the runs duration to the DB
-					leaderboard.run(`UPDATE runs SET duration = ? WHERE id = ?`, [
-						rows[i].duration,
-						rows[i].id,
-					]);
+					leaderboard.run(
+						`UPDATE runs SET duration = ? WHERE id = ?`,
+						[rows[i].duration, rows[i].id],
+						(err) => {
+							if (err) next(err);
+						}
+					);
 				}
 			}
 		);
-
-		res.render("admin_add", {
-			banner: { text: "Run added succesfully", status: "success" },
+		leaderboard.all("SELECT * FROM categories", (err, rows) => {
+			if (err) next(err);
+			res.render("admin_add", {
+				banner: {
+					text: "Run added succesfully",
+					status: "success",
+					csrfToken: req.csrfToken(),
+				},
+				categories: rows,
+				csrfToken: req.csrfToken(),
+			});
 		});
 	});
 });
@@ -216,7 +236,11 @@ router.post("/new_user", restrict, (req, _res) => {
 		(err) => {
 			if (err) next(err);
 			res.render("new_user", {
-				banner: { text: "Runner added succesfully", status: "success" },
+				banner: {
+					text: "Runner added succesfully",
+					status: "success",
+					csrfToken: req.csrfToken(),
+				},
 			});
 		}
 	);

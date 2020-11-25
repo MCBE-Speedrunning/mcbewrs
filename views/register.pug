@@ -13,4 +13,5 @@ block content
 				label Password:
 				input(type="text", name="password")
 			p
+				input(type="hidden", name="_csrf", value=csrfToken)
 				input(type="submit", value="Register")

@@ -11,7 +11,7 @@ const db = new sqlite3.Database("./data/leaderboard.db");
 /*
  * Home page
  */
-router.get("/", (req, res) => {
+router.get("/", (req, res, next) => {
 	/*
 	 * Get the 10 most recent world records
 	 * for each of the category types
@@ -31,6 +31,7 @@ router.get("/", (req, res) => {
             ORDER BY date DESC LIMIT 10`,
 			[cat_type],
 			(err, recent) => {
+				if (err) next(err);
 				// For each run, format the date and time appropriately
 				for (let i in recent) {
 					switch (req.acceptsLanguages(["en-GB", "en-US", "en", "es-ES"])) {

@@ -4,13 +4,15 @@ const express = require("express");
 const minify = require("express-minify");
 const rateLimit = require("express-rate-limit");
 const path = require("path");
-const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const compression = require("compression");
 const fs = require("fs");
 const sassMiddleware = require("node-sass-middleware");
 const session = require("express-session");
 const csurf = require("csurf");
+const xml = require("xml");
+const { safeDump } = require("js-yaml");
+const { toToml } = require("tomlify-j0.4");
 if (process.env.NODE_ENV === "development") {
 	var sqlite3 = require("sqlite3").verbose();
 	var debug = true;
@@ -30,29 +32,29 @@ const leaderboard = new sqlite3.Database("./data/leaderboard.db");
 
 const config = JSON.parse(fs.readFileSync("./data/config.json"));
 
-function parseData(req, res, rows) {
-	switch (req.headers["content-type"]) {
-		case "application/json":
-			res.jsonp({ data: rows });
+function parseError(req, res, err) {
+	switch (req.acceptsLanguages(["json", "xml", "yaml", "toml"])) {
+		case "json":
+			res.jsonp({ error: err });
 			break;
 
-		case "application/xml":
+		case "xml":
 			res.set("Content-Type", "text/xml");
-			res.send(xml({ data: rows }));
+			res.send(xml({ error: err }));
 			break;
 
-		case "application/yaml":
+		case "yaml":
 			res.set("Content-Type", "text/yaml");
-			res.send(safeDump({ data: rows }));
+			res.send(safeDump({ error: err }));
 			break;
 
-		case "application/toml":
+		case "toml":
 			res.set("Content-Type", "text/toml");
-			res.send(toToml({ data: rows }, { space: 4 }));
+			res.send(toToml({ error: err }, { space: 4 }));
 			break;
 
 		default:
-			res.jsonp({ data: rows });
+			res.jsonp({ error: err });
 			break;
 	}
 }
@@ -97,26 +99,25 @@ app.use(
 		secret: config.db_secret,
 	})
 );
-app.use(cookieParser());
-//app.use(csurf({ cookie: true }));
+app.use(csurf({ cookie: false }));
 
 app.use("/", require("./routes/index"));
 app.use("/api", require("./routes/api"));
 app.use("/admin", require("./routes/admin"));
 // Catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use(function (_req, _res, next) {
 	next(createError(404));
 });
 
 // Error handler
-app.use(function (err, req, res, next) {
+app.use(function (err, req, res, _next) {
 	// Set locals, only providing error in development
 	res.locals.message = err.message;
-	res.locals.error = req.app.get("env") === "development" ? err : {};
+	res.locals.error = debug ? err : {};
 
 	if (req.path.includes("/api")) {
 		res.status(err.status);
-		parseData(req, res, err);
+		parseError(req, res, err);
 	} else {
 		// Render the error page
 		res.status(err.status || 500);

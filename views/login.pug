@@ -16,4 +16,5 @@ block content
 					label Password:
 					input.form-control(type="password", name="password", required)
 				p
+					input(type="hidden", name="_csrf", value=csrfToken)
 					input.btn.btn-primary(type="submit", value="Login")

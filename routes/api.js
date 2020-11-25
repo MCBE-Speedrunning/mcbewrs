@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const sqlite3 = require("sqlite3").verbose();
-const xml = require("xml");
 const hash = require("pbkdf2-password")();
+const xml = require("xml");
 const { safeDump } = require("js-yaml");
 const { toToml } = require("tomlify-j0.4");
 const jwt = require("jsonwebtoken");
@@ -33,22 +33,22 @@ function authenticateToken(req, res, next) {
 }
 
 function parseData(req, res, rows) {
-	switch (req.headers["content-type"]) {
-		case "application/json":
+	switch (req.acceptsLanguages(["json", "xml", "yaml", "toml"])) {
+		case "json":
 			res.jsonp({ data: rows });
 			break;
 
-		case "application/xml":
+		case "xml":
 			res.set("Content-Type", "text/xml");
 			res.send(xml({ data: rows }));
 			break;
 
-		case "application/yaml":
+		case "yaml":
 			res.set("Content-Type", "text/yaml");
 			res.send(safeDump({ data: rows }));
 			break;
 
-		case "application/toml":
+		case "toml":
 			res.set("Content-Type", "text/toml");
 			res.send(toToml({ data: rows }, { space: 4 }));
 			break;
