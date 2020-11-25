@@ -3,10 +3,12 @@ extends layout
 block content
 	.home
 		h1 Login
+
 		if session.error
 			h2 #{session.error}
 		else
 			h2 #{session.success}
+
 		form(method="POST", action="/admin/login")
 			.form-group
 				p

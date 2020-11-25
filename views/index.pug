@@ -15,13 +15,14 @@ block content
 			tbody
 				each run in main
 					tr
-						td= run.date
+						td #{run.date}
 						td
 							a(href='/history/' + run.abbreviation) #{run.readable}
 						td
 							a(href=run.link, target="_blank") #{run.time}
-						td= run.name
-						td= run.nationality
+						td #{run.name}
+						td #{run.nationality}
+
 		h3 Individual Levels
 		table.table.table-hover.table-sm.table-striped
 			thead
@@ -34,13 +35,14 @@ block content
 			tbody
 				each run in il
 					tr
-						td= run.date
+						td #{run.date}
 						td
 							a(href='/history/' + run.abbreviation) #{run.readable}
 						td
 							a(href=run.link, target="_blank") #{run.time}
-						td= run.name
-						td= run.nationality
+						td #{run.name}
+						td #{run.nationality}
+
 		h3 Category Extensions
 		table.table.table-hover.table-sm.table-striped
 			thead
@@ -53,10 +55,10 @@ block content
 			tbody
 				each run in catext
 					tr
-						td= run.date
+						td #{run.date}
 						td
 							a(href='/history/' + run.abbreviation) #{run.readable}
 						td
 							a(href=run.link, target="_blank") #{run.time}
-						td= run.name
-						td= run.nationality
+						td #{run.name}
+						td #{run.nationality}
