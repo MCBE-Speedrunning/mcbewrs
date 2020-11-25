@@ -2,7 +2,7 @@ extends layout
 
 block content
 	.leaderboard
-		h1 #{player}
+		h1 #{nationality} #{player}
 		h1 Stats
 		table.table.table-hover.table-sm.table-striped
 			thead
@@ -24,7 +24,7 @@ block content
 				tr
 					th Date
 					th Category
-					th Time+Video
+					th Time
 					th Platform
 					th Version
 					th Duration (Days)
@@ -35,7 +35,7 @@ block content
 							.wr
 								td <b>#{run.date}</b>
 								td
-									a(href="#") <b>#{run.readable}</b>
+									a(href='/history/' + run.abbreviation) <b>#{run.readable}</b>
 								td
 									a(href=run.link, target="_blank") <b>#{run.time}</b>
 								td <b>#{run.platform}</b>
@@ -44,7 +44,7 @@ block content
 						else
 							td #{run.date}
 							td
-								a(href="#") #{run.readable}
+								a(href='/history/' + run.abbreviation) #{run.readable}
 							td
 								a(href=run.link, target="_blank") #{run.time}
 							td #{run.platform}

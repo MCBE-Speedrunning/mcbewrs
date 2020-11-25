@@ -22,7 +22,8 @@ block content
 						td #{run.date}
 						td
 							a(href=run.link, target="_blank") #{run.time}
-						td #{run.name}
+						td
+							a(href='/profile/' + run.runner_id) #{run.name}
 						td #{run.nationality}
 						td #{run.platform}
 						td #{run.input}

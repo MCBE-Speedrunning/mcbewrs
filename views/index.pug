@@ -9,7 +9,7 @@ block content
 				tr
 					th(scope="col") Date
 					th(scope="col") Category
-					th(scope="col") Time+Video
+					th(scope="col") Time
 					th(scope="col") Player
 					th(scope="col") Nation
 			tbody
@@ -20,7 +20,8 @@ block content
 							a(href='/history/' + run.abbreviation) #{run.readable}
 						td
 							a(href=run.link, target="_blank") #{run.time}
-						td #{run.name}
+						td 
+							a(href='/profile/' + run.runner_id) #{run.name}
 						td #{run.nationality}
 
 		h3 Individual Levels
@@ -29,7 +30,7 @@ block content
 				tr
 					th(scope="col") Date
 					th(scope="col") Category
-					th(scope="col") Time+Video
+					th(scope="col") Time
 					th(scope="col") Player
 					th(scope="col") Nation
 			tbody
@@ -40,7 +41,8 @@ block content
 							a(href='/history/' + run.abbreviation) #{run.readable}
 						td
 							a(href=run.link, target="_blank") #{run.time}
-						td #{run.name}
+						td 
+							a(href='/profile/' + run.runner_id) #{run.name}
 						td #{run.nationality}
 
 		h3 Category Extensions
@@ -49,7 +51,7 @@ block content
 				tr
 					th(scope="col") Date
 					th(scope="col") Category
-					th(scope="col") Time+Video
+					th(scope="col") Time
 					th(scope="col") Player
 					th(scope="col") Nation
 			tbody
@@ -60,5 +62,6 @@ block content
 							a(href='/history/' + run.abbreviation) #{run.readable}
 						td
 							a(href=run.link, target="_blank") #{run.time}
-						td #{run.name}
+						td 
+							a(href='/profile/' + run.runner_id) #{run.name}
 						td #{run.nationality}

@@ -19,8 +19,8 @@ router.get("/", (req, res, next) => {
 	function getRecent(cat_type, callback) {
 		db.all(
 			`SELECT
-                date, abbreviation, readable, link,
-                time, name, nationality FROM runs
+                date, abbreviation, readable, link, time,
+				name, nationality, runner_id FROM runs
             INNER JOIN
                 categories ON categories.id = runs.category_id
                 AND categories.type = ?
@@ -104,8 +104,8 @@ router.get("/history/:cat?", (req, res) => {
 		db.all(
 			`SELECT
                 date, time, name, nationality, platform,
-                input, version, seed, duration, link
-			FROM runs
+                input, version, seed, duration, link,
+				runner_id FROM runs
             INNER JOIN
                 pairs ON pairs.run_id = runs.id
             INNER JOIN
@@ -180,9 +180,8 @@ router.get("/profile/:player?", (req, res) => {
 
 	// Get all the players runs
 	db.all(
-		`SELECT date, readable, link, time,
-        platform, version, duration, wr
-        FROM runs
+		`SELECT abbreviation, date, readable, link, time,
+        platform, version, duration, wr FROM runs
         INNER JOIN
             pairs ON pairs.run_id = runs.id
             AND pairs.runner_id = ?
@@ -245,14 +244,15 @@ router.get("/profile/:player?", (req, res) => {
 					unique_cats_count = count.count;
 					total_cats = count.total;
 
-					// Get the runners name and render the page
+					// Get the runners name and nationality, then render the page
 					db.get(
-						`SELECT name FROM runners
+						`SELECT name, nationality FROM runners
                         WHERE id = ?`,
 						[req.params.player],
 						(err, runner) => {
 							res.render("profile", {
 								player: runner.name,
+								nationality: getFlag(runner.nationality),
 								current_wrs: current_wrs,
 								total_wrs: runs.length,
 								unique_cats: unique_cats_count + " / " + total_cats,
