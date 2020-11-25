@@ -18,7 +18,7 @@ block content
 					label Category
 						select.form-control(name="category")
 							- for (cat in categories)
-								option(value=categories[cat].abbreviation) #{categories[cat].readable}
+								option(value=categories[cat].id) #{categories[cat].readable}
 				p
 					label Date
 					input(name="date", type="date", value=0, required)

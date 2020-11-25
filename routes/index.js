@@ -18,14 +18,18 @@ router.get("/", (req, res) => {
 	 */
 	function getRecent(cat_type, callback) {
 		db.all(
-			"SELECT date, category, readable, link, time, name, nationality \
-			FROM runners, runs, pairs, categories 							\
-			WHERE runners.rowid = runner_id 								\
-			AND runs.rowid = run_id 										\
-			AND abbreviation = category 									\
-			AND type = ? 													\
-			ORDER BY date DESC LIMIT 10",
-			cat_type,
+			`SELECT
+                date, abbreviation, readable, link,
+                time, name, nationality FROM runs
+            INNER JOIN
+                categories ON categories.id = runs.category_id
+                AND categories.type = ?
+            INNER JOIN
+                pairs ON pairs.run_id = runs.id
+            INNER JOIN
+                runners ON runners.id = pairs.runner_id
+            ORDER BY date DESC LIMIT 10`,
+			[cat_type],
 			(err, recent) => {
 				// For each run, format the date and time appropriately
 				for (let i in recent) {
@@ -97,13 +101,20 @@ router.get("/history/:cat?", (req, res) => {
 	} else {
 		// Query all the runs for the specified category, sorted by date
 		db.all(
-			"SELECT date, time, name, nationality, platform, input, version, seed, duration link \
-			FROM runners, runs, pairs 															 \
-			WHERE runners.rowid = runner_id 													 \
-			AND runs.rowid = run_id 															 \
-			AND category = ? 																	 \
-			ORDER BY date ASC",
-			req.params.cat,
+			`SELECT
+                date, time, name, nationality, platform,
+                input, version, seed, duration, link
+			FROM runs
+            INNER JOIN
+                pairs ON pairs.run_id = runs.id
+            INNER JOIN
+                runners ON runners.id = pairs.runner_id
+                AND runs.category_id = (
+                    SELECT id FROM categories
+                    WHERE abbreviation = ?
+                )
+            ORDER BY date ASC`,
+			[req.params.cat],
 			(err, rows) => {
 				for (i = 0, len = rows.length; i < len; i++) {
 					rows[i].nationality = getFlag(rows[i].nationality);
@@ -143,8 +154,9 @@ router.get("/history/:cat?", (req, res) => {
 
 				// Get the category name
 				db.get(
-					"SELECT readable FROM categories WHERE abbreviation = ?",
-					req.params.cat,
+					`SELECT readable FROM categories
+                    WHERE abbreviation = ?`,
+					[req.params.cat],
 					(err, category) => {
 						if (err) throw err;
 						if (!category) res.send("No category found");
@@ -167,13 +179,16 @@ router.get("/profile/:player?", (req, res) => {
 
 	// Get all the players runs
 	db.all(
-		"SELECT date, readable, link, time, platform, version, duration, wr \
-		FROM runs, categories, pairs 										\
-		WHERE pairs.run_id = runs.rowid 									\
-		AND pairs.runner_id = ? 											\
-		AND runs.category = categories.abbreviation 						\
-		ORDER BY date",
-		req.params.player,
+		`SELECT date, readable, link, time,
+        platform, version, duration, wr
+        FROM runs
+        INNER JOIN
+            pairs ON pairs.run_id = runs.id
+            AND pairs.runner_id = ?
+        INNER JOIN
+            categories ON categories.id = runs.category_id
+        ORDER BY date`,
+		[req.params.player],
 		(err, runs) => {
 			let current_wrs = 0;
 			let total_duration = 0;
@@ -217,10 +232,13 @@ router.get("/profile/:player?", (req, res) => {
 
 			// Get the number of unique categories the player has had records in
 			db.get(
-				"SELECT COUNT(DISTINCT category) AS count, COUNT(DISTINCT abbreviation) AS total \
-				FROM runs, pairs, categories 													 \
-				WHERE runs.rowid = run_id 													   	 \
-				AND runner_id = ?",
+				`SELECT COUNT(DISTINCT category_id) AS count,
+                    COUNT(DISTINCT abbreviation) AS total
+                FROM runs
+                INNER JOIN
+                    pairs ON pairs.run_id = runs.id
+                    AND pairs.runner_id = ?
+                INNER JOIN categories`,
 				req.params.player,
 				(err, count) => {
 					unique_cats_count = count.count;
@@ -228,8 +246,9 @@ router.get("/profile/:player?", (req, res) => {
 
 					// Get the runners name and render the page
 					db.get(
-						"SELECT name FROM runners WHERE rowid = ?",
-						req.params.player,
+						`SELECT name FROM runners
+                        WHERE id = ?`,
+						[req.params.player],
 						(err, runner) => {
 							res.render("profile", {
 								player: runner.name,

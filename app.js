@@ -98,7 +98,7 @@ app.use(
 	})
 );
 app.use(cookieParser());
-app.use(csurf({ cookie: true }));
+//app.use(csurf({ cookie: true }));
 
 app.use("/", require("./routes/index"));
 app.use("/api", require("./routes/api"));

@@ -8,12 +8,15 @@ const db = new sqlite3.Database("./data/auth.db");
 
 const leaderboard = new sqlite3.Database("./data/leaderboard.db");
 
+/*
+ * Add a new user to the DB
+ */
 function newUser(username, password, fn) {
 	hash({ password: password }, (err, _pass, salt, hash) => {
 		if (err) return fn(new Error("Error during hashing"));
 		// Store the salt & hash in the "db"
 		db.run(
-			`INSERT INTO users VALUES(?, ?, ?); `,
+			`INSERT INTO users VALUES(?, ?, ?)`,
 			[username, hash, salt],
 			(err) => {
 				if (err) return fn(new Error("Error during insertion"));
@@ -22,6 +25,9 @@ function newUser(username, password, fn) {
 	});
 }
 
+/*
+ * Restrict access to the admin page
+ */
 function restrict(req, res, next) {
 	if (req.session.user) {
 		next();
@@ -31,8 +37,11 @@ function restrict(req, res, next) {
 	}
 }
 
+/*
+ * User authentication
+ */
 function authenticate(name, pass, fn) {
-	db.get("SELECT * FROM users WHERE username=?; ", name, (err, user) => {
+	db.get("SELECT * FROM users WHERE username = ?", [name], (err, user) => {
 		if (err) next(err);
 		// Query the db for the given username
 		if (!user) return fn(new Error("cannot find user"));
@@ -101,7 +110,6 @@ router.get("/add", restrict, (_req, res) => {
 
 router.post("/add", restrict, (req, res) => {
 	const run = req.body;
-	console.log(req.body);
 	// Multiple runners can be input by seperating them with ,
 	run.runners = run.runners.trim().split(",");
 	// Convert html date format to epoch ms then convert to seconds
@@ -119,72 +127,99 @@ router.post("/add", restrict, (req, res) => {
 		run.time += parseInt(run.milliseconds, 10) / 1000 + 0.0001;
 
 	leaderboard.serialize(() => {
-		leaderboard.run("INSERT INTO runs VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", [
-			run.category,
-			run.date,
-			run.time,
-			0,
-			run.platform,
-			run.seed,
-			run.version,
-			run.input,
-			run.link,
-		]);
+		leaderboard.run(
+			"INSERT INTO runs VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+			[
+				run.category,
+				run.date,
+				run.time,
+				// Run duration
+				0,
+				run.platform,
+				run.seed,
+				run.version,
+				run.input,
+				run.link,
+				// WR flag
+				0,
+			]
+		);
 
 		// Prevents DoS
 		if (!(run.runners instanceof Array)) return [];
 
-		// TODO: Make page stop loading when done!
 		// Insert the run/runner pairs
 		for (let i = 0; i < run.runners.length; i++)
 			leaderboard.run(
-				"INSERT INTO pairs VALUES((SELECT Count() FROM runs), (SELECT rowid FROM runners WHERE name = ?))",
+				`INSERT INTO pairs VALUES(
+                    (SELECT MAX(id) FROM runs),
+                    (SELECT id FROM runners WHERE name = ?)
+                )`,
 				[run.runners[i]]
 			);
+
+		// Update the WR flags
+		leaderboard.run(
+			`UPDATE runs
+            SET wr = CASE WHEN time = (
+                SELECT id FROM runs
+                WHERE category_id = ?
+                ORDER BY time ASC LIMIT 1
+            )
+            THEN 1 ELSE 0
+            END`,
+			[run.category_id]
+		);
+
+		// Calculate the duration of each run in the category just updated
+		leaderboard.all(
+			`SELECT id, date, time FROM runs
+            WHERE category_id = ?
+            ORDER BY date ASC`,
+			[run.category_id],
+			(err, rows) => {
+				if (err) next(err);
+				for (let i = 0, len = rows.length; i < len; i++) {
+					// Check every newer record until a faster one is found
+					// Can't just check the very next because of ties
+					for (let j = i + 1; j <= len; j++) {
+						// Check if the record is current
+						if (j === len) {
+							rows[i].duration = Date.now() / 1000 - rows[i].date;
+						} else if (rows[j].time != rows[i].time) {
+							rows[i].duration = rows[j].date - rows[i].date;
+							break;
+						}
+					}
+
+					// Add the runs duration to the DB
+					leaderboard.run(`UPDATE runs SET duration = ? WHERE id = ?`, [
+						rows[i].duration,
+						rows[i].id,
+					]);
+				}
+			}
+		);
+
 		res.render("admin_add", {
 			banner: { text: "Run added succesfully", status: "success" },
 		});
 	});
-
-	// TODO: This does not update the duration for the last run
-	// Calculate the duration of each run in the category just updated
-	leaderboard.all(
-		"SELECT rowid, date, time FROM runs WHERE category = ? ORDER BY date ASC",
-		[run.category],
-		(err, rows) => {
-			if (err) next(err);
-			for (let i = 0, len = rows.length; i < len; i++) {
-				// Check every newer record until a faster one is found
-				// Can't just check the very next because of ties
-				for (let j = i + 1; j < len; j++) {
-					// Check if the record is current
-					if (j === len) {
-						rows[i].duration = Date.now() / 1000 - rows[i].date;
-					} else if (rows[j].time != rows[i].time) {
-						rows[i].duration = rows[j].date - rows[i].date;
-						break;
-					}
-				}
-
-				// Add the runs duration to the DB
-				leaderboard.run("UPDATE runs SET duration = ? WHERE rowid = ?", [
-					rows[i].duration,
-					rows[i].rowid,
-				]);
-			}
-		}
-	);
 });
 
 router.post("/new_user", restrict, (req, _res) => {
 	if (req.body.name) name = req.body.name;
 	nationality = req.body.nationality || null;
-	db.run("INSERT INTO runners VALUES(?, ?)", [name, nationality], (err) => {
-		if (err) next(err);
-		res.render("new_user", {
-			banner: { text: "Runner added succesfully", status: "success" },
-		});
-	});
+	db.run(
+		`INSERT INTO runners (name, nationality) VALUES(?, ?)`,
+		[name, nationality],
+		(err) => {
+			if (err) next(err);
+			res.render("new_user", {
+				banner: { text: "Runner added succesfully", status: "success" },
+			});
+		}
+	);
 });
 
 router.get("/pull", restrict, (_req, res, next) => {
