@@ -40,7 +40,10 @@
 		"ignore": [
 			"data/*",
 			"public/*",
-			".git/"
+			".git/*",
+			".github/*",
+			"cache/*",
+			"docs/*"
 		]
 	}
 }
