@@ -190,6 +190,7 @@ router.get("/profile/:player?", (req, res) => {
         ORDER BY date`,
 		[req.params.player],
 		(err, runs) => {
+			if (err) next(err);
 			let current_wrs = 0;
 			let total_duration = 0;
 
@@ -241,6 +242,7 @@ router.get("/profile/:player?", (req, res) => {
                 INNER JOIN categories`,
 				req.params.player,
 				(err, count) => {
+					if (err) next(err);
 					unique_cats_count = count.count;
 					total_cats = count.total;
 
@@ -250,6 +252,7 @@ router.get("/profile/:player?", (req, res) => {
                         WHERE id = ?`,
 						[req.params.player],
 						(err, runner) => {
+							if (err) next(err);
 							res.render("profile", {
 								player: runner.name,
 								nationality: getFlag(runner.nationality),
