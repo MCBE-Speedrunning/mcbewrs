@@ -32,15 +32,14 @@ block content
 				each run in runs
 					tr
 						if run.wr
-							.wr
-								td <b>#{run.date}</b>
-								td
-									a(href='/history/' + run.abbreviation) <b>#{run.readable}</b>
-								td
-									a(href=run.link, target="_blank") <b>#{run.time}</b>
-								td <b>#{run.platform}</b>
-								td <b>#{run.version}</b>
-								td <b>#{run.duration}</b>
+							td <b>#{run.date}</b>
+							td
+								a(href='/history/' + run.abbreviation) <b>#{run.readable}</b>
+							td
+								a(href=run.link, target="_blank") <b>#{run.time}</b>
+							td <b>#{run.platform}</b>
+							td <b>#{run.version}</b>
+							td <b>#{run.duration}</b>
 						else
 							td #{run.date}
 							td
