@@ -6,11 +6,11 @@ Minecraft: Bedrock Edition World Records (mcbewrs) is a world record history sit
 
 ## Usage
 
-To start the website you must first install all dependencies, then you can just start the server
+To start the website you must first install all dependencies, then you can just start the server.
 
 ```sh
-npm install
-npm start
+sudo npm install
+sudo npm start
 ```
 
 On Linux systems port 80 might be restricted to normal users, and as such you should run it as root.
@@ -23,9 +23,16 @@ After saving your code please run `npm run format` to format the code as per the
 
 ### File structure
 
-**DO NOT** put any sensitive information in the `public/` folder as that folder is visable to everyone accessing the server.
-
-- `views/`
-  - This is where `.pug` files go, like the layout and navigation bar.
+- `data/`
+  - This is where the important data goes, such as the databases, and the `config.json`
+- `docs/`
+  - This is where all the documentation goes.
+- `public`
+  - **DO NOT** put any sensitive information in the `public/` folder as that folder is visable to everyone accessing the server.
+  - This is where things like stylesheets and assets go.
 - `routes/`
   - This is where the server side code goes for each page. These must be defined in `app.js` to be accessible from the browser.
+- `utils/`
+  - This is where the utilities go, such as cron jobs, or javascript functions that are used in other files.
+- `views/`
+  - This is where the pug template files go, like the player profiles and navigation bar.
