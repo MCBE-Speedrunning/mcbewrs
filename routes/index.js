@@ -193,8 +193,23 @@ router.get("/profile/:player?", (req, res) => {
 			if (err) next(err);
 			let current_wrs = 0;
 			let total_duration = 0;
+			let timestamps = [];
+			let beg_end_flags = [];
 
 			for (i = 0, len = runs.length; i < len; i++) {
+				// Store the beginning and end of each wr
+				const beg = {
+					date: runs[i].date,
+					beg: 1,
+				};
+
+				const end = {
+					date: runs[i].date + runs[i].duration,
+					beg: 0,
+				};
+
+				timestamps.push(beg, end);
+
 				// Format the date according to the users browser settings
 				switch (req.acceptsLanguages(["en-GB", "en-US", "en", "es-ES"])) {
 					case "en-GB":
@@ -231,6 +246,33 @@ router.get("/profile/:player?", (req, res) => {
 				if (runs[i].wr === 1) current_wrs++;
 			}
 
+			timestamps.sort((a, b) => {
+				return a.date - b.date;
+			});
+
+			console.log(timestamps);
+
+			// https://canary.discord.com/channels/574267523869179904/574268036052156416/781707906428043264
+			let beg_time = (total_time = 0);
+			let beg_count = (end_count = 0);
+
+			for (let i = 0, len = timestamps.length; i < len; i++) {
+				if (timestamps[i].beg) {
+					if (beg_count++ === 0) beg_time = timestamps[i].date;
+				} else {
+					if (beg_count === ++end_count) {
+						total_time += timestamps[i].date - beg_time;
+						beg_count = 0;
+						end_count = 0;
+					}
+				}
+			}
+
+			total_time = durationFormat(total_time);
+			const leaderboard_age = durationFormat(new Date() / 1000 - 1548098280);
+			const wr_percentage = ((total_time / leaderboard_age) * 100).toFixed(2);
+			const time_with_wr = `${total_time} / ${leaderboard_age} (${wr_percentage}%)`;
+
 			// Get the number of unique categories the player has had records in
 			db.get(
 				`SELECT COUNT(DISTINCT category_id) AS count,
@@ -260,6 +302,7 @@ router.get("/profile/:player?", (req, res) => {
 								total_wrs: runs.length,
 								unique_cats: unique_cats_count + " / " + total_cats,
 								total_duration: durationFormat(total_duration),
+								time_with_wr: time_with_wr,
 								runs: runs,
 							});
 						}
