@@ -80,6 +80,33 @@ function preferesLight() {
 	});
 }
 
+function preferesNether() {
+	// Start the transition
+	trans();
+	// Save the preferance
+	localStorage.setItem("colorMode", "Nether");
+	// Check the box to make it look like dark mode is enabled
+	document.getElementById("colorPreferance").checked = true;
+	// Add the dark mode css
+	document.getElementById("colorScheme").innerHTML =
+		'<link rel="stylesheet" type="text/css" href="/stylesheets/nether.css">';
+
+	document.querySelectorAll(".table").forEach((el) => {
+		el.classList.remove("table-light");
+		el.classList.add("table-dark");
+	});
+
+	document.querySelectorAll("nav").forEach((el) => {
+		el.classList.remove("navbar-light");
+		el.classList.add("navbar-dark");
+	});
+
+	document.querySelectorAll(".card").forEach((el) => {
+		el.classList.remove("bg-light");
+		el.classList.add("bg-dark");
+	});
+}
+
 /*
  * When the user changes their native
  * color scheme make sure to change too
@@ -96,11 +123,23 @@ const preferedColorScheme = localStorage.getItem("colorMode");
 
 // If the user already has a preferance respect it
 if (preferedColorScheme == "Light") preferesLight();
+else if (preferedColorScheme == "Nether") preferesNether();
 else preferesDark();
 
 document
 	.getElementById("colorPreferance")
 	.addEventListener("click", colorChange, true);
+
+// Nothing interesting
+const shakeEvent = new Shake({
+	threshold: 15, // optional shake strength threshold
+	timeout: 1000, // optional, determines the frequency of event generation
+});
+shakeEvent.start();
+window.addEventListener("shake", preferesNether, false);
+
+const listener = new window.keypress.Listener();
+listener.sequence_combo("d r e a m space b a d", preferesNether, true);
 
 // Use twemoji's
 window.addEventListener("load", () => {

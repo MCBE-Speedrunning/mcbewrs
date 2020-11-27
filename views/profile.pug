@@ -33,19 +33,19 @@ block content
 					tr
 						if run.wr
 							td 
-								b=run.date
+								b= run.date
 							td
 								a(href='/history/' + run.abbreviation) 
-									b=run.readable
+									b= run.readable
 							td
 								a(href=run.link, target="_blank") 
-									b=run.time
+									b= run.time
 							td 
-								b=run.platform
+								b= run.platform
 							td 
-								b=run.version
+								b= run.version
 							td 
-								b=run.duration
+								b= run.duration
 						else
 							td #{run.date}
 							td

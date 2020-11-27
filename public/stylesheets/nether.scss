@@ -1,0 +1,27 @@
+body {
+	background-color: #555555;
+	background-image: url("/assets/bg_nether.png");
+	color: #ffffff;
+
+	a {
+		color: #fd8c41;
+	}
+
+	nav {
+		background-image: linear-gradient(
+			to right,
+			#fc713a96,
+			#54020596
+		) !important;
+	}
+
+	table {
+		--bs-table-bg: #29212196 !important;
+		--bs-table-striped-bg: #342c2c96 !important;
+	}
+
+	.footer {
+		background-color: #333333ff;
+		color: #ffffff;
+	}
+}

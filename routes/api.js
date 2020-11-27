@@ -33,9 +33,9 @@ function authenticateToken(req, res, next) {
 }
 
 function parseData(req, res, rows) {
-	for(let i in rows) {
-		for(let j in rows[i]){
-			if(rows[i][j] === "-") {
+	for (let i in rows) {
+		for (let j in rows[i]) {
+			if (rows[i][j] === "-") {
 				rows[i][j] = null;
 			}
 		}

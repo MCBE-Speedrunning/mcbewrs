@@ -1,0 +1,20 @@
+{
+	"name": "mcbewrs",
+	"description": "A website that tracks world records for minecraft bedrock edition",
+	"main": "server.js",
+	"license": "UNLICENSED",
+	"homepage": "https://github.com/MCBE-Speedrunning/mcbewrs",
+	"private": true,
+	"ignore": [
+		"**/.*",
+		"node_modules",
+		"bower_components",
+		"./public/components/",
+		"test",
+		"tests"
+	],
+	"dependencies": {
+		"Keypress": "^2.1.5",
+		"shake.js": "^1.2.2"
+	}
+}
