@@ -32,20 +32,20 @@ block content
 				each run in runs
 					tr
 						if run.wr
-							td 
-								b= run.date
 							td
-								a(href='/history/' + run.abbreviation) 
-									b= run.readable
+								b #{run.date}
 							td
-								a(href=run.link, target="_blank") 
-									b= run.time
-							td 
-								b= run.platform
-							td 
-								b= run.version
-							td 
-								b= run.duration
+								a(href='/history/' + run.abbreviation)
+									b #{run.readable}
+							td
+								a(href=run.link, target="_blank")
+									b #{run.time}
+							td
+								b #{run.platform}
+							td
+								b #{run.version}
+							td
+								b #{run.duration}
 						else
 							td #{run.date}
 							td
