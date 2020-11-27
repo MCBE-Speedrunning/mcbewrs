@@ -130,6 +130,14 @@ document
 	.getElementById("colorPreferance")
 	.addEventListener("click", colorChange, true);
 
+// Add active class to active link
+const navLinks = document.querySelectorAll(".nav-link");
+for (let i = 0; i < navLinks.length; i++) {
+	if (navLinks[i].getAttribute("href") === location.pathname) {
+		navLinks[i].classList.add("active");
+	}
+}
+
 // Nothing interesting
 const shakeEvent = new Shake({
 	threshold: 15, // optional shake strength threshold
