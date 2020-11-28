@@ -75,8 +75,6 @@ router.get("/home", (req, res) => {
  * World record history
  */
 router.get("/history/:cat?", (req, res) => {
-	const db = req.app.get("leaderboard");
-
 	// If no category is specified, go to the history home page
 	if (typeof req.params.cat === "undefined") {
 		res.render("historyhome");
@@ -134,8 +132,6 @@ router.get("/history/:cat?", (req, res) => {
  * Player profiles
  */
 router.get("/profile/:player?", (req, res) => {
-	const db = req.app.get("leaderboard");
-
 	// Get all the players runs
 	db.all(
 		`SELECT abbreviation, date, readable, link, time,
