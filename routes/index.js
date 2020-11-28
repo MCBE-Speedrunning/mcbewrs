@@ -32,33 +32,14 @@ router.get("/", (req, res, next) => {
 			[cat_type],
 			(err, recent) => {
 				if (err) next(err);
+
+				const locale = req.acceptsLanguages(["en-GB", "en-US", "en-ES", "en"]);
+
 				// For each run, format the date and time appropriately
 				for (let i in recent) {
-					switch (req.acceptsLanguages(["en-GB", "en-US", "en", "es-ES"])) {
-						case "en-GB":
-							recent[i].date = new Date(
-								recent[i].date * 1000
-							).toLocaleDateString("en-GB");
-							break;
-
-						case "en-US":
-							recent[i].date = new Date(
-								recent[i].date * 1000
-							).toLocaleDateString("en");
-							break;
-
-						case "es-ES":
-							recent[i].date = new Date(
-								recent[i].date * 1000
-							).toLocaleDateString("es-ES");
-							break;
-
-						default:
-							recent[i].date = new Date(
-								recent[i].date * 1000
-							).toLocaleDateString("en");
-							break;
-					}
+					recent[i].date = new Date(recent[i].date * 1000).toLocaleDateString(
+						locale
+					);
 
 					recent[i].time = timeFormat(recent[i].time);
 					recent[i].nationality = getFlag(recent[i].nationality);
@@ -117,38 +98,15 @@ router.get("/history/:cat?", (req, res) => {
             ORDER BY date ASC`,
 			[req.params.cat],
 			(err, rows) => {
+				const locale = req.acceptsLanguages(["en-GB", "en-US", "es-ES", "en"]);
+
 				for (i = 0, len = rows.length; i < len; i++) {
 					rows[i].nationality = getFlag(rows[i].nationality);
-
-					// Properly format the runs date, time, and duration
-					switch (req.acceptsLanguages(["en-GB", "en-US", "en", "es-ES"])) {
-						case "en-GB":
-							rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(
-								"en-GB"
-							);
-							break;
-
-						case "en-US":
-							rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(
-								"en"
-							);
-							break;
-
-						case "es-ES":
-							rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(
-								"es-ES"
-							);
-							break;
-
-						default:
-							rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(
-								"en"
-							);
-							break;
-					}
-
 					rows[i].time = timeFormat(rows[i].time);
 					rows[i].duration = Math.trunc(rows[i].duration / 86400);
+					rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(
+						locale
+					);
 
 					if (rows[i].duration === 0) rows[i].duration = "<1";
 				}
@@ -196,6 +154,8 @@ router.get("/profile/:player?", (req, res) => {
 			let timestamps = [];
 			let beg_end_flags = [];
 
+			const locale = req.acceptsLanguages(["en-GB", "en-US", "en-ES", "en"]);
+
 			for (i = 0, len = runs.length; i < len; i++) {
 				// Store the beginning and end of each wr
 				const beg = {
@@ -211,31 +171,7 @@ router.get("/profile/:player?", (req, res) => {
 				timestamps.push(beg, end);
 
 				// Format the date according to the users browser settings
-				switch (req.acceptsLanguages(["en-GB", "en-US", "en", "es-ES"])) {
-					case "en-GB":
-						runs[i].date = new Date(runs[i].date * 1000).toLocaleDateString(
-							"en-GB"
-						);
-						break;
-
-					case "en-US":
-						runs[i].date = new Date(runs[i].date * 1000).toLocaleDateString(
-							"en"
-						);
-						break;
-
-					case "es-ES":
-						runs[i].date = new Date(runs[i].date * 1000).toLocaleDateString(
-							"es-ES"
-						);
-						break;
-
-					default:
-						runs[i].date = new Date(runs[i].date * 1000).toLocaleDateString(
-							"en"
-						);
-						break;
-				}
+				runs[i].date = new Date(runs[i].date * 1000).toLocaleDateString(locale);
 
 				// Update stats, and format the runs time and duration
 				total_duration += runs[i].duration;
@@ -262,8 +198,7 @@ router.get("/profile/:player?", (req, res) => {
 				} else {
 					if (beg_count === ++end_count) {
 						total_time += timestamps[i].date - beg_time;
-						beg_count = 0;
-						end_count = 0;
+						beg_count = end_count = 0;
 					}
 				}
 			}

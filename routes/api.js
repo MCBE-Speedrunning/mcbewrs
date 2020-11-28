@@ -16,7 +16,7 @@ const auth = new sqlite3.Database("./data/auth.db");
  * ^^the above object structure is completely arbitrary
  */
 function generateAccessToken(username) {
-	// expires after half and hour (1800 seconds = 30 minutes)
+	// Expires after half and hour (1800 seconds = 30 minutes)
 	return jwt.sign(username, config.token_secret, { expiresIn: "1800s" });
 }
 
@@ -37,13 +37,9 @@ function authenticateToken(req, res, next) {
 }
 
 function parseData(req, res, rows) {
-	for (let i in rows) {
-		for (let j in rows[i]) {
-			if (rows[i][j] === "-") {
-				rows[i][j] = null;
-			}
-		}
-	}
+	for (let i in rows)
+		for (let j in rows[i]) if (rows[i][j] === "-") rows[i][j] = null;
+
 	switch (req.acceptsLanguages(["json", "xml", "yaml", "toml"])) {
 		case "json":
 			res.jsonp({ data: rows });
