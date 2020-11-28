@@ -19,7 +19,7 @@ The `leaderboard.db` database is used to store all the information relating to r
 
 | Column        | Type    | Not Null? | Notes                                                                                                                                                |
 | ------------- | ------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `id`          | Integer | Yes*      | The tables primary key, which is used as an ID for each run.                                                                                         |
+| `id`          | Integer | Yes\*     | The tables primary key, which is used as an ID for each run.                                                                                         |
 | `category_id` | Integer | Yes       | The ID of the category that the run is part of.                                                                                                      |
 | `date`        | Integer | Yes       | The date the run was set, stored as a unix timestamp.                                                                                                |
 | `time`        | Numeric | Yes       | The time of the run in seconds.                                                                                                                      |
@@ -35,7 +35,7 @@ The `leaderboard.db` database is used to store all the information relating to r
 
 | Column        | Type    | Not Null? | Notes                                                                                                                                                                   |
 | ------------- | ------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `id`          | Integer | Yes*      | The tables primary key, which is used as an ID for each runner. This ID is also used in the url of the players profile.                                                 |
+| `id`          | Integer | Yes\*     | The tables primary key, which is used as an ID for each runner. This ID is also used in the url of the players profile.                                                 |
 | `name`        | Text    | Yes       | The runners username on [speedrun.com](https://www.speedrun.com). In the case that the runner does not have an account, either a known alias or real name will be used. |
 | `nationality` | Text    | No        | The runners nationality, stored as an [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code.                                              |
 
@@ -43,7 +43,7 @@ The `leaderboard.db` database is used to store all the information relating to r
 
 | Column         | Type    | Not Null? | Notes                                                                         |
 | -------------- | ------- | --------- | ----------------------------------------------------------------------------- |
-| `id`           | Integer | Yes*      | The tables primary key, which is used as an ID for each category.             |
+| `id`           | Integer | Yes\*     | The tables primary key, which is used as an ID for each category.             |
 | `readable`     | Text    | Yes       | The full category name, as they appear on the history pages.                  |
 | `abbreviation` | Text    | Yes       | The abbrevated category name, which is used in URIs.                          |
 | `type`         | Text    | Yes       | The type of category, with the three values being `main`, `il`, and `catext`. |
