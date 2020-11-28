@@ -47,6 +47,7 @@ The `leaderboard.db` database is used to store all the information relating to r
 | `readable`     | Text    | Yes       | The full category name, as they appear on the history pages.                  |
 | `abbreviation` | Text    | Yes       | The abbrevated category name, which is used in URIs.                          |
 | `type`         | Text    | Yes       | The type of category, with the three values being `main`, `il`, and `catext`. |
+| `corder`       | Integer | Yes       | The order in which the category should be displayed, lower comes first.       |
 
 ## pairs
 

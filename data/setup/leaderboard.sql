@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS categories (
 	id				INTEGER PRIMARY KEY AUTOINCREMENT,
 	readable		TEXT NOT NULL UNIQUE,
 	abbreviation	TEXT NOT NULL UNIQUE,
-	type			TEXT NOT NULL DEFAULT 'main'
+	type			TEXT NOT NULL DEFAULT 'main',
+    corder          INTEGER NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS runs (
