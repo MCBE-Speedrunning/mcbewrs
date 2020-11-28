@@ -4,7 +4,7 @@
 
 ## Purpose
 
-The `leaderboard.db` is used to store all the information relating to runs on the site.
+The `leaderboard.db` database is used to store all the information relating to runs on the site.
 
 ## Tables
 
