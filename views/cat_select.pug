@@ -1,0 +1,33 @@
+extends layout
+
+block content
+	h1 #{type} World Records
+	table.table.table-hover.table-sm.table-striped
+		thead
+			tr
+				th(scope="col") Category
+				th(scope="col") Time
+				th(scope="col") Player
+				th(scope="col") Nation
+				th(scope="col") Date
+				th(scope="col") Platform
+				th(scope="col") Input
+				th(scope="col") Version
+				th(scope="col") Seed
+				th(scope="col") Duration (Days)
+		tbody
+			each run in records
+				tr
+					td
+						a(href='/history/' + run.abbreviation) #{run.readable}
+					td
+						a(href=run.link, target="_blank") #{run.time}
+					td
+						a(href='/profile/' + run.runner_id) #{run.name}
+					td #{run.nationality}
+					td #{run.date}
+					td #{run.platform}
+					td #{run.input}
+					td #{run.version}
+					td #{run.seed}
+					td #{run.duration}

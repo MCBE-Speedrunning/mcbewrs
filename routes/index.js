@@ -72,12 +72,68 @@ router.get("/home", (req, res) => {
 });
 
 /*
+ * Category select
+ */
+router.get("/catselect/:type?", (req, res) => {
+	// If no type is specified, go to the history home page
+	if (typeof req.params.type === "undefined") {
+		res.render("history_home");
+	} else {
+		// Query all the records for the specified cat type
+		db.all(
+			`SELECT
+				abbreviation, readable, link, time,
+				runner_id, name, nationality, date,
+				platform, input, version, seed, duration
+			FROM runs
+			INNER JOIN
+				pairs ON pairs.run_id = runs.id
+			INNER JOIN
+				runners ON runners.id = pairs.runner_id
+			INNER JOIN
+				categories ON categories.id = runs.category_id
+				AND categories.type = ?
+			WHERE wr = 1
+			ORDER BY corder`,
+			[req.params.type],
+			(err, records) => {
+				if (err) next(err);
+
+				const locale = req.acceptsLanguages(["en-GB", "en-US", "es-ES", "en"]);
+
+				for (let i = 0, len = records.length; i < len; i++) {
+					records[i].nationality = getFlag(records[i].nationality);
+					records[i].time = timeFormat(records[i].time);
+					records[i].duration = Math.trunc(records[i].duration / 86400);
+					records[i].date = new Date(records[i].date * 1000).toLocaleDateString(
+						locale
+					);
+
+					if (records[i].duration === 0) records[i].duration = "<1";
+				}
+
+				// Set the title for the page
+				let type;
+				if (req.params.type === "main") type = "Full Game";
+				else if (req.params.type === "il") type = "Individual Level";
+				else type = "Category Extension";
+
+				res.render("cat_select", {
+					type: type,
+					records: records,
+				});
+			}
+		);
+	}
+});
+
+/*
  * World record history
  */
 router.get("/history/:cat?", (req, res) => {
 	// If no category is specified, go to the history home page
 	if (typeof req.params.cat === "undefined") {
-		res.render("historyhome");
+		res.render("history_home");
 	} else {
 		// Query all the runs for the specified category, sorted by date
 		db.all(
@@ -96,6 +152,7 @@ router.get("/history/:cat?", (req, res) => {
             ORDER BY date ASC`,
 			[req.params.cat],
 			(err, rows) => {
+				if (err) next(err);
 				const locale = req.acceptsLanguages(["en-GB", "en-US", "es-ES", "en"]);
 
 				for (i = 0, len = rows.length; i < len; i++) {
