@@ -3,7 +3,7 @@ extends layout
 block content
 	.leaderboardhome
 		h1 Recent World Records
-		h3 Full Game Runs
+		h3 Full Game
 		table.table.table-hover.table-sm.table-striped
 			thead
 				tr
@@ -24,7 +24,7 @@ block content
 							a(href='/profile/' + run.runner_id) #{run.name}
 						td #{run.nationality}
 
-		h3 Individual Levels
+		h3 Individual Level
 		table.table.table-hover.table-sm.table-striped
 			thead
 				tr
