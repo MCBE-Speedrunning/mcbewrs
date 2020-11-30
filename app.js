@@ -36,26 +36,26 @@ const cache = {};
 function parseError(req, res, err) {
 	switch (req.acceptsLanguages(["json", "xml", "yaml", "toml"])) {
 		case "json":
-			res.jsonp({ error: err });
+			res.status(err.status).jsonp({ error: err });
 			break;
 
 		case "xml":
 			res.set("Content-Type", "text/xml");
-			res.send(xml({ error: err }));
+			res.status(err.status).send(xml({ error: err }));
 			break;
 
 		case "yaml":
 			res.set("Content-Type", "text/yaml");
-			res.send(safeDump({ error: err }));
+			res.status(err.status).send(safeDump({ error: err }));
 			break;
 
 		case "toml":
 			res.set("Content-Type", "text/toml");
-			res.send(toToml({ error: err }, { space: 4 }));
+			res.status(err.status).send(toToml({ error: err }, { space: 4 }));
 			break;
 
 		default:
-			res.jsonp({ error: err });
+			res.status(err.status).jsonp({ error: err });
 			break;
 	}
 }
@@ -106,7 +106,6 @@ app.use(function (err, req, res, _next) {
 	res.locals.error = debug ? err : {};
 
 	if (req.path.includes("/api")) {
-		res.status(err.status);
 		parseError(req, res, err);
 	} else {
 		// Render the error page
