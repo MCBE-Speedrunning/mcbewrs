@@ -8,7 +8,7 @@ const logger = require("morgan");
 const minify = require("express-minify");
 const path = require("path");
 const rateLimit = require("express-rate-limit");
-const sassMiddleware = require("node-sass-middleware");
+const sass = require("./utils/sass-middleware.js");
 const session = require("express-session");
 const xml = require("xml");
 const { safeDump } = require("js-yaml");
@@ -31,6 +31,7 @@ try {
 const app = express();
 const config = JSON.parse(fs.readFileSync("./data/config.json"));
 const leaderboard = new sqlite3.Database("./data/leaderboard.db");
+const cache = {};
 
 function parseError(req, res, err) {
 	switch (req.acceptsLanguages(["json", "xml", "yaml", "toml"])) {
@@ -58,7 +59,6 @@ function parseError(req, res, err) {
 			break;
 	}
 }
-
 app.set("leaderboard", leaderboard);
 
 // View engine setup
@@ -69,15 +69,7 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(compression());
-app.use(
-	sassMiddleware({
-		src: path.join(__dirname, "public"),
-		dest: path.join(__dirname, "public"),
-		debug: debug,
-		outputStyle: "compressed",
-		sourceMap: true,
-	})
-);
+app.use(sass);
 app.use(
 	// Limit each IP to 10,000 requests per 15 minutes
 	rateLimit({
