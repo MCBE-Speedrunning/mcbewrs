@@ -4,14 +4,16 @@ const sass = require("sass");
 const cache = {};
 
 module.exports = async function renderSass(req, res, next) {
-	// ignore non-CSS requests
-    if (!req.path.endsWith(".css")) return next();
-    
-	// derive SCSS filepath from CSS request path
-	const file = path.join(process.cwd(), "public", req.path).replace(".css", ".scss");
+	// Ignore non-CSS requests
+	if (!req.path.endsWith(".css")) return next();
+
+	// Derive SCSS filepath from CSS request path
+	const file = path
+		.join(process.cwd(), "public", req.path)
+		.replace(".css", ".scss");
 	if (!fs.existsSync(file)) return res.status(404).end();
-    
-	// cache rendered CSS in memory
+
+	// Cache rendered CSS in memory
 	if (!cache[req.path]) {
 		cache[req.path] = sass.renderSync({
 			file,
