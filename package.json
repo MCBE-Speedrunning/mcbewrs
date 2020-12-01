@@ -5,8 +5,7 @@
 		"postinstall": "bower install",
 		"start": "export NODE_ENV=development && nodemon ./server.js",
 		"start-production": "node ./server.js",
-		"format": "prettier --write .",
-		"push": "git update-index --assume-unchanged data/* && git push"
+		"format": "prettier --write ."
 	},
 	"dependencies": {
 		"@prettier/plugin-pug": "^1.10.1",
