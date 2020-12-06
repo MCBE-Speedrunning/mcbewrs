@@ -19,16 +19,16 @@ router.get("/", (req, res, next) => {
 	function getRecent(cat_type, callback) {
 		db.all(
 			`SELECT
-                date, abbreviation, readable, link, time,
+				date, abbreviation, readable, link, time,
 				name, nationality, runner_id FROM runs
-            INNER JOIN
-                categories ON categories.id = runs.category_id
-                AND categories.type = ?
-            INNER JOIN
-                pairs ON pairs.run_id = runs.id
-            INNER JOIN
-                runners ON runners.id = pairs.runner_id
-            ORDER BY date DESC LIMIT 10`,
+			INNER JOIN
+				categories ON categories.id = runs.category_id
+				AND categories.type = ?
+			INNER JOIN
+				pairs ON pairs.run_id = runs.id
+			INNER JOIN
+				runners ON runners.id = pairs.runner_id
+			ORDER BY date DESC LIMIT 10`,
 			[cat_type],
 			(err, recent) => {
 				if (err) next(err);
@@ -138,18 +138,18 @@ router.get("/history/:cat?", (req, res) => {
 		// Query all the runs for the specified category, sorted by date
 		db.all(
 			`SELECT
-                date, time, name, nationality, platform,
-                input, version, seed, duration, link,
+				date, time, name, nationality, platform,
+				input, version, seed, duration, link,
 				runner_id FROM runs
-            INNER JOIN
-                pairs ON pairs.run_id = runs.id
-            INNER JOIN
-                runners ON runners.id = pairs.runner_id
-                AND runs.category_id = (
-                    SELECT id FROM categories
-                    WHERE abbreviation = ?
-                )
-            ORDER BY date ASC`,
+			INNER JOIN
+				pairs ON pairs.run_id = runs.id
+			INNER JOIN
+				runners ON runners.id = pairs.runner_id
+				AND runs.category_id = (
+					SELECT id FROM categories
+					WHERE abbreviation = ?
+				)
+			ORDER BY date ASC`,
 			[req.params.cat],
 			(err, rows) => {
 				if (err) next(err);
@@ -169,7 +169,7 @@ router.get("/history/:cat?", (req, res) => {
 				// Get the category name
 				db.get(
 					`SELECT readable FROM categories
-                    WHERE abbreviation = ?`,
+					WHERE abbreviation = ?`,
 					[req.params.cat],
 					(err, category) => {
 						if (err) throw err;
@@ -192,13 +192,13 @@ router.get("/profile/:player?", (req, res) => {
 	// Get all the players runs
 	db.all(
 		`SELECT abbreviation, date, readable, link, time,
-        platform, version, duration, wr FROM runs
-        INNER JOIN
-            pairs ON pairs.run_id = runs.id
-            AND pairs.runner_id = ?
-        INNER JOIN
-            categories ON categories.id = runs.category_id
-        ORDER BY date`,
+		platform, version, duration, wr FROM runs
+		INNER JOIN
+			pairs ON pairs.run_id = runs.id
+			AND pairs.runner_id = ?
+		INNER JOIN
+			categories ON categories.id = runs.category_id
+		ORDER BY date`,
 		[req.params.player],
 		(err, runs) => {
 			if (err) next(err);
@@ -239,8 +239,6 @@ router.get("/profile/:player?", (req, res) => {
 				return a.date - b.date;
 			});
 
-			console.log(timestamps);
-
 			// https://canary.discord.com/channels/574267523869179904/574268036052156416/781707906428043264
 			let beg_time = (total_time = 0);
 			let beg_count = (end_count = 0);
@@ -264,12 +262,12 @@ router.get("/profile/:player?", (req, res) => {
 			// Get the number of unique categories the player has had records in
 			db.get(
 				`SELECT COUNT(DISTINCT category_id) AS count,
-                    COUNT(DISTINCT abbreviation) AS total
-                FROM runs
-                INNER JOIN
-                    pairs ON pairs.run_id = runs.id
-                    AND pairs.runner_id = ?
-                INNER JOIN categories`,
+					COUNT(DISTINCT abbreviation) AS total
+				FROM runs
+				INNER JOIN
+					pairs ON pairs.run_id = runs.id
+					AND pairs.runner_id = ?
+				INNER JOIN categories`,
 				req.params.player,
 				(err, count) => {
 					if (err) next(err);
@@ -279,7 +277,7 @@ router.get("/profile/:player?", (req, res) => {
 					// Get the runners name and nationality, then render the page
 					db.get(
 						`SELECT name, nationality FROM runners
-                        WHERE id = ?`,
+						WHERE id = ?`,
 						[req.params.player],
 						(err, runner) => {
 							if (err) next(err);

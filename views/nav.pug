@@ -12,12 +12,15 @@ nav.navbar.navbar-expand-lg.navbar-dark.sticky-top
 			span.navbar-toggler-icon
 
 		#navbarSupportedContent.collapse.navbar-collapse
-			- const links = [{name: "Home", link: "/"}, {name: "History", link: "/history"}, {name: "Players", link: "/players", disabled: true}, {name: "GitHub", link: "https://www.github.com/MCBE-Speedrunning/mcbewrs"}, {name: "About", link: "/about"},];
+			- const links = [{name: "Home", link: "/"}, {name: "History", link: "/history"}, {name: "Players", link: "/players", disabled: true}, {name: "GitHub", link: "https://www.github.com/MCBE-Speedrunning/mcbewrs", blank: true,}, {name: "About", link: "/about"},];
 				ul.navbar-nav.mr-auto.mb-2.mb-lg-0
 					each i in links
 						if !i.disabled
 							li.nav-item
-								a.nav-link(aria-current=i.name, href=i.link)= i.name
+								if !i.blank
+									a.nav-link(aria-current=i.name, href=i.link)= i.name
+								else
+									a.nav-link(aria-current=i.name, href=i.link, target="_blank")= i.name
 						else
 							li.nav-item
 								a.nav-link.disabled(href=i.link, tabindex="-1", aria-disabled="true")= i.name

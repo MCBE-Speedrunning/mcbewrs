@@ -125,8 +125,17 @@ body {
 		margin-right: auto;
 		width: 75%;
 	}
-
-	.input-group {
-		width: 50%;
+	@media only screen and (max-width: 600px) {
+		[row="Nation"] {
+			display: none;
+		}
+		[row="Category"] {
+			display: none;
+		}
 	}
+	@media only screen and (min-width: 600px) {		
+		[row="Abbreviation"] {
+			display: none;
+		}
+	} 
 }
