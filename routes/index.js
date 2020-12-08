@@ -31,18 +31,28 @@ router.get("/", (req, res, next) => {
 			ORDER BY date DESC LIMIT 10`,
 			[cat_type],
 			(err, recent) => {
-				if (err) next(err);
+				if (err) return next(err);
 
 				const locale = req.acceptsLanguages(["en-GB", "en-US", "en-ES", "en"]);
 
 				// For each run, format the date and time appropriately
-				for (let i in recent) {
+				for (let i = 0; i >= recent.length; i++) {
 					recent[i].date = new Date(recent[i].date * 1000).toLocaleDateString(
 						locale
 					);
 
+					if (
+						recent[i + 1] !== undefined &&
+						recent[i].link === recent[i + 1].link
+					) {
+						recent[i].name = `${recent[i].name} & ${recent[i + 1].name}`;
+						recent[i].nationality = `${getFlag(recent[i].nationality)} ${getFlag(recent[i + 1].nationality)}`;
+						delete recent[i + 1];
+						console.log(recent[i]);
+					} else {
+						recent[i].nationality = getFlag(recent[i].nationality);
+					}
 					recent[i].time = timeFormat(recent[i].time);
-					recent[i].nationality = getFlag(recent[i].nationality);
 				}
 
 				callback(recent);
@@ -97,7 +107,7 @@ router.get("/catselect/:type?", (req, res) => {
 			ORDER BY corder`,
 			[req.params.type],
 			(err, records) => {
-				if (err) next(err);
+				if (err) return next(err);
 
 				const locale = req.acceptsLanguages(["en-GB", "en-US", "es-ES", "en"]);
 
@@ -130,7 +140,7 @@ router.get("/catselect/:type?", (req, res) => {
 /*
  * World record history
  */
-router.get("/history/:cat?", (req, res) => {
+router.get("/history/:cat?", (req, res, next) => {
 	// If no category is specified, go to the history home page
 	if (typeof req.params.cat === "undefined") {
 		res.render("history_home");
@@ -152,18 +162,29 @@ router.get("/history/:cat?", (req, res) => {
 			ORDER BY date ASC`,
 			[req.params.cat],
 			(err, rows) => {
-				if (err) next(err);
+				if (err) return next(err);
+
 				const locale = req.acceptsLanguages(["en-GB", "en-US", "es-ES", "en"]);
 
 				for (i = 0, len = rows.length; i < len; i++) {
-					rows[i].nationality = getFlag(rows[i].nationality);
+					if(rows[i] === undefined) continue;
+					if (
+						rows[i + 1] !== undefined &&
+						rows[i].link === rows[i + 1].link
+					) {
+						rows[i].name = `${rows[i].name} & ${rows[i + 1].name}`;
+						rows[i].nationality = `${getFlag(rows[i].nationality)} ${getFlag(rows[i + 1].nationality)}`;
+						delete rows[i + 1];
+						console.log(rows[i]);
+					} else {
+						rows[i].nationality = getFlag(rows[i].nationality);
+					}
+					if (rows[i].duration === 0) rows[i].duration = "<1";
 					rows[i].time = timeFormat(rows[i].time);
 					rows[i].duration = Math.trunc(rows[i].duration / 86400);
 					rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(
 						locale
 					);
-
-					if (rows[i].duration === 0) rows[i].duration = "<1";
 				}
 
 				// Get the category name
@@ -201,7 +222,7 @@ router.get("/profile/:player?", (req, res) => {
 		ORDER BY date`,
 		[req.params.player],
 		(err, runs) => {
-			if (err) next(err);
+			if (err) return next(err);
 			let current_wrs = 0;
 			let total_duration = 0;
 			let timestamps = [];
@@ -270,7 +291,7 @@ router.get("/profile/:player?", (req, res) => {
 				INNER JOIN categories`,
 				req.params.player,
 				(err, count) => {
-					if (err) next(err);
+					if (err) return next(err);
 					unique_cats_count = count.count;
 					total_cats = count.total;
 
@@ -280,7 +301,7 @@ router.get("/profile/:player?", (req, res) => {
 						WHERE id = ?`,
 						[req.params.player],
 						(err, runner) => {
-							if (err) next(err);
+							if (err) return next(err);
 							res.render("profile", {
 								player: runner.name,
 								nationality: getFlag(runner.nationality),

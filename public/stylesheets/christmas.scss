@@ -1,0 +1,23 @@
+body {
+	background-color: #555555;
+	background-image: url("/assets/bg_christmas.png");
+	color: #ffffff;
+
+	a {
+		color: #f0c674;
+	}
+
+	nav {
+		background-color: #113b0896 !important;
+	}
+
+	table {
+		--bs-table-bg: #113b0896 !important;
+		--bs-table-striped-bg: #113b0896 !important;
+	}
+
+	.footer {
+		background-color: #333333ff;
+		color: #ffffff;
+	}
+}

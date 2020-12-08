@@ -41,8 +41,8 @@ function restrict(req, res, next) {
  * User authentication
  */
 function authenticate(name, pass, fn) {
-	db.get("SELECT * FROM users WHERE username = ?", [name], (err, user) => {
-		if (err) next(err);
+	db.get("SELECT * FROM users WHERE username = ?", name, (err, user) => {
+		if (err) return fn(err);
 		// Query the db for the given username
 		if (!user) return fn(new Error("cannot find user"));
 		// Apply the same algorithm to the POSTed password, applying
@@ -60,9 +60,9 @@ router.get("/login", (req, res) => {
 	res.render("login", { session: req.session, csrfToken: req.csrfToken() });
 });
 
-router.post("/login", (req, res) => {
+router.post("/login", (req, res, next) => {
 	authenticate(req.body.username, req.body.password, (err, user) => {
-		if (err) next(err);
+		if (err) return next(err);
 		if (user) {
 			// Regenerate session when signing in
 			// to prevent fixation
@@ -103,7 +103,7 @@ router.post("/register", restrict, (req, res) => {
 
 router.get("/add", restrict, (req, res, next) => {
 	leaderboard.all("SELECT * FROM categories", (err, rows) => {
-		if (err) next(err);
+		if (err) return next(err);
 		res.render("admin_add", { categories: rows, csrfToken: req.csrfToken() });
 	});
 });
@@ -144,7 +144,7 @@ router.post("/add", restrict, (req, res, next) => {
 				0,
 			],
 			(err) => {
-				if (err) next(err);
+				if (err) return next(err);
 			}
 		);
 
@@ -155,39 +155,39 @@ router.post("/add", restrict, (req, res, next) => {
 		for (let i = 0; i < run.runners.length; i++)
 			leaderboard.run(
 				`INSERT INTO pairs VALUES(
-                    (SELECT MAX(id) FROM runs),
-                    (SELECT id FROM runners WHERE name = ?)
-                )`,
+										(SELECT MAX(id) FROM runs),
+										(SELECT id FROM runners WHERE name = ?)
+								)`,
 				[run.runners[i]],
 				(err) => {
-					if (err) next(err);
+					if (err) return next(err);
 				}
 			);
 
 		// Update the WR flags
 		leaderboard.run(
 			`UPDATE runs
-            SET wr = CASE WHEN time = (
-                SELECT time FROM runs
-                WHERE category_id = ?
-                ORDER BY time ASC LIMIT 1
-            )
-            THEN 1 ELSE 0
-            END`,
+						SET wr = CASE WHEN time = (
+								SELECT time FROM runs
+								WHERE category_id = ?
+								ORDER BY time ASC LIMIT 1
+						)
+						THEN 1 ELSE 0
+						END`,
 			[run.category_id],
 			(err) => {
-				if (err) next(err);
+				if (err) return next(err);
 			}
 		);
 
 		// Calculate the duration of each run in the category just updated
 		leaderboard.all(
 			`SELECT id, date, time FROM runs
-            WHERE category_id = ?
-            ORDER BY date ASC`,
+						WHERE category_id = ?
+						ORDER BY date ASC`,
 			[run.category_id],
 			(err, rows) => {
-				if (err) next(err);
+				if (err) return next(err);
 				for (let i = 0, len = rows.length; i < len; i++) {
 					// Check every newer record until a faster one is found
 					// Can't just check the very next because of ties
@@ -206,7 +206,7 @@ router.post("/add", restrict, (req, res, next) => {
 						`UPDATE runs SET duration = ? WHERE id = ?`,
 						[rows[i].duration, rows[i].id],
 						(err) => {
-							if (err) next(err);
+							if (err) return next(err);
 						}
 					);
 				}
@@ -214,7 +214,7 @@ router.post("/add", restrict, (req, res, next) => {
 		);
 
 		leaderboard.all("SELECT * FROM categories", (err, rows) => {
-			if (err) next(err);
+			if (err) return next(err);
 			res.render("admin_add", {
 				banner: {
 					text: "Run added succesfully",
@@ -235,7 +235,7 @@ router.post("/new_user", restrict, (req, _res) => {
 		`INSERT INTO runners (name, nationality) VALUES(?, ?)`,
 		[name, nationality],
 		(err) => {
-			if (err) next(err);
+			if (err) return next(err);
 			res.render("new_user", {
 				banner: {
 					text: "Runner added succesfully",
@@ -249,7 +249,7 @@ router.post("/new_user", restrict, (req, _res) => {
 
 router.get("/pull", restrict, (_req, res, next) => {
 	exec("git pull", (err, _stdout, stderr) => {
-		if (err) next(err);
+		if (err) return next(err);
 		res.send(`Pulling complete \n ${stderr}`);
 	});
 });
