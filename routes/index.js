@@ -36,11 +36,7 @@ router.get("/", (req, res, next) => {
 				const locale = req.acceptsLanguages(["en-GB", "en-US", "en-ES", "en"]);
 
 				// For each run, format the date and time appropriately
-				for (let i = 0; i >= recent.length; i++) {
-					recent[i].date = new Date(recent[i].date * 1000).toLocaleDateString(
-						locale
-					);
-
+				for (let i = 0; i < recent.length; i++) {
 					if (
 						recent[i + 1] !== undefined &&
 						recent[i].link === recent[i + 1].link
@@ -48,13 +44,14 @@ router.get("/", (req, res, next) => {
 						recent[i].name = `${recent[i].name} & ${recent[i + 1].name}`;
 						recent[i].nationality = `${getFlag(recent[i].nationality)} ${getFlag(recent[i + 1].nationality)}`;
 						delete recent[i + 1];
-						console.log(recent[i]);
 					} else {
 						recent[i].nationality = getFlag(recent[i].nationality);
 					}
 					recent[i].time = timeFormat(recent[i].time);
+					recent[i].date = new Date(recent[i].date * 1000).toLocaleDateString(
+						locale
+					);
 				}
-
 				callback(recent);
 			}
 		);
