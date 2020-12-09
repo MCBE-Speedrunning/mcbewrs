@@ -15,17 +15,18 @@ block content
 					th(scope="col", row="Nation") Nation
 			tbody
 				each run in main
-					tr
-						td(row="Date") #{run.date}
-						td(row="Category")
-							a(href='/history/' + run.abbreviation) #{run.readable}
-						td(row="Abbreviation")
-							a(href='/history/' + run.abbreviation) #{run.abbreviation}
-						td(row="Time")
-							a(href=run.link, target="_blank") #{run.time}
-						td(row="Player") 
-							a(href='/profile/' + run.runner_id) #{run.name}
-						td(row="Nation") #{run.nationality}
+					if run !== undefined
+						tr
+							td(row="Date") #{run.date}
+							td(row="Category")
+								a(href='/history/' + run.abbreviation) #{run.readable}
+							td(row="Abbreviation")
+								a(href='/history/' + run.abbreviation) #{run.abbreviation}
+							td(row="Time")
+								a(href=run.link, target="_blank") #{run.time}
+							td(row="Player") 
+								a(href='/profile/' + run.runner_id) #{run.name}
+							td(row="Nation") #{run.nationality}
 
 		h3 Individual Level
 		table.table.table-hover.table-sm.table-striped
@@ -39,17 +40,18 @@ block content
 					th(scope="col", row="Nation") Nation
 			tbody
 				each run in il
-					tr
-						td(row="Date") #{run.date}
-						td(row="Category")
-							a(href='/history/' + run.abbreviation) #{run.readable}
-						td(row="Abbreviation")
-							a(href='/history/' + run.abbreviation) #{run.abbreviation}
-						td(row="Time")
-							a(href=run.link, target="_blank") #{run.time}
-						td(row="Player") 
-							a(href='/profile/' + run.runner_id) #{run.name}
-						td(row="Nation") #{run.nationality}
+					if run !== undefined
+						tr
+							td(row="Date") #{run.date}
+							td(row="Category")
+								a(href='/history/' + run.abbreviation) #{run.readable}
+							td(row="Abbreviation")
+								a(href='/history/' + run.abbreviation) #{run.abbreviation}
+							td(row="Time")
+								a(href=run.link, target="_blank") #{run.time}
+							td(row="Player") 
+								a(href='/profile/' + run.runner_id) #{run.name}
+							td(row="Nation") #{run.nationality}
 
 		h3 Category Extensions
 		table.table.table-hover.table-sm.table-striped
@@ -63,14 +65,15 @@ block content
 					th(scope="col", row="Nation") Nation
 			tbody
 				each run in catext
-					tr
-						td(row="Date") #{run.date}
-						td(row="Category")
-							a(href='/history/' + run.abbreviation) #{run.readable}
-						td(row="Abbreviation")
-							a(href='/history/' + run.abbreviation) #{run.abbreviation}
-						td(row="Time")
-							a(href=run.link, target="_blank") #{run.time}
-						td(row="Player") 
-							a(href='/profile/' + run.runner_id) #{run.name}
-						td(row="Nation") #{run.nationality}
+					if run !== undefined
+						tr
+							td(row="Date") #{run.date}
+							td(row="Category")
+								a(href='/history/' + run.abbreviation) #{run.readable}
+							td(row="Abbreviation")
+								a(href='/history/' + run.abbreviation) #{run.abbreviation}
+							td(row="Time")
+								a(href=run.link, target="_blank") #{run.time}
+							td(row="Player") 
+								a(href='/profile/' + run.runner_id) #{run.name}
+							td(row="Nation") #{run.nationality}

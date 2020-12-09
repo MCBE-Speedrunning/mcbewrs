@@ -37,6 +37,7 @@ router.get("/", (req, res, next) => {
 
 				// For each run, format the date and time appropriately
 				for (let i = 0; i < recent.length; i++) {
+					if(recent[i] === undefined) continue;
 					if (
 						recent[i + 1] !== undefined &&
 						recent[i].link === recent[i + 1].link
