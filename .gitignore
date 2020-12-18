@@ -78,3 +78,6 @@ cache/
 # Data that doesn't need to be in the repo
 backup/
 data/
+
+# nodemon output
+output.log
