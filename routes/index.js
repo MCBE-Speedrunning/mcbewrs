@@ -37,13 +37,15 @@ router.get("/", (req, res, next) => {
 
 				// For each run, format the date and time appropriately
 				for (let i = 0; i < recent.length; i++) {
-					if(recent[i] === undefined) continue;
+					if (recent[i] === undefined) continue;
 					if (
 						recent[i + 1] !== undefined &&
 						recent[i].link === recent[i + 1].link
 					) {
 						recent[i].name = `${recent[i].name} & ${recent[i + 1].name}`;
-						recent[i].nationality = `${getFlag(recent[i].nationality)} ${getFlag(recent[i + 1].nationality)}`;
+						recent[i].nationality = `${getFlag(
+							recent[i].nationality
+						)} ${getFlag(recent[i + 1].nationality)}`;
 						delete recent[i + 1];
 					} else {
 						recent[i].nationality = getFlag(recent[i].nationality);
@@ -165,13 +167,12 @@ router.get("/history/:cat?", (req, res, next) => {
 				const locale = req.acceptsLanguages(["en-GB", "en-US", "es-ES", "en"]);
 
 				for (i = 0, len = rows.length; i < len; i++) {
-					if(rows[i] === undefined) continue;
-					if (
-						rows[i + 1] !== undefined &&
-						rows[i].link === rows[i + 1].link
-					) {
+					if (rows[i] === undefined) continue;
+					if (rows[i + 1] !== undefined && rows[i].link === rows[i + 1].link) {
 						rows[i].name = `${rows[i].name} & ${rows[i + 1].name}`;
-						rows[i].nationality = `${getFlag(rows[i].nationality)} ${getFlag(rows[i + 1].nationality)}`;
+						rows[i].nationality = `${getFlag(rows[i].nationality)} ${getFlag(
+							rows[i + 1].nationality
+						)}`;
 						delete rows[i + 1];
 						console.log(rows[i]);
 					} else {
