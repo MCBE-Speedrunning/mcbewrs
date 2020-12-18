@@ -107,6 +107,33 @@ function preferesNether() {
 	});
 }
 
+function preferesChristmas() {
+	// Start the transition
+	trans();
+	// Save the preferance
+	localStorage.setItem("colorMode", "Christmas");
+	// Check the box to make it look like light mode is enabled
+	document.getElementById("colorPreferance").checked = false;
+	// Add the dark mode css
+	document.getElementById("colorScheme").innerHTML =
+		'<link rel="stylesheet" type="text/css" href="/stylesheets/christmas.css">';
+
+	document.querySelectorAll(".table").forEach((el) => {
+		el.classList.remove("table-light");
+		el.classList.add("table-dark");
+	});
+
+	document.querySelectorAll("nav").forEach((el) => {
+		el.classList.remove("navbar-light");
+		el.classList.add("navbar-dark");
+	});
+
+	document.querySelectorAll(".card").forEach((el) => {
+		el.classList.remove("bg-light");
+		el.classList.add("bg-dark");
+	});
+}
+
 /*
  * When the user changes their native
  * color scheme make sure to change too
@@ -124,6 +151,7 @@ const preferedColorScheme = localStorage.getItem("colorMode");
 // If the user already has a preferance respect it
 if (preferedColorScheme == "Light") preferesLight();
 else if (preferedColorScheme == "Nether") preferesNether();
+else if (preferedColorScheme == "Christmas") preferesChristmas();
 else preferesDark();
 
 document
@@ -148,6 +176,7 @@ window.addEventListener("shake", preferesNether, false);
 
 const listener = new window.keypress.Listener();
 listener.sequence_combo("d r e a m space b a d", preferesNether, true);
+listener.sequence_combo("j i n g l e space b e l l s", preferesChristmas, true);
 
 // Use twemoji's
 window.addEventListener("load", () => {

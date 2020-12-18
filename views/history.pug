@@ -18,15 +18,16 @@ block content
 					th(scope="col") Duration (Days)
 			tbody
 				each run in history
-					tr
-						td #{run.date}
-						td
-							a(href=run.link, target="_blank") #{run.time}
-						td
-							a(href='/profile/' + run.runner_id) #{run.name}
-						td #{run.nationality}
-						td #{run.platform}
-						td #{run.input}
-						td #{run.version}
-						td #{run.seed}
-						td #{run.duration}
+					if run !== undefined
+						tr
+							td #{run.date}
+							td
+								a(href=run.link, target="_blank") #{run.time}
+							td
+								a(href='/profile/' + run.runner_id) #{run.name}
+							td #{run.nationality}
+							td #{run.platform}
+							td #{run.input}
+							td #{run.version}
+							td #{run.seed}
+							td #{run.duration}

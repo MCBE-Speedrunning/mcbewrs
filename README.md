@@ -24,10 +24,11 @@ After saving your code please run `npm run format` to format the code as per the
 ### File structure
 
 - `data/`
-  - This is where the important data goes, such as the databases, and the `config.json`
+  - This is where the important data goes, such as the databases, and the `config.json`.
+  - By default, this directory does not exist. You can set it up by running `utils/setup_data.sh`.
 - `docs/`
   - This is where all the documentation goes.
-- `public`
+- `public/`
   - **DO NOT** put any sensitive information in the `public/` folder as that folder is visable to everyone accessing the server.
   - This is where things like stylesheets and assets go.
 - `routes/`

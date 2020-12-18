@@ -14,12 +14,14 @@ module.exports = async function renderSass(req, res, next) {
 	if (!fs.existsSync(file)) return res.status(404).end();
 
 	// Cache rendered CSS in memory
-	if (!cache[req.path]) {
+	if (!cache[req.path] || !process.env.NODE_ENV === "production") {
 		cache[req.path] = sass.renderSync({
 			file,
 			includePaths: [path.join(process.cwd(), "node_modules")],
 			outputStyle:
 				process.env.NODE_ENV === "production" ? "compressed" : "expanded",
+			sourceMap: process.env.NODE_ENV === "production" ? false : true,
+			sourceMapEmbed: true,
 		});
 	}
 
