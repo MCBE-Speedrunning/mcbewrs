@@ -1,6 +1,28 @@
 {
 	"name": "mcbewrs",
 	"version": "0.0.0",
+	"description": "The world record history site for Minecraft: Bedrock Edition speedrunning",
+	"main": "server.js",
+	"private": "true",
+	"author": {
+		"name": "Thomas Voss",
+		"email": "thomasvoss@live.com",
+		"url": "https://mcbe.wtf"
+	},
+	"contributors": [
+		{
+			"name": "Luca Matei Pintillie",
+			"email": "lucafulger@gmail.com",
+			"url": "https://aninternettroll.xyz"
+		}
+	],
+	"bugs": "https://github.com/MCBE-Speedrunning/mcbewrs/issues",
+	"homepage": "https://wrs.mcbe.wtf",
+	"license": "Unlicense",
+	"repository": {
+		"type": "git",
+		"url": "https://git.mcbe.wtf/MCBE-Speedrunning/mcbewrs"
+	},
 	"scripts": {
 		"postinstall": "bower install",
 		"start": "export NODE_ENV=development && nodemon ./server.js",
