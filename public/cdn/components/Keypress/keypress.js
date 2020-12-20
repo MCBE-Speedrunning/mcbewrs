@@ -105,7 +105,9 @@ Combo options available and their defaults:
 		}
 
 		Combo.prototype.allows_key_repeat = function () {
-			return !this.prevent_repeat && typeof this.on_keydown === "function";
+			return (
+				!this.prevent_repeat && typeof this.on_keydown === "function"
+			);
 		};
 
 		Combo.prototype.reset = function () {
@@ -275,7 +277,12 @@ Combo options available and their defaults:
 						if (__indexOf.call(active_combos, match) >= 0) {
 							return;
 						}
-						if (!(match.is_solitary || !_this._cmd_bug_check(match.keys))) {
+						if (
+							!(
+								match.is_solitary ||
+								!_this._cmd_bug_check(match.keys)
+							)
+						) {
 							return active_combos.push(match);
 						}
 					};
@@ -332,13 +339,21 @@ Combo options available and their defaults:
 				) {
 					active_combo = this._active_combos[i];
 					if (
-						!(active_combo && active_combo.is_exclusive && combo.is_exclusive)
+						!(
+							active_combo &&
+							active_combo.is_exclusive &&
+							combo.is_exclusive
+						)
 					) {
 						continue;
 					}
 					active_keys = active_combo.keys;
 					if (!should_replace) {
-						for (_j = 0, _len = active_keys.length; _j < _len; _j++) {
+						for (
+							_j = 0, _len = active_keys.length;
+							_j < _len;
+							_j++
+						) {
 							active_key = active_keys[_j];
 							should_replace = true;
 							if (__indexOf.call(combo.keys, active_key) < 0) {
@@ -365,7 +380,11 @@ Combo options available and their defaults:
 								active_combo.reset();
 							}
 						} else {
-							active_combo = this._active_combos.splice(i, 1, combo)[0];
+							active_combo = this._active_combos.splice(
+								i,
+								1,
+								combo
+							)[0];
 							if (active_combo != null) {
 								active_combo.reset();
 							}
@@ -504,7 +523,9 @@ Combo options available and their defaults:
 					1 <= _ref1 ? _j <= _ref1 : _j >= _ref1;
 					j = 1 <= _ref1 ? ++_j : --_j
 				) {
-					sequence = _filter_array(this._sequence, function (seq_key) {
+					sequence = _filter_array(this._sequence, function (
+						seq_key
+					) {
 						if (__indexOf.call(combo.keys, "shift") >= 0) {
 							return true;
 						}
@@ -524,7 +545,10 @@ Combo options available and their defaults:
 								continue;
 							}
 						}
-						if (key === "shift" && __indexOf.call(combo.keys, "shift") < 0) {
+						if (
+							key === "shift" &&
+							__indexOf.call(combo.keys, "shift") < 0
+						) {
 							continue;
 						}
 						if (combo.keys[i] === seq_key) {
@@ -553,7 +577,9 @@ Combo options available and their defaults:
 				}
 				return;
 			}
-			key = _convert_key_to_readable((_ref = e.keyCode) != null ? _ref : e.key);
+			key = _convert_key_to_readable(
+				(_ref = e.keyCode) != null ? _ref : e.key
+			);
 			if (
 				!is_keydown &&
 				!this._keys_down.length &&
@@ -616,9 +642,15 @@ Combo options available and their defaults:
 				}
 				if (
 					(!source_combo.is_unordered &&
-						_compare_arrays_sorted(combo_potential_match, source_combo.keys)) ||
+						_compare_arrays_sorted(
+							combo_potential_match,
+							source_combo.keys
+						)) ||
 					(source_combo.is_unordered &&
-						_compare_arrays(combo_potential_match, source_combo.keys))
+						_compare_arrays(
+							combo_potential_match,
+							source_combo.keys
+						))
 				) {
 					match_handler(source_combo);
 				}
@@ -635,7 +667,10 @@ Combo options available and their defaults:
 				source_combo = _ref[_i];
 				if (
 					(!source_combo.is_unordered &&
-						_is_array_in_array_sorted(source_combo.keys, potential_match)) ||
+						_is_array_in_array_sorted(
+							source_combo.keys,
+							potential_match
+						)) ||
 					(source_combo.is_unordered &&
 						_is_array_in_array(source_combo.keys, potential_match))
 				) {
@@ -697,7 +732,10 @@ Combo options available and their defaults:
 				if (mod === key) {
 					continue;
 				}
-				if (__indexOf.call(this._keys_down, mod) >= 0 && !e[event_mod]) {
+				if (
+					__indexOf.call(this._keys_down, mod) >= 0 &&
+					!e[event_mod]
+				) {
 					if (mod === "cmd" && _metakey !== "cmd") {
 						continue;
 					}
@@ -719,7 +757,11 @@ Combo options available and their defaults:
 				this._handle_combo_down(combo, potential_combos, key, e);
 			}
 			if (potential_combos.length) {
-				for (_k = 0, _len1 = potential_combos.length; _k < _len1; _k++) {
+				for (
+					_k = 0, _len1 = potential_combos.length;
+					_k < _len1;
+					_k++
+				) {
 					potential = potential_combos[_k];
 					this._prevent_default(e, potential.prevent_default);
 				}
@@ -735,7 +777,12 @@ Combo options available and their defaults:
 			key,
 			e
 		) {
-			var is_autorepeat, is_other_exclusive, potential_combo, result, _i, _len;
+			var is_autorepeat,
+				is_other_exclusive,
+				potential_combo,
+				result,
+				_i,
+				_len;
 			if (__indexOf.call(combo.keys, key) < 0) {
 				return false;
 			}
@@ -763,7 +810,10 @@ Combo options available and their defaults:
 				}
 			}
 			if (!is_other_exclusive) {
-				if (combo.is_counting && typeof combo.on_keydown === "function") {
+				if (
+					combo.is_counting &&
+					typeof combo.on_keydown === "function"
+				) {
 					combo.count += 1;
 				}
 				if (result) {
@@ -800,14 +850,18 @@ Combo options available and their defaults:
 			shifted_key = _keycode_shifted_keys[unshifted_key];
 			if (e.shiftKey) {
 				if (
-					!(shifted_key && __indexOf.call(this._keys_down, shifted_key) >= 0)
+					!(
+						shifted_key &&
+						__indexOf.call(this._keys_down, shifted_key) >= 0
+					)
 				) {
 					key = unshifted_key;
 				}
 			} else {
 				if (
 					!(
-						unshifted_key && __indexOf.call(this._keys_down, unshifted_key) >= 0
+						unshifted_key &&
+						__indexOf.call(this._keys_down, unshifted_key) >= 0
 					)
 				) {
 					key = shifted_key;
@@ -871,7 +925,10 @@ Combo options available and their defaults:
 			if (!combo.keyup_fired) {
 				keys_down = this._keys_down.slice();
 				keys_down.push(key);
-				if (!combo.is_solitary || _compare_arrays(keys_down, combo.keys)) {
+				if (
+					!combo.is_solitary ||
+					_compare_arrays(keys_down, combo.keys)
+				) {
 					this._fire("keyup", combo, e);
 					if (
 						combo.is_counting &&
@@ -1228,7 +1285,10 @@ Combo options available and their defaults:
 			non_modifier_keys = combo.keys.slice();
 			for (_k = 0, _len1 = _modifier_keys.length; _k < _len1; _k++) {
 				mod_key = _modifier_keys[_k];
-				if ((i = _index_of_in_array.call(non_modifier_keys, mod_key)) > -1) {
+				if (
+					(i = _index_of_in_array.call(non_modifier_keys, mod_key)) >
+					-1
+				) {
 					non_modifier_keys.splice(i, 1);
 				}
 			}

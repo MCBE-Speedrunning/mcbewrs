@@ -101,8 +101,10 @@
 		deltaZ = Math.abs(this.lastZ - current.z);
 
 		if (
-			(deltaX > this.options.threshold && deltaY > this.options.threshold) ||
-			(deltaX > this.options.threshold && deltaZ > this.options.threshold) ||
+			(deltaX > this.options.threshold &&
+				deltaY > this.options.threshold) ||
+			(deltaX > this.options.threshold &&
+				deltaZ > this.options.threshold) ||
 			(deltaY > this.options.threshold && deltaZ > this.options.threshold)
 		) {
 			//calculate time in milliseconds since last shake registered

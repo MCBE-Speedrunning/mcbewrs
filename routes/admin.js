@@ -104,7 +104,10 @@ router.post("/register", restrict, (req, res) => {
 router.get("/add", restrict, (req, res, next) => {
 	leaderboard.all("SELECT * FROM categories", (err, rows) => {
 		if (err) return next(err);
-		res.render("admin_add", { categories: rows, csrfToken: req.csrfToken() });
+		res.render("admin_add", {
+			categories: rows,
+			csrfToken: req.csrfToken(),
+		});
 	});
 });
 

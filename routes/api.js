@@ -119,7 +119,9 @@ router.post("/login", (req, res) => {
 					if (err) parseData(req, res, err);
 
 					if (hash === user.password) {
-						const token = generateAccessToken({ username: req.body.username });
+						const token = generateAccessToken({
+							username: req.body.username,
+						});
 						parseData(req, res, { token: token });
 						return;
 					}

@@ -19,7 +19,9 @@ module.exports = async function renderSass(req, res, next) {
 			file,
 			includePaths: [path.join(process.cwd(), "node_modules")],
 			outputStyle:
-				process.env.NODE_ENV === "production" ? "compressed" : "expanded",
+				process.env.NODE_ENV === "production"
+					? "compressed"
+					: "expanded",
 			sourceMap: process.env.NODE_ENV === "production" ? false : true,
 			sourceMapEmbed: true,
 		});

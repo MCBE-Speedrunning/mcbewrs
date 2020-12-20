@@ -5,10 +5,12 @@
 Minecraft: Bedrock Edition World Records (mcbewrs) is a world record history site for [Minecraft: Bedrock Edition speedrunning](https://www.speedrun.com/mcbe) heavily inspired by Cole Gilberts [mkwrs](https://www.mkwrs.com/) and [fzerowrs](https://www.fzerowrs.com).
 
 ## Usage
+
 ### Development mode
+
 To start the website you must first install all dependencies, add a database, config and user database, then you can just start the server.
-Consult [the documentation](docs/db/) for how to configure databases. 
-`data/config.json` is just 
+Consult [the documentation](docs/db/) for how to configure databases.
+`data/config.json` is just
 
 ```json
 {
@@ -26,8 +28,10 @@ npm start
 ```
 
 ### Self hosting (not recommended)
+
 (First read [development mode](#development-mode), specifically about configuring databases and config files.)
-If you wish to host your own instance it's best to optimise a couple of stuff. 
+If you wish to host your own instance it's best to optimise a couple of stuff.
+
 1. Set up NGINX to serve static files. For example:
 
     ```
@@ -47,6 +51,7 @@ If you wish to host your own instance it's best to optimise a couple of stuff.
         }
     }
     ```
+
 2. `npm run start-production` for self hosting and not developer mode
 
 ## Developers
@@ -57,17 +62,17 @@ After saving your code please run `npm run format` to format the code as per the
 
 ### File structure
 
-- `data/`
-  - This is where the important data goes, such as the databases, and the `config.json`.
-  - By default, this directory does not exist. You can set it up by running `utils/setup_data.sh`.
-- `docs/`
-  - This is where all the documentation goes.
-- `public/`
-  - **DO NOT** put any sensitive information in the `public/` folder as that folder is visable to everyone accessing the server.
-  - This is where things like stylesheets and assets go.
-- `routes/`
-  - This is where the server side code goes for each page. These must be defined in `app.js` to be accessible from the browser.
-- `utils/`
-  - This is where the utilities go, such as cron jobs, or javascript functions that are used in other files.
-- `views/`
-  - This is where the pug template files go, like the player profiles and navigation bar.
+-   `data/`
+    -   This is where the important data goes, such as the databases, and the `config.json`.
+    -   By default, this directory does not exist. You can set it up by running `utils/setup_data.sh`.
+-   `docs/`
+    -   This is where all the documentation goes.
+-   `public/`
+    -   **DO NOT** put any sensitive information in the `public/` folder as that folder is visable to everyone accessing the server.
+    -   This is where things like stylesheets and assets go.
+-   `routes/`
+    -   This is where the server side code goes for each page. These must be defined in `app.js` to be accessible from the browser.
+-   `utils/`
+    -   This is where the utilities go, such as cron jobs, or javascript functions that are used in other files.
+-   `views/`
+    -   This is where the pug template files go, like the player profiles and navigation bar.

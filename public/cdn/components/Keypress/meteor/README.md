@@ -25,8 +25,8 @@ If you encounter an issue while using this package, please CC @dandv when you fi
 
 # DONE
 
-- Instantiation and basic functionality test
+-   Instantiation and basic functionality test
 
 # TODO
 
-- Test to ensure bindings are preserved when re-rendering templates
+-   Test to ensure bindings are preserved when re-rendering templates

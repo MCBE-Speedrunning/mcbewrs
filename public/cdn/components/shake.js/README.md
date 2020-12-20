@@ -4,10 +4,10 @@ A custom 'shake' event JavaScript plugin for mobile web browsers using device ac
 
 ## Installation
 
-- Download: [zip](https://github.com/alexgibson/shake.js/zipball/master)
-- [NPM](https://www.npmjs.org/): `npm install shake.js`
-- [Bower](https://github.com/twitter/bower/): `bower install shake.js`
-- Git: `git clone https://github.com/alexgibson/shake.js`
+-   Download: [zip](https://github.com/alexgibson/shake.js/zipball/master)
+-   [NPM](https://www.npmjs.org/): `npm install shake.js`
+-   [Bower](https://github.com/twitter/bower/): `bower install shake.js`
+-   Git: `git clone https://github.com/alexgibson/shake.js`
 
 ## Dependencies
 
@@ -79,10 +79,10 @@ myShakeEvent.stop();
 
 ## Supported web browsers/devices
 
-- iOS Safari 4.2.1 (and above)
-- Android 4.0.3 (default browser)
-- Chrome 41+ for Android
-- Opera Mobile (Android)
-- BlackBerry PlayBook 2.0
-- Firefox for Android
-- FirefoxOS Devices
+-   iOS Safari 4.2.1 (and above)
+-   Android 4.0.3 (default browser)
+-   Chrome 41+ for Android
+-   Opera Mobile (Android)
+-   BlackBerry PlayBook 2.0
+-   Firefox for Android
+-   FirefoxOS Devices

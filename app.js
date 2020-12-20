@@ -10,11 +10,11 @@ const rateLimit = require("express-rate-limit");
 const sass = require("./utils/sass-middleware.js");
 const session = require("express-session");
 const xml = require("xml");
+const logger = require("morgan");
 const { safeDump } = require("js-yaml");
 const { toToml } = require("tomlify-j0.4");
 
 if (process.env.NODE_ENV === "development") {
-	var logger = require("morgan");
 	var sqlite3 = require("sqlite3").verbose();
 	var debug = true;
 } else {
@@ -33,8 +33,10 @@ const config = JSON.parse(fs.readFileSync("./data/config.json"));
 const leaderboard = new sqlite3.Database("./data/leaderboard.db");
 const cache = {};
 const logger_options = {
-	stream: fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
-}
+	stream: fs.createWriteStream(path.join(__dirname, "access.log"), {
+		flags: "a",
+	}),
+};
 
 function parseError(req, res, err) {
 	switch (req.acceptsLanguages(["json", "xml", "yaml", "toml"])) {
@@ -81,7 +83,7 @@ app.use(
 	})
 );
 app.use(minify({ cache: "./cache/" }));
-if(debug) {
+if (debug) {
 	app.use(express.static(path.join(__dirname, "public")));
 }
 app.use(cors());

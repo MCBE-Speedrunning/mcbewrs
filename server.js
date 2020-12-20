@@ -72,10 +72,11 @@ function onError(error) {
  */
 function onListening() {
 	const addr = server.address();
-	const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-	try{
+	const bind =
+		typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+	try {
 		debug("Listening on " + bind);
-	} catch(e) {
+	} catch (e) {
 		console.log("Started in production mode");
 	}
 }
