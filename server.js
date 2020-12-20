@@ -4,9 +4,11 @@
  * Module dependencies.
  */
 const app = require("./app");
-const debug = require("debug")("mcbewrs:server");
 const http = require("http");
 const fs = require("fs");
+if (process.env.NODE_ENV === "development") {
+	var debug = require("debug")("mcbewrs:server");
+}
 
 /*
  * Get port from environment and store in Express.
@@ -71,5 +73,9 @@ function onError(error) {
 function onListening() {
 	const addr = server.address();
 	const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-	debug("Listening on " + bind);
+	try{
+		debug("Listening on " + bind);
+	} catch(e) {
+		console.log("Started in production mode");
+	}
 }

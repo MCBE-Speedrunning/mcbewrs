@@ -5,7 +5,7 @@ html(lang="en")
 		meta(charset="utf-8")
 		meta(name="viewport", content="width=device-width, initial-scale=1.0")
 		meta(property="og:title", content=pageName)
-		link(rel="manifest", href="/manifest.json")
+		link(rel="manifest", href="/cdn/manifest.json")
 		link(rel="stylesheet", href="/stylesheets/style.css")
 		link(
 			rel="stylesheet",
@@ -30,13 +30,13 @@ html(lang="en")
 		.container
 			block content
 
-		script(src="/javascripts/main.js", defer="")
+		script(src="/cdn/javascripts/main.js", defer="")
 		script(
 			src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js",
 			crossorigin="anonymous"
 		)
-		script(src="/components/shake.js/shake.js")
-		script(src="/components/Keypress/keypress.js")
+		script(src="/cdn/components/shake.js/shake.js")
+		script(src="/cdn/components/Keypress/keypress.js")
 		script(
 			src="https://code.jquery.com/jquery-3.5.1.slim.min.js",
 			integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj",

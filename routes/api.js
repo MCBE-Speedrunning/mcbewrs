@@ -131,4 +131,124 @@ router.post("/login", (req, res) => {
 	);
 });
 
+router.post("/run/add", authenticateToken, (req, res) => {
+	const run = req.body;
+	// Multiple runners can be input by seperating them with ,
+	run.runners = run.runners.trim().split(",");
+	// Convert html date format to epoch ms then convert to seconds
+	run.date = new Date(run.date).valueOf() / 1000;
+
+	// All input from the client comes as a string, so everything must be parsed as an int
+	run.time =
+		parseInt(run.hour, 10) * 60 * 60 +
+		parseInt(run.minutes, 10) * 60 +
+		parseInt(run.seconds, 10);
+
+	// Add 0.0001 to the end of runs that time with milliseconds
+	// This ensures that the site will display 3 significant figures
+	if (parseInt(run.milliseconds, 10))
+		run.time += parseInt(run.milliseconds, 10) / 1000 + 0.0001;
+
+	leaderboard.serialize(() => {
+		leaderboard.run(
+			"INSERT INTO runs VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+			[
+				run.category_id,
+				run.date,
+				run.time,
+				// Run duration
+				0,
+				run.platform,
+				run.seed,
+				run.version,
+				run.input,
+				run.link,
+				// WR flag
+				0,
+			],
+			(err) => {
+				if (err) return next(err);
+			}
+		);
+
+		// Prevents DoS
+		if (!(run.runners instanceof Array)) return [];
+
+		// Insert the run/runner pairs
+		for (let i = 0; i < run.runners.length; i++)
+			leaderboard.run(
+				`INSERT INTO pairs VALUES(
+										(SELECT MAX(id) FROM runs),
+										(SELECT id FROM runners WHERE name = ?)
+								)`,
+				[run.runners[i]],
+				(err) => {
+					if (err) return next(err);
+				}
+			);
+
+		// Update the WR flags
+		leaderboard.run(
+			`UPDATE runs
+						SET wr = CASE WHEN time = (
+								SELECT time FROM runs
+								WHERE category_id = ?
+								ORDER BY time ASC LIMIT 1
+						)
+						THEN 1 ELSE 0
+						END`,
+			[run.category_id],
+			(err) => {
+				if (err) return next(err);
+			}
+		);
+
+		// Calculate the duration of each run in the category just updated
+		leaderboard.all(
+			`SELECT id, date, time FROM runs
+						WHERE category_id = ?
+						ORDER BY date ASC`,
+			[run.category_id],
+			(err, rows) => {
+				if (err) return next(err);
+				for (let i = 0, len = rows.length; i < len; i++) {
+					// Check every newer record until a faster one is found
+					// Can't just check the very next because of ties
+					for (let j = i + 1; j <= len; j++) {
+						// Check if the record is current
+						if (j === len) {
+							rows[i].duration = Date.now() / 1000 - rows[i].date;
+						} else if (rows[j].time != rows[i].time) {
+							rows[i].duration = rows[j].date - rows[i].date;
+							break;
+						}
+					}
+
+					// Add the runs duration to the DB
+					leaderboard.run(
+						`UPDATE runs SET duration = ? WHERE id = ?`,
+						[rows[i].duration, rows[i].id],
+						(err) => {
+							if (err) return next(err);
+						}
+					);
+				}
+			}
+		);
+
+		leaderboard.all("SELECT * FROM categories", (err, rows) => {
+			if (err) return next(err);
+			res.render("admin_add", {
+				banner: {
+					text: "Run added succesfully",
+					status: "success",
+					csrfToken: req.csrfToken(),
+				},
+				categories: rows,
+				csrfToken: req.csrfToken(),
+			});
+		});
+	});
+});
+
 module.exports = router;

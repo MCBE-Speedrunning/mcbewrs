@@ -5,15 +5,49 @@
 Minecraft: Bedrock Edition World Records (mcbewrs) is a world record history site for [Minecraft: Bedrock Edition speedrunning](https://www.speedrun.com/mcbe) heavily inspired by Cole Gilberts [mkwrs](https://www.mkwrs.com/) and [fzerowrs](https://www.fzerowrs.com).
 
 ## Usage
+### Development mode
+To start the website you must first install all dependencies, add a database, config and user database, then you can just start the server.
+Consult [the documentation](docs/db/) for how to configure databases. 
+`data/config.json` is just 
 
-To start the website you must first install all dependencies, then you can just start the server.
-
-```sh
-sudo npm install
-sudo npm start
+```json
+{
+	"db_secret": "foo",
+	"token_secret": "bar",
+	"port": 5000
+}
 ```
 
-On Linux systems port 80 might be restricted to normal users, and as such you should run it as root.
+After all that you can start the server
+
+```sh
+npm install
+npm start
+```
+
+### Self hosting (not recommended)
+(First read [development mode](#development-mode), specifically about configuring databases and config files.)
+If you wish to host your own instance it's best to optimise a couple of stuff. 
+1. Set up NGINX to serve static files. For example:
+
+    ```
+    server {
+        # Listen to IPv4 and IPv6
+        listen 80;
+        listen [::]:80;
+
+        #server_name wrs.mcbe.wtf;
+        # Change the port to whatever you have in data/config.json
+        location /cdn/ {
+        root /path/to/mcbewrs/public;
+        }
+
+        location / {
+            proxy_pass http://localhost:PORT;
+        }
+    }
+    ```
+2. `npm run start-production` for self hosting and not developer mode
 
 ## Developers
 

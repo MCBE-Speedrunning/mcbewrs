@@ -4,7 +4,6 @@ const createError = require("http-errors");
 const csurf = require("csurf");
 const express = require("express");
 const fs = require("fs");
-const logger = require("morgan");
 const minify = require("express-minify");
 const path = require("path");
 const rateLimit = require("express-rate-limit");
@@ -15,6 +14,7 @@ const { safeDump } = require("js-yaml");
 const { toToml } = require("tomlify-j0.4");
 
 if (process.env.NODE_ENV === "development") {
+	var logger = require("morgan");
 	var sqlite3 = require("sqlite3").verbose();
 	var debug = true;
 } else {
@@ -32,6 +32,9 @@ const app = express();
 const config = JSON.parse(fs.readFileSync("./data/config.json"));
 const leaderboard = new sqlite3.Database("./data/leaderboard.db");
 const cache = {};
+const logger_options = {
+	stream: fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+}
 
 function parseError(req, res, err) {
 	switch (req.acceptsLanguages(["json", "xml", "yaml", "toml"])) {
@@ -64,8 +67,8 @@ app.set("leaderboard", leaderboard);
 // View engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
-
-app.use(logger("dev"));
+if (debug) app.use(logger("dev", logger_options));
+else app.use(logger("common", logger_options));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(compression());
@@ -78,7 +81,9 @@ app.use(
 	})
 );
 app.use(minify({ cache: "./cache/" }));
-app.use(express.static(path.join(__dirname, "public")));
+if(debug) {
+	app.use(express.static(path.join(__dirname, "public")));
+}
 app.use(cors());
 app.use(
 	session({
@@ -95,12 +100,12 @@ app.use("/", require("./routes/index"));
 app.use("/api", require("./routes/api"));
 app.use("/admin", require("./routes/admin"));
 // Catch 404 and forward to error handler
-app.use(function (_req, _res, next) {
+app.use((_req, _res, next) => {
 	next(createError(404));
 });
 
 // Error handler
-app.use(function (err, req, res, _next) {
+app.use((err, req, res, _next) => {
 	// Set locals, only providing error in development
 	res.locals.message = err.message;
 	res.locals.error = debug ? err : {};

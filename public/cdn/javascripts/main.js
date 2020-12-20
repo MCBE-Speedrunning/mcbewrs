@@ -173,10 +173,13 @@ const shakeEvent = new Shake({
 });
 shakeEvent.start();
 window.addEventListener("shake", preferesNether, false);
-
-const listener = new window.keypress.Listener();
-listener.sequence_combo("d r e a m space b a d", preferesNether, true);
-listener.sequence_combo("j i n g l e space b e l l s", preferesChristmas, true);
+try {
+	const listener = new window.keypress.Listener();
+	listener.sequence_combo("d r e a m space b a d", preferesNether, true);
+	listener.sequence_combo("j i n g l e space b e l l s", preferesChristmas, true);
+} catch(TypeError) {
+	console.log("Javascript component blocked by the client. Continuing execution.");	
+}
 
 // Use twemoji's
 window.addEventListener("load", () => {

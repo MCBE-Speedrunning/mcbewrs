@@ -9,7 +9,7 @@ module.exports = async function renderSass(req, res, next) {
 
 	// Derive SCSS filepath from CSS request path
 	const file = path
-		.join(process.cwd(), "public", req.path)
+		.join(process.cwd(), "public", "cdn", req.path)
 		.replace(".css", ".scss");
 	if (!fs.existsSync(file)) return res.status(404).end();
 
