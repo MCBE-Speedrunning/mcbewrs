@@ -28,8 +28,7 @@
 		"start": "NODE_ENV=development nodemon ./dist/server.js",
 		"start-production": "NODE_ENV=production node ./dist/server.js",
 		"format": "prettier --write .",
-		"build": "./src/utils/build.sh",
-		"copy-files": "./src/utils/copy_files.sh"
+		"build": "./src/utils/build.sh"
 	},
 	"dependencies": {
 		"@prettier/plugin-pug": "^1.10.1",
