@@ -28,8 +28,8 @@
 		"start": "NODE_ENV=development nodemon ./dist/server.js",
 		"start-production": "NODE_ENV=production node ./dist/server.js",
 		"format": "prettier --write .",
-		"build": "npm run copy-files && tsc || true && find ./dist/ -name '*.ts' -type f -delete && sass --update dist/public/cdn/stylesheets/",
-		"copy-files": "rm -r dist && mkdir dist dist/data dist/views dist/public && cp -r src/data dist/ || true && cp -r src/views dist/ && cp -r src/public dist/"
+		"build": "./src/utils/build.sh",
+		"copy-files": "./src/utils/copy_files.sh"
 	},
 	"dependencies": {
 		"@prettier/plugin-pug": "^1.10.1",
