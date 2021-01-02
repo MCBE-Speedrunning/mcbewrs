@@ -1,16 +1,23 @@
-const express = require("express");
+import express from "express";
+import xml from "xml";
+import { stringify } from "yaml";
+import jwt from "jsonwebtoken";
+import hashFunc from "pbkdf2-password";
+import sqlite3 from "sqlite3";
+import fs from "fs";
+import path from "path";
+
+const hash = hashFunc();
 const router = express.Router();
-const sqlite3 = require("sqlite3").verbose();
-const hash = require("pbkdf2-password")();
-const xml = require("xml");
-const { safeDump } = require("js-yaml");
-const { toToml } = require("tomlify-j0.4");
-const jwt = require("jsonwebtoken");
-const config = require("../data/config.json");
-
-const leaderboard = new sqlite3.Database("./data/leaderboard.db");
-const auth = new sqlite3.Database("./data/auth.db");
-
+const leaderboard = new sqlite3.Database(
+	path.join(__dirname, "..", "data", "leaderboard.db")
+);
+const auth = new sqlite3.Database(
+	path.join(__dirname, "..", "data", "auth.db")
+);
+const config = JSON.parse(
+	fs.readFileSync(path.join(__dirname, "..", "data", "config.json"), "utf-8")
+);
 /*
  * username is in the form { username: "my cool username" }
  * ^^the above object structure is completely arbitrary
@@ -41,9 +48,6 @@ function parseData(req, res, rows) {
 		for (let j in rows[i]) if (rows[i][j] === "-") rows[i][j] = null;
 
 	switch (req.acceptsLanguages(["json", "xml", "yaml", "toml"])) {
-		case "json":
-			res.jsonp({ data: rows });
-			break;
 
 		case "xml":
 			res.set("Content-Type", "text/xml");
@@ -52,12 +56,7 @@ function parseData(req, res, rows) {
 
 		case "yaml":
 			res.set("Content-Type", "text/yaml");
-			res.send(safeDump({ data: rows }));
-			break;
-
-		case "toml":
-			res.set("Content-Type", "text/toml");
-			res.send(toToml({ data: rows }, { space: 4 }));
+			res.send(stringify({ data: rows }));
 			break;
 
 		default:
@@ -133,7 +132,7 @@ router.post("/login", (req, res) => {
 	);
 });
 
-router.post("/run/add", authenticateToken, (req, res) => {
+router.post("/run/add", authenticateToken, (req, res, next) => {
 	const run = req.body;
 	// Multiple runners can be input by seperating them with ,
 	run.runners = run.runners.trim().split(",");

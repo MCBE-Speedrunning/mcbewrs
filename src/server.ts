@@ -3,9 +3,11 @@
 /*
  * Module dependencies.
  */
-const app = require("./app");
-const http = require("http");
-const fs = require("fs");
+import app from "./app";
+import http from "http";
+import fs from "fs";
+import path from "path";
+
 if (process.env.NODE_ENV === "development") {
 	var debug = require("debug")("mcbewrs:server");
 }
@@ -13,7 +15,9 @@ if (process.env.NODE_ENV === "development") {
 /*
  * Get port from environment and store in Express.
  */
-const config = JSON.parse(fs.readFileSync("./data/config.json"));
+const config = JSON.parse(
+	fs.readFileSync(path.join(__dirname, "data", "config.json"), "utf-8")
+);
 
 const port = normalizePort(process.env.PORT || config.port || "2909");
 app.set("port", port);
@@ -30,7 +34,7 @@ server.on("listening", onListening);
 /*
  * Normalize a port into a number, string, or false.
  */
-function normalizePort(val) {
+function normalizePort(val: string) {
 	const port = parseInt(val, 10);
 
 	// Named pipe
@@ -73,7 +77,7 @@ function onError(error) {
 function onListening() {
 	const addr = server.address();
 	const bind =
-		typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+		typeof addr === "string" ? "pipe " + addr : "port " + addr?.port;
 	try {
 		debug("Listening on " + bind);
 	} catch (e) {

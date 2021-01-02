@@ -1,7 +1,7 @@
 /*
  * Convert seconds to human readable time
  */
-function timeFormat(time) {
+function timeFormat(time: number): string {
 	const hours = ~~(time / 3600);
 	const minutes = ~~((time % 3600) / 60);
 	const seconds = ~~time % 60;
@@ -23,7 +23,7 @@ function timeFormat(time) {
  * Covert duration from unix timestamp
  * to days
  */
-function durationFormat(duration) {
+function durationFormat(duration: number) {
 	const output = Math.trunc(duration / 86400);
 
 	if (output === 0) return "<1";
@@ -33,7 +33,7 @@ function durationFormat(duration) {
 /*
  * Thank you vim!
  */
-function getFlag(code) {
+function getFlag(code: string): string {
 	switch (code) {
 		case "AD":
 			return "🇦🇩";
@@ -787,4 +787,4 @@ function getFlag(code) {
 	}
 }
 
-module.exports = { getFlag, timeFormat, durationFormat };
+export { getFlag, timeFormat, durationFormat };

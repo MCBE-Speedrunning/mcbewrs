@@ -1,12 +1,12 @@
-const express = require("express");
+import express from "express";
+import sqlite3 from "sqlite3";
+import path from "path";
+import { getFlag, timeFormat, durationFormat } from "../utils/functions";
+
 const router = express.Router();
-const sqlite3 = require("sqlite3").verbose();
-const db = new sqlite3.Database("./data/leaderboard.db");
-const {
-	getFlag,
-	timeFormat,
-	durationFormat,
-} = require("../utils/functions.js");
+const db = new sqlite3.Database(
+	path.join(__dirname, "..", "data", "leaderboard.db")
+);
 
 /*
  * Home page
@@ -60,7 +60,7 @@ router.get("/", (req, res, next) => {
 					recent[i].time = timeFormat(recent[i].time);
 					recent[i].date = new Date(
 						recent[i].date * 1000
-					).toLocaleDateString(locale);
+					).toLocaleDateString(locale || "en-GB");
 				}
 				callback(recent);
 			}
@@ -69,11 +69,11 @@ router.get("/", (req, res, next) => {
 
 	// Get the 10 most recent world record runs, for all 3 category types
 	getRecent("main", (returned_value) => {
-		main = returned_value;
+		const main = returned_value;
 		getRecent("il", (returned_value) => {
-			il = returned_value;
+			const il = returned_value;
 			getRecent("catext", (returned_value) => {
-				catext = returned_value;
+				const catext = returned_value;
 				res.render("index", {
 					main: main,
 					il: il,
@@ -91,7 +91,7 @@ router.get("/home", (req, res) => {
 /*
  * Category select
  */
-router.get("/catselect/:type?", (req, res) => {
+router.get("/catselect/:type?", (req, res, next) => {
 	// If no type is specified, go to the history home page
 	if (typeof req.params.type === "undefined") {
 		res.render("history_home");
@@ -131,7 +131,7 @@ router.get("/catselect/:type?", (req, res) => {
 					);
 					records[i].date = new Date(
 						records[i].date * 1000
-					).toLocaleDateString(locale);
+					).toLocaleDateString(locale || "en-GB");
 
 					if (records[i].duration === 0) records[i].duration = "<1";
 				}
@@ -185,7 +185,7 @@ router.get("/history/:cat?", (req, res, next) => {
 					"en",
 				]);
 
-				for (i = 0, len = rows.length; i < len; i++) {
+				for (let i = 0, len = rows.length; i < len; i++) {
 					if (rows[i] === undefined) continue;
 					if (
 						rows[i + 1] !== undefined &&
@@ -205,7 +205,7 @@ router.get("/history/:cat?", (req, res, next) => {
 					rows[i].duration = Math.trunc(rows[i].duration / 86400);
 					rows[i].date = new Date(
 						rows[i].date * 1000
-					).toLocaleDateString(locale);
+					).toLocaleDateString(locale || "en-GB");
 				}
 
 				// Get the category name
@@ -230,7 +230,7 @@ router.get("/history/:cat?", (req, res, next) => {
 /*
  * Player profiles
  */
-router.get("/profile/:player?", (req, res) => {
+router.get("/profile/:player?", (req, res, next) => {
 	// Get all the players runs
 	db.all(
 		`SELECT abbreviation, date, readable, link, time,
@@ -256,7 +256,7 @@ router.get("/profile/:player?", (req, res) => {
 				"en",
 			]);
 
-			for (i = 0, len = runs.length; i < len; i++) {
+			for (let i = 0, len = runs.length; i < len; i++) {
 				// Store the beginning and end of each wr
 				const beg = {
 					date: runs[i].date,
@@ -272,7 +272,7 @@ router.get("/profile/:player?", (req, res) => {
 
 				// Format the date according to the users browser settings
 				runs[i].date = new Date(runs[i].date * 1000).toLocaleDateString(
-					locale
+					locale || "en-GB"
 				);
 
 				// Update stats, and format the runs time and duration
@@ -289,8 +289,10 @@ router.get("/profile/:player?", (req, res) => {
 			});
 
 			// https://canary.discord.com/channels/574267523869179904/574268036052156416/781707906428043264
-			let beg_time = (total_time = 0);
-			let beg_count = (end_count = 0);
+			let beg_time = 0,
+				total_time = 0,
+				beg_count = 0,
+				end_count = 0;
 
 			for (let i = 0, len = timestamps.length; i < len; i++) {
 				if (timestamps[i].beg) {
@@ -325,8 +327,8 @@ router.get("/profile/:player?", (req, res) => {
 				req.params.player,
 				(err, count) => {
 					if (err) return next(err);
-					unique_cats_count = count.count;
-					total_cats = count.total;
+					let unique_cats_count = count.count;
+					let total_cats = count.total;
 
 					// Get the runners name and nationality, then render the page
 					db.get(

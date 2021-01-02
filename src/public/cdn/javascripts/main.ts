@@ -32,7 +32,7 @@ function preferesDark() {
 	document.getElementById("colorPreferance").checked = true;
 	// Add the dark mode css
 	document.getElementById("colorScheme").innerHTML =
-		'<link rel="stylesheet" type="text/css" href="/stylesheets/dark.css">';
+		'<link rel="stylesheet" type="text/css" href="/cdn/stylesheets/dark.css">';
 
 	document.querySelectorAll(".table").forEach((el) => {
 		el.classList.remove("table-light");
@@ -62,7 +62,7 @@ function preferesLight() {
 	localStorage.setItem("colorMode", "Light");
 	document.getElementById("colorPreferance").checked = false;
 	document.getElementById("colorScheme").innerHTML =
-		'<link rel="stylesheet" type="text/css" href="/stylesheets/light.css">';
+		'<link rel="stylesheet" type="text/css" href="/cdn/stylesheets/light.css">';
 
 	document.querySelectorAll(".table").forEach((el) => {
 		el.classList.remove("table-dark");
@@ -89,7 +89,7 @@ function preferesNether() {
 	document.getElementById("colorPreferance").checked = true;
 	// Add the dark mode css
 	document.getElementById("colorScheme").innerHTML =
-		'<link rel="stylesheet" type="text/css" href="/stylesheets/nether.css">';
+		'<link rel="stylesheet" type="text/css" href="/cdn/stylesheets/nether.css">';
 
 	document.querySelectorAll(".table").forEach((el) => {
 		el.classList.remove("table-light");
@@ -116,7 +116,7 @@ function preferesChristmas() {
 	document.getElementById("colorPreferance").checked = false;
 	// Add the dark mode css
 	document.getElementById("colorScheme").innerHTML =
-		'<link rel="stylesheet" type="text/css" href="/stylesheets/christmas.css">';
+		'<link rel="stylesheet" type="text/css" href="/cdn/stylesheets/christmas.css">';
 
 	document.querySelectorAll(".table").forEach((el) => {
 		el.classList.remove("table-light");

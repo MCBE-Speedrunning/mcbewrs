@@ -1,24 +1,21 @@
-const compression = require("compression");
-const cors = require("cors");
-const createError = require("http-errors");
-const csurf = require("csurf");
-const express = require("express");
-const fs = require("fs");
-const minify = require("express-minify");
-const path = require("path");
-const rateLimit = require("express-rate-limit");
-const sass = require("./utils/sass-middleware.js");
-const session = require("express-session");
-const xml = require("xml");
-const logger = require("morgan");
-const { safeDump } = require("js-yaml");
-const { toToml } = require("tomlify-j0.4");
+import compression from "compression";
+import cors from "cors";
+import createError, { HttpError } from "http-errors";
+import csurf from "csurf";
+import express, { NextFunction, Request, Response } from "express";
+import fs from "fs";
+import minify from "express-minify";
+import path from "path";
+import rateLimit from "express-rate-limit";
+import session from "express-session";
+import xml from "xml";
+import logger from "morgan";
+import sqlite3 from "sqlite3";
+import { stringify } from "yaml";
 
 if (process.env.NODE_ENV === "development") {
-	var sqlite3 = require("sqlite3").verbose();
 	var debug = true;
 } else {
-	var sqlite3 = require("sqlite3");
 	var debug = false;
 }
 
@@ -29,20 +26,20 @@ try {
 }
 
 const app = express();
-const config = JSON.parse(fs.readFileSync("./data/config.json"));
-const leaderboard = new sqlite3.Database("./data/leaderboard.db");
-const cache = {};
+const config = JSON.parse(
+	fs.readFileSync(path.join(__dirname, "data", "config.json"), "utf-8")
+);
+const leaderboard = new sqlite3.Database(
+	path.join(__dirname, "data", "leaderboard.db")
+);
 const logger_options = {
 	stream: fs.createWriteStream(path.join(__dirname, "access.log"), {
 		flags: "a",
 	}),
 };
 
-function parseError(req, res, err) {
+function parseError(req: Request, res: Response, err: HttpError) {
 	switch (req.acceptsLanguages(["json", "xml", "yaml", "toml"])) {
-		case "json":
-			res.status(err.status).jsonp({ error: err });
-			break;
 
 		case "xml":
 			res.set("Content-Type", "text/xml");
@@ -51,12 +48,7 @@ function parseError(req, res, err) {
 
 		case "yaml":
 			res.set("Content-Type", "text/yaml");
-			res.status(err.status).send(safeDump({ error: err }));
-			break;
-
-		case "toml":
-			res.set("Content-Type", "text/toml");
-			res.status(err.status).send(toToml({ error: err }, { space: 4 }));
+			res.status(err.status).send(stringify({ error: err }));
 			break;
 
 		default:
@@ -74,7 +66,7 @@ else app.use(logger("common", logger_options));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(compression());
-app.use(sass);
+//app.use(sass);
 app.use(
 	// Limit each IP to 10,000 requests per 15 minutes
 	rateLimit({
@@ -83,9 +75,8 @@ app.use(
 	})
 );
 app.use(minify({ cache: "./cache/" }));
-if (debug) {
-	app.use(express.static(path.join(__dirname, "public")));
-}
+if (debug) app.use(express.static(path.join(__dirname, "public")));
+
 app.use(cors());
 app.use(
 	session({
@@ -107,7 +98,7 @@ app.use((_req, _res, next) => {
 });
 
 // Error handler
-app.use((err, req, res, _next) => {
+app.use((err: HttpError, req: Request, res: Response, _next: NextFunction) => {
 	// Set locals, only providing error in development
 	res.locals.message = err.message;
 	res.locals.error = debug ? err : {};
@@ -121,4 +112,4 @@ app.use((err, req, res, _next) => {
 	}
 });
 
-module.exports = app;
+export default app;

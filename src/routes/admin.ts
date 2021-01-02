@@ -1,12 +1,15 @@
-const express = require("express");
-const hash = require("pbkdf2-password")();
-const sqlite3 = require("sqlite3").verbose();
-const { exec } = require("child_process");
+import express from "express";
+import hashFunc from "pbkdf2-password";
+import sqlite3 from "sqlite3";
+import path from "path";
+import { exec } from "child_process";
 
+const hash = hashFunc();
 const router = express.Router();
-const db = new sqlite3.Database("./data/auth.db");
-
-const leaderboard = new sqlite3.Database("./data/leaderboard.db");
+const db = new sqlite3.Database(path.join(__dirname, "..", "data", "auth.db"));
+const leaderboard = new sqlite3.Database(
+	path.join(__dirname, "..", "data", "leaderboard.db")
+);
 
 /*
  * Add a new user to the DB
@@ -89,7 +92,7 @@ router.get("/logout", (req, res) => {
 	});
 });
 
-router.get("/register", restrict, (_req, res) => {
+router.get("/register", restrict, (req, res) => {
 	res.render("register", { csrfToken: req.csrfToken() });
 });
 
@@ -231,12 +234,12 @@ router.post("/add", restrict, (req, res, next) => {
 	});
 });
 
-router.post("/new_user", restrict, (req, _res) => {
-	if (req.body.name) name = req.body.name;
-	nationality = req.body.nationality || null;
+router.post("/new_user", restrict, (req, res, next) => {
+	if (req.body.name) var username = req.body.name;
+	const nationality = req.body.nationality || null;
 	db.run(
 		`INSERT INTO runners (name, nationality) VALUES(?, ?)`,
-		[name, nationality],
+		[username, nationality],
 		(err) => {
 			if (err) return next(err);
 			res.render("new_user", {
