@@ -1,11 +1,11 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 # This script when run will setup all the data files
 # required for the site
 
 SCRIPT_PATH=$(cd "$(dirname "$0")" && pwd)
 
-[ ! -d "${SCRIPT_PATH}/../data" ] && mkdir "${SCRIPT_PATH}/../data"
+test ! -d "${SCRIPT_PATH}/../data" && mkdir "${SCRIPT_PATH}/../data"
 
 DATA="${SCRIPT_PATH}/../data"
 
