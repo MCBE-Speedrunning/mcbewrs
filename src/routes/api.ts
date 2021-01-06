@@ -1,4 +1,5 @@
-import express from "express";
+import createError from "http-errors";
+import express, { Request, Response, NextFunction } from "express";
 import xml from "xml";
 import { stringify } from "yaml";
 import jwt from "jsonwebtoken";
@@ -6,6 +7,8 @@ import hashFunc from "pbkdf2-password";
 import sqlite3 from "sqlite3";
 import fs from "fs";
 import path from "path";
+
+import { Api } from "utils/types/api";
 
 const hash = hashFunc();
 const router = express.Router();
@@ -22,33 +25,35 @@ const config = JSON.parse(
  * username is in the form { username: "my cool username" }
  * ^^the above object structure is completely arbitrary
  */
-function generateAccessToken(username) {
+function generateAccessToken(username: string) {
 	// Expires after half and hour (1800 seconds = 30 minutes)
-	return jwt.sign(username, config.token_secret, { expiresIn: "1800s" });
+	return jwt.sign({ username }, config.token_secret, { expiresIn: "1800s" });
 }
 
-function authenticateToken(req, res, next) {
+function authenticateToken(req: Request, res: Response, next: NextFunction) {
 	// Gather the jwt access token from the request header
 	const authHeader = req.headers["authorization"];
 	const token = authHeader && authHeader.split(" ")[1];
 	// If there isn't any token
 	if (token == null) return res.sendStatus(401);
 
-	jwt.verify(token, config.token_secret, (err, user) => {
-		console.log(err);
-		if (err) return res.sendStatus(403);
+	jwt.verify(token, config.token_secret, (err: any, user: any) => {
+		if (err) return next(err);
 		req.user = user;
 		// Pass the execution off to whatever request the client intended
 		next();
 	});
 }
 
-function parseData(req, res, rows) {
+function parseData(req: Request, res: Response, rows: any) {
 	for (let i in rows)
-		for (let j in rows[i]) if (rows[i][j] === "-") rows[i][j] = null;
+		for (let j in rows[i])
+			if (rows[i][j] === "-")
+				try {
+					rows[i][j] = null;
+				} catch (TypeError) {}
 
 	switch (req.acceptsLanguages(["json", "xml", "yaml", "toml"])) {
-
 		case "xml":
 			res.set("Content-Type", "text/xml");
 			res.send(xml({ data: rows }));
@@ -87,12 +92,12 @@ router.get("/categories", (req, res) => {
 	);
 });
 
-router.get("/runners", (req, res) => {
+router.get("/runners", (req, res, next) => {
 	leaderboard.all(
 		"SELECT * FROM runners WHERE id BETWEEN ? and ?",
 		[req.query.min || 0, req.query.max || 10],
 		(err, rows) => {
-			if (err) throw err;
+			if (err) return next(err);
 			parseData(req, res, rows);
 		}
 	);
@@ -102,25 +107,24 @@ router.get("/login", authenticateToken, (req, res) => {
 	parseData(req, res, req.user);
 });
 
-router.post("/login", (req, res) => {
+router.post("/login", (req, res, next) => {
 	auth.get(
 		"SELECT * FROM users WHERE username = ?",
 		req.body.username,
 		(err, user) => {
+			if (err) return next(err);
 			// Query the db for the given username
-			if (!user) parseData(req, res, { error: "User not found" });
+			if (!user) return next(createError(403, "User not found"));
 			// Apply the same algorithm to the POSTed password, applying
 			// the hash against the pass / salt, if there is a match we
 			// found the user
 			hash(
 				{ password: req.body.password, salt: user.salt },
 				(err, pass, salt, hash) => {
-					if (err) parseData(req, res, err);
+					if (err) return next(err);
 
 					if (hash === user.password) {
-						const token = generateAccessToken({
-							username: req.body.username,
-						});
+						const token = generateAccessToken(req.body.username);
 						parseData(req, res, { token: token });
 						return;
 					}

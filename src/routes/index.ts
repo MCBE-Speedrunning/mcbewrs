@@ -1,3 +1,4 @@
+import createError, { HttpError } from "http-errors";
 import express from "express";
 import sqlite3 from "sqlite3";
 import path from "path";
@@ -231,6 +232,7 @@ router.get("/history/:cat?", (req, res, next) => {
  * Player profiles
  */
 router.get("/profile/:player?", (req, res, next) => {
+	if (!req.params.player) return next(createError(501, "Page not ready"));
 	// Get all the players runs
 	db.all(
 		`SELECT abbreviation, date, readable, link, time,
@@ -307,7 +309,7 @@ router.get("/profile/:player?", (req, res, next) => {
 
 			total_time = durationFormat(total_time);
 			const leaderboard_age = durationFormat(
-				new Date() / 1000 - 1548098280
+				new Date().valueOf() / 1000 - 1548098280
 			);
 			const wr_percentage = (
 				(total_time / leaderboard_age) *

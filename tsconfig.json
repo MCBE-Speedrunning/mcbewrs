@@ -16,7 +16,11 @@
 
 		/* Advanced Options */
 		"skipLibCheck": true                     /* Skip type checking of declaration files. */,
-		"forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
+		"forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
+		"typeRoots": [
+			"./src/utils/types",
+			"./node_modules/@types"
+		]
 	},
 	"exclude": ["./src/public/cdn/components/", "./node_modules/", "./dist/"],
 	"include": ["./src/"],

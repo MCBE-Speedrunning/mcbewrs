@@ -40,7 +40,6 @@ const logger_options = {
 
 function parseError(req: Request, res: Response, err: HttpError) {
 	switch (req.acceptsLanguages(["json", "xml", "yaml", "toml"])) {
-
 		case "xml":
 			res.set("Content-Type", "text/xml");
 			res.status(err.status).send(xml({ error: err }));
@@ -76,7 +75,6 @@ app.use(
 );
 app.use(minify({ cache: "./cache/" }));
 if (debug) app.use(express.static(path.join(__dirname, "public")));
-
 app.use(cors());
 app.use(
 	session({
@@ -87,7 +85,6 @@ app.use(
 		secret: config.db_secret,
 	})
 );
-app.use(csurf({ cookie: false }));
 
 app.use("/", require("./routes/index"));
 app.use("/api", require("./routes/api"));

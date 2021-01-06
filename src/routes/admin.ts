@@ -1,3 +1,4 @@
+import csurf from "csurf";
 import express from "express";
 import hashFunc from "pbkdf2-password";
 import sqlite3 from "sqlite3";
@@ -58,6 +59,8 @@ function authenticate(name, pass, fn) {
 		});
 	});
 }
+
+router.use(csurf({ cookie: false }));
 
 router.get("/login", (req, res) => {
 	res.render("login", { session: req.session, csrfToken: req.csrfToken() });
