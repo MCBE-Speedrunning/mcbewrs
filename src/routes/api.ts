@@ -8,8 +8,6 @@ import sqlite3 from "sqlite3";
 import fs from "fs";
 import path from "path";
 
-import { Api } from "utils/types/api";
-
 const hash = hashFunc();
 const router = express.Router();
 const leaderboard = new sqlite3.Database(
@@ -120,7 +118,7 @@ router.post("/login", (req, res, next) => {
 			// found the user
 			hash(
 				{ password: req.body.password, salt: user.salt },
-				(err, pass, salt, hash) => {
+				(err: Error, _pass: string, _salt: string, hash: string) => {
 					if (err) return next(err);
 
 					if (hash === user.password) {
@@ -256,4 +254,4 @@ router.post("/run/add", authenticateToken, (req, res, next) => {
 	});
 });
 
-module.exports = router;
+export default router;

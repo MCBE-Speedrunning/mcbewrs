@@ -1,4 +1,4 @@
-import createError, { HttpError } from "http-errors";
+import createError from "http-errors";
 import express from "express";
 import sqlite3 from "sqlite3";
 import path from "path";
@@ -22,7 +22,7 @@ router.get("/", (req, res, next) => {
 	 * duckduckgo. In typical TypeScript fashion I
 	 * am now forced to lie about the true return type.
 	 */
-	function getRecent(cat_type, callback): void {
+	function getRecent(cat_type: string, callback: (val: (string | number)[]) => void): void {
 		db.all(
 			`SELECT
 				date, abbreviation, readable, link, time,
@@ -74,11 +74,11 @@ router.get("/", (req, res, next) => {
 	}
 
 	// Get the 10 most recent world record runs, for all 3 category types
-	getRecent("main", (returned_value: Array<string | number>) => {
+	getRecent("main", (returned_value) => {
 		const main = returned_value;
-		getRecent("il", (returned_value: Array<string | number>) => {
+		getRecent("il", (returned_value) => {
 			const il = returned_value;
-			getRecent("catext", (returned_value: Array<string | number>) => {
+			getRecent("catext", (returned_value) => {
 				const catext = returned_value;
 				res.render("index", {
 					main: main,
@@ -90,7 +90,7 @@ router.get("/", (req, res, next) => {
 	});
 });
 
-router.get("/home", (req, res) => {
+router.get("/home", (_req, res) => {
 	res.redirect("/");
 });
 
@@ -379,10 +379,10 @@ router.get("/profile/:player?", (req, res, next) => {
 /*
  * About page
  */
-router.get("/about", (req, res) => {
+router.get("/about", (_req, res) => {
 	res.render("about", {
 		pageName: "About MCBEWRS",
 	});
 });
 
-module.exports = router;
+export default router;
