@@ -14,7 +14,7 @@ const db = new sqlite3.Database(
  */
 router.get("/", (req, res, next) => {
 	/*
-	 * Get the 10 most recent world records for 
+	 * Get the 10 most recent world records for
 	 * each of the category types. Also this function
 	 * actually ends up returning an array that
 	 * contains strings and numbers, but it does so
@@ -22,7 +22,10 @@ router.get("/", (req, res, next) => {
 	 * duckduckgo. In typical TypeScript fashion I
 	 * am now forced to lie about the true return type.
 	 */
-	function getRecent(cat_type: string, callback: (val: (string | number)[]) => void): void {
+	function getRecent(
+		cat_type: string,
+		callback: (val: (string | number)[]) => void
+	): void {
 		db.all(
 			`SELECT
 				date, abbreviation, readable, link, time,
@@ -253,7 +256,7 @@ router.get("/profile/:player?", (req, res, next) => {
 			if (err) return next(err);
 			let current_wrs = 0;
 			let total_duration = 0;
-			let timestamps: {date: number, beg: number}[] = [];
+			let timestamps: { date: number; beg: number }[] = [];
 
 			const locale = req.acceptsLanguages([
 				"en-GB",
@@ -315,7 +318,7 @@ router.get("/profile/:player?", (req, res, next) => {
 			const leaderboard_age = durationFormat(
 				new Date().valueOf() / 1000 - 1548098280
 			);
-			
+
 			/*
 			 * There is actually no need to check if `leaderboard_age`
 			 * is not equal to "<1" because we know the leaderboard has
@@ -323,15 +326,18 @@ router.get("/profile/:player?", (req, res, next) => {
 			 * Microsoft is a bitch and won't give us alternative ways
 			 * to shut up errors, so now I need to try to sleep at night
 			 * knowing that my code is just a little bit less efficient.
-			 * 
-			 * Please just give me a good language D: 
+			 *
+			 * Please just give me a good language D:
 			 */
 			let wr_percentage: string;
-			if (typeof(total_time) === "number" && typeof(leaderboard_age) === "number")
-				wr_percentage = (
-					(total_time / leaderboard_age) * 100).toFixed(2);
-			else
-				wr_percentage = "00";
+			if (
+				typeof total_time === "number" &&
+				typeof leaderboard_age === "number"
+			)
+				wr_percentage = ((total_time / leaderboard_age) * 100).toFixed(
+					2
+				);
+			else wr_percentage = "00";
 
 			const time_with_wr = `${total_time} / ${leaderboard_age} (${wr_percentage}%)`;
 

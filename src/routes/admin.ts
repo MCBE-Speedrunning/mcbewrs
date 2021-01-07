@@ -1,5 +1,5 @@
 import csurf from "csurf";
-import express, {Request, Response, NextFunction} from "express";
+import express, { Request, Response, NextFunction } from "express";
 import hashFunc from "pbkdf2-password";
 import sqlite3 from "sqlite3";
 import path from "path";
@@ -16,17 +16,20 @@ const leaderboard = new sqlite3.Database(
  * Add a new user to the DB
  */
 function newUser(username: string, password: string, fn: (err: Error) => void) {
-	hash({ password: password }, (err: any, _pass: string, salt: string, hash: string) => {
-		if (err) return fn(new Error("Error during hashing"));
-		// Store the salt & hash in the "db"
-		db.run(
-			`INSERT INTO users VALUES(?, ?, ?)`,
-			[username, hash, salt],
-			(err) => {
-				if (err) return fn(new Error("Error during insertion"));
-			}
-		);
-	});
+	hash(
+		{ password: password },
+		(err: any, _pass: string, salt: string, hash: string) => {
+			if (err) return fn(new Error("Error during hashing"));
+			// Store the salt & hash in the "db"
+			db.run(
+				`INSERT INTO users VALUES(?, ?, ?)`,
+				[username, hash, salt],
+				(err) => {
+					if (err) return fn(new Error("Error during insertion"));
+				}
+			);
+		}
+	);
 }
 
 /*
@@ -44,7 +47,11 @@ function restrict(req: Request, res: Response, next: NextFunction) {
 /*
  * User authentication
  */
-function authenticate(name: string, pass: string, fn: (err: Error | null, user?: any) => void) {
+function authenticate(
+	name: string,
+	pass: string,
+	fn: (err: Error | null, user?: any) => void
+) {
 	db.get("SELECT * FROM users WHERE username = ?", name, (err, user) => {
 		if (err) return fn(err);
 		// Query the db for the given username
