@@ -4,7 +4,9 @@ declare const twemoji: any;
 
 // Global variables
 const preferedColorScheme = localStorage.getItem("colorMode");
-const colorPreferance = document.getElementById("colorPreferance")! as HTMLInputElement;
+const colorPreferance = document.getElementById(
+	"colorPreferance"
+)! as HTMLInputElement;
 const colorScheme = document.getElementById("colorScheme")!;
 const tableClasses = document.querySelectorAll(".table");
 const cardClasses = document.querySelectorAll(".card");
@@ -15,7 +17,6 @@ const documentClasses = document.documentElement.classList;
  * Color changing
  */
 function colorChange() {
-
 	if (colorPreferance.checked == true) preferesDark();
 	else preferesLight();
 }
@@ -174,11 +175,7 @@ for (let i = 0; i < navLinks.length; i++) {
 try {
 	// @ts-ignore window.keypress is defined in `../components/Keypress/`
 	const listener = new window.keypress.Listener();
-	listener.sequence_combo(
-		"d r e a m space b a d",
-		preferesNether,
-		true
-	);
+	listener.sequence_combo("d r e a m space b a d", preferesNether, true);
 	listener.sequence_combo(
 		"j i n g l e space b e l l s",
 		preferesChristmas,
