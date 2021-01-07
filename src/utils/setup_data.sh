@@ -9,7 +9,7 @@ test ! -d "$SCRIPT_PATH/../data" && mkdir "$SCRIPT_PATH/../data"
 
 DATA="$SCRIPT_PATH/../data"
 
-sqlite3 "$DATA/auth.db" << EOF
+sqlite3 "$DATA/auth.db" <<EOF
 CREATE TABLE IF NOT EXISTS config (
     db_secret       TEXT NOT NULL,
     server_port     INTEGER NOT NULL
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 EOF
 
-sqlite3 "$DATA/leaderboard.db" << EOF
+sqlite3 "$DATA/leaderboard.db" <<EOF
 CREATE TABLE IF NOT EXISTS runners (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     name            TEXT NOT NULL UNIQUE,
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS pairs (
 );
 EOF
 
-cat << EOF > "$DATA/config.json"
+cat <<EOF >"$DATA/config.json"
 {
     "db_secret": "",
     "port": 80,
