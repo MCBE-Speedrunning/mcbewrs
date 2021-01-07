@@ -14,7 +14,6 @@
 		"tests"
 	],
 	"dependencies": {
-		"Keypress": "^2.1.5",
-		"shake.js": "^1.2.2"
+		"Keypress": "^2.1.5"
 	}
 }
