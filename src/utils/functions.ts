@@ -23,7 +23,7 @@ function timeFormat(time: number): string {
  * Covert duration from unix timestamp
  * to days
  */
-function durationFormat(duration: number) {
+function durationFormat(duration: number): number | string {
 	const output = Math.trunc(duration / 86400);
 
 	if (output === 0) return "<1";
