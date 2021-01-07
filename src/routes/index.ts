@@ -14,10 +14,15 @@ const db = new sqlite3.Database(
  */
 router.get("/", (req, res, next) => {
 	/*
-	 * Get the 10 most recent world records
-	 * for each of the category types
+	 * Get the 10 most recent world records for 
+	 * each of the category types. Also this function
+	 * actually ends up returning an array that
+	 * contains strings and numbers, but it does so
+	 * with weird callback magic that I stole from
+	 * duckduckgo. In typical TypeScript fashion I
+	 * am now forced to lie about the true return type.
 	 */
-	function getRecent(cat_type, callback) {
+	function getRecent(cat_type, callback): void {
 		db.all(
 			`SELECT
 				date, abbreviation, readable, link, time,
@@ -69,11 +74,11 @@ router.get("/", (req, res, next) => {
 	}
 
 	// Get the 10 most recent world record runs, for all 3 category types
-	getRecent("main", (returned_value) => {
+	getRecent("main", (returned_value: Array<string | number>) => {
 		const main = returned_value;
-		getRecent("il", (returned_value) => {
+		getRecent("il", (returned_value: Array<string | number>) => {
 			const il = returned_value;
-			getRecent("catext", (returned_value) => {
+			getRecent("catext", (returned_value: Array<string | number>) => {
 				const catext = returned_value;
 				res.render("index", {
 					main: main,
@@ -248,8 +253,7 @@ router.get("/profile/:player?", (req, res, next) => {
 			if (err) return next(err);
 			let current_wrs = 0;
 			let total_duration = 0;
-			let timestamps = [];
-			let beg_end_flags = [];
+			let timestamps: {date: number, beg: number}[] = [];
 
 			const locale = req.acceptsLanguages([
 				"en-GB",
@@ -292,7 +296,7 @@ router.get("/profile/:player?", (req, res, next) => {
 
 			// https://canary.discord.com/channels/574267523869179904/574268036052156416/781707906428043264
 			let beg_time = 0,
-				total_time = 0,
+				total_time: number | string = 0,
 				beg_count = 0,
 				end_count = 0;
 
@@ -311,10 +315,24 @@ router.get("/profile/:player?", (req, res, next) => {
 			const leaderboard_age = durationFormat(
 				new Date().valueOf() / 1000 - 1548098280
 			);
-			const wr_percentage = (
-				(total_time / leaderboard_age) *
-				100
-			).toFixed(2);
+			
+			/*
+			 * There is actually no need to check if `leaderboard_age`
+			 * is not equal to "<1" because we know the leaderboard has
+			 * been around for over a day (I've been there!), but alas,
+			 * Microsoft is a bitch and won't give us alternative ways
+			 * to shut up errors, so now I need to try to sleep at night
+			 * knowing that my code is just a little bit less efficient.
+			 * 
+			 * Please just give me a good language D: 
+			 */
+			let wr_percentage: string;
+			if (typeof(total_time) === "number" && typeof(leaderboard_age) === "number")
+				wr_percentage = (
+					(total_time / leaderboard_age) * 100).toFixed(2);
+			else
+				wr_percentage = "00";
+
 			const time_with_wr = `${total_time} / ${leaderboard_age} (${wr_percentage}%)`;
 
 			// Get the number of unique categories the player has had records in
