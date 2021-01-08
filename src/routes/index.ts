@@ -131,8 +131,8 @@ router.get("/catselect/:type?", (req, res, next) => {
 			    }
 
 			    // Set the title for the page
-				let runType: string;
-				if (req.params.type === "main")
+			    let runType: string;
+			    if (req.params.type === "main")
 				    runType = "Full Game";
 			    else if (req.params.type === "il")
 				    runType = "Individual Level";
