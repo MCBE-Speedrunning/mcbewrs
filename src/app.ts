@@ -13,7 +13,12 @@ import sqlite3 from "sqlite3";
 import xml from "xml";
 import {stringify} from "yaml";
 
-var debug = (process.env.NODE_ENV === "development")
+// Routes
+import apiRouter from "./routes/api";
+import indexRouter from "./routes/index";
+import adminRouter from "./routes/admin";
+
+const debug = process.env.NODE_ENV === "development";
 
 try {
 	fs.mkdirSync("./cache/");
@@ -75,9 +80,9 @@ app.use(session({
 	secret: config.db_secret,
 }));
 
-app.use("/", require("./routes/index"));
-app.use("/api", require("./routes/api"));
-app.use("/admin", require("./routes/admin"));
+app.use("/", indexRouter);
+app.use("/api", apiRouter);
+app.use("/admin", adminRouter);
 // Catch 404 and forward to error handler
 app.use((_req, _res, next) => { next(createError(404)); });
 

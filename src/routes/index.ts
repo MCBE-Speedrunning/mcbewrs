@@ -131,15 +131,16 @@ router.get("/catselect/:type?", (req, res, next) => {
 			    }
 
 			    // Set the title for the page
-			    if (req.params.type === "main")
-				    const type = "Full Game";
+				let runType: string;
+				if (req.params.type === "main")
+				    runType = "Full Game";
 			    else if (req.params.type === "il")
-				    const type = "Individual Level";
+				    runType = "Individual Level";
 			    else
-				    const type = "Category Extension";
+				    runType = "Category Extension";
 
 			    res.render("cat_select", {
-				    type: type,
+				    type: runType,
 				    records: records,
 			    });
 		    });
