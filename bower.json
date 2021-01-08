@@ -1,8 +1,8 @@
 {
 	"name": "mcbewrs",
-	"description": "A website that tracks world records for minecraft bedrock edition",
+	"description": "The world record history site for Minecraft: Bedrock Edition speedrunning",
 	"main": "server.js",
-	"license": "UNLICENSED",
+	"license": "UNLICENSE",
 	"homepage": "https://github.com/MCBE-Speedrunning/mcbewrs",
 	"private": true,
 	"ignore": [
