@@ -2,6 +2,9 @@
 
 # Build everything
 
+SCRIPT_PATH=$(cd "$(dirname "$0")" && pwd)
+cd "$SCRIPT_PATH/../../"
+
 rm -r dist 2>/dev/null
 mkdir dist dist/data dist/views dist/public
 cp -r src/data src/views src/public dist/
