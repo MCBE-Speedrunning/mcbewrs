@@ -7,7 +7,8 @@ function timeFormat(time: number): string {
 	const seconds = ~~time % 60;
 	let output = "";
 
-	if (hours > 0) output += hours + ":" + (minutes < 10 ? "0" : "");
+	if (hours > 0)
+		output += hours + ":" + (minutes < 10 ? "0" : "");
 
 	output += minutes + ":" + (seconds < 10 ? "0" : "");
 	output += seconds;
@@ -23,10 +24,11 @@ function timeFormat(time: number): string {
  * Covert duration from unix timestamp
  * to days
  */
-function durationFormat(duration: number): number | string {
+function durationFormat(duration: number): number|string {
 	const output = Math.trunc(duration / 86400);
 
-	if (output === 0) return "<1";
+	if (output === 0)
+		return "<1";
 	return output;
 }
 
@@ -787,4 +789,4 @@ function getFlag(code: string): string {
 	}
 }
 
-export { getFlag, timeFormat, durationFormat };
+export {getFlag, timeFormat, durationFormat};

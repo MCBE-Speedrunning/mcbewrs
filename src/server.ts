@@ -8,16 +8,13 @@ import http from "http";
 import fs from "fs";
 import path from "path";
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === "development")
 	var debug = require("debug")("mcbewrs:server");
-}
 
 /*
  * Get port from environment and store in Express.
  */
-const config = JSON.parse(
-	fs.readFileSync(path.join(__dirname, "data", "config.json"), "utf-8")
-);
+const config = JSON.parse(fs.readFileSync(path.join(__dirname, "data", "config.json"), "utf-8"));
 
 const port = normalizePort(process.env.PORT || config.port || "2909");
 app.set("port", port);
@@ -38,10 +35,12 @@ function normalizePort(val: string) {
 	const port = parseInt(val, 10);
 
 	// Named pipe
-	if (isNaN(port)) return val;
+	if (isNaN(port))
+		return val;
 
 	// Port number
-	if (port >= 0) return port;
+	if (port >= 0)
+		return port;
 
 	return false;
 }
@@ -50,7 +49,8 @@ function normalizePort(val: string) {
  * Event listener for HTTP server "error" event.
  */
 function onError(error) {
-	if (error.syscall !== "listen") throw error;
+	if (error.syscall !== "listen")
+		throw error;
 
 	const bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 
@@ -76,11 +76,8 @@ function onError(error) {
  */
 function onListening() {
 	const addr = server.address();
-	const bind =
-		typeof addr === "string" ? "pipe " + addr : "port " + addr?.port;
+	const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr?.port;
 	try {
 		debug("Listening on " + bind);
-	} catch (e) {
-		console.log("Started in production mode");
-	}
+	} catch (e) { console.log("Started in production mode"); }
 }

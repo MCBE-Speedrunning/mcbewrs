@@ -4,9 +4,7 @@ declare const twemoji: any;
 
 // Global variables
 const preferedColorScheme = localStorage.getItem("colorMode");
-const colorPreferance = document.getElementById(
-	"colorPreferance"
-)! as HTMLInputElement;
+const colorPreferance = document.getElementById("colorPreferance")! as HTMLInputElement;
 const colorScheme = document.getElementById("colorScheme")!;
 const tableClasses = document.querySelectorAll(".table");
 const cardClasses = document.querySelectorAll(".card");
@@ -17,8 +15,10 @@ const documentClasses = document.documentElement.classList;
  * Color changing
  */
 function colorChange() {
-	if (colorPreferance.checked == true) preferesDark();
-	else preferesLight();
+	if (colorPreferance.checked == true)
+		preferesDark();
+	else
+		preferesLight();
 }
 
 /*
@@ -28,9 +28,7 @@ function trans() {
 	// Add class
 	documentClasses.add("transition");
 	// Wait for the animation to finish then remove the class
-	setTimeout(() => {
-		documentClasses.remove("transition");
-	}, 1000);
+	setTimeout(() => { documentClasses.remove("transition"); }, 1000);
 }
 
 /*
@@ -45,7 +43,7 @@ function preferesDark() {
 	colorPreferance.checked = true;
 	// Add the dark mode css
 	colorScheme.innerHTML =
-		'<link rel="stylesheet" type="text/css" href="/cdn/stylesheets/dark.css">';
+	    "<link rel=\"stylesheet\" type=\"text/css\" href=\"/cdn/stylesheets/dark.css\">";
 
 	tableClasses.forEach((el) => {
 		el.classList.remove("table-light");
@@ -75,7 +73,7 @@ function preferesLight() {
 	localStorage.setItem("colorMode", "Light");
 	colorPreferance.checked = false;
 	colorScheme.innerHTML =
-		'<link rel="stylesheet" type="text/css" href="/cdn/stylesheets/light.css">';
+	    "<link rel=\"stylesheet\" type=\"text/css\" href=\"/cdn/stylesheets/light.css\">";
 
 	tableClasses.forEach((el) => {
 		el.classList.remove("table-dark");
@@ -102,7 +100,7 @@ function preferesNether() {
 	colorPreferance.checked = true;
 	// Add the dark mode css
 	colorScheme.innerHTML =
-		'<link rel="stylesheet" type="text/css" href="/cdn/stylesheets/nether.css">';
+	    "<link rel=\"stylesheet\" type=\"text/css\" href=\"/cdn/stylesheets/nether.css\">";
 
 	tableClasses.forEach((el) => {
 		el.classList.remove("table-light");
@@ -129,7 +127,7 @@ function preferesChristmas() {
 	colorPreferance.checked = false;
 	// Add the dark mode css
 	colorScheme.innerHTML =
-		'<link rel="stylesheet" type="text/css" href="/cdn/stylesheets/christmas.css">';
+	    "<link rel=\"stylesheet\" type=\"text/css\" href=\"/cdn/stylesheets/christmas.css\">";
 
 	tableClasses.forEach((el) => {
 		el.classList.remove("table-light");
@@ -153,15 +151,21 @@ function preferesChristmas() {
  */
 const mql = matchMedia("(prefers-color-scheme: dark)");
 mql.onchange = (event) => {
-	if (event.matches) preferesDark();
-	else preferesLight();
+	if (event.matches)
+		preferesDark();
+	else
+		preferesLight();
 };
 
 // If the user already has a preferance respect it
-if (preferedColorScheme == "Light") preferesLight();
-else if (preferedColorScheme == "Nether") preferesNether();
-else if (preferedColorScheme == "Christmas") preferesChristmas();
-else preferesDark();
+if (preferedColorScheme == "Light")
+	preferesLight();
+else if (preferedColorScheme == "Nether")
+	preferesNether();
+else if (preferedColorScheme == "Christmas")
+	preferesChristmas();
+else
+	preferesDark();
 
 colorPreferance.addEventListener("click", colorChange, true);
 
@@ -176,20 +180,15 @@ try {
 	// @ts-ignore window.keypress is defined in `../components/Keypress/`
 	const listener = new window.keypress.Listener();
 	listener.sequence_combo("d r e a m space b a d", preferesNether, true);
-	listener.sequence_combo(
-		"j i n g l e space b e l l s",
-		preferesChristmas,
-		true
-	);
+	listener.sequence_combo("j i n g l e space b e l l s", preferesChristmas, true);
 } catch (TypeError) {
-	console.log(
-		"Javascript component blocked by the client. Continuing execution."
-	);
+	console.log("Javascript component blocked by the client. Continuing execution.");
 }
 
 // Use twemoji's
 window.addEventListener("load", () => {
 	if (screen.width >= 1079)
-		twemoji.parse(document.body, { ext: ".svg", folder: "svg" });
-	else twemoji.parse(document.body);
+		twemoji.parse(document.body, {ext: ".svg", folder: "svg"});
+	else
+		twemoji.parse(document.body);
 });
