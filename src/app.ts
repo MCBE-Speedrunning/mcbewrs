@@ -13,8 +13,7 @@ import sqlite3 from "sqlite3";
 import xml from "xml";
 import {stringify} from "yaml";
 
-var debug;
-process.env.NODE_ENV === "development" ? debug = true : debug = false;
+var debug = (process.env.NODE_ENV === "development")
 
 try {
 	fs.mkdirSync("./cache/");
