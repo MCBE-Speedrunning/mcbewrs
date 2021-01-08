@@ -14,8 +14,9 @@ function timeFormat(time: number): string {
 	output += seconds;
 
 	// Check if the time has milliseconds, and remove the trailing .0001
-	if (!isNaN(time) && time.toString().indexOf(".") != -1)
-		output += "." + time.toString().split(".")[1].slice(0, -1);
+	const strtime = time.toString();
+	if (!isNaN(time) && strtime.indexOf(".") != -1)
+		output += "." + strtime.split(".")[1].slice(0, -1);
 
 	return output;
 }
