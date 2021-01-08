@@ -14,9 +14,9 @@ import xml from "xml";
 import {stringify} from "yaml";
 
 // Routes
+import adminRouter from "./routes/admin";
 import apiRouter from "./routes/api";
 import indexRouter from "./routes/index";
-import adminRouter from "./routes/admin";
 
 const debug = process.env.NODE_ENV === "development";
 
