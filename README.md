@@ -34,7 +34,7 @@ If you wish to host your own instance it's best to optimise a couple of stuff.
 
 1. Set up NGINX to serve static files. For example:
 
-    ```
+    ```nginx
     server {
         # Listen to IPv4 and IPv6
         listen 80;
@@ -58,21 +58,21 @@ If you wish to host your own instance it's best to optimise a couple of stuff.
 
 ### Formatting
 
-After saving your code please run `npm run format` to format the code as per the configuration in `package.json`
+After saving your code please run `npm run format` to format the code as per the configuration in `.clang-format`
 
 ### File structure
 
--   `data/`
-    -   This is where the important data goes, such as the databases, and the `config.json`.
-    -   By default, this directory does not exist. You can set it up by running `utils/setup_data.sh`.
 -   `docs/`
     -   This is where all the documentation goes.
--   `public/`
-    -   **DO NOT** put any sensitive information in the `public/` folder as that folder is visable to everyone accessing the server.
+-   `src/data/`
+    -   This is where the important data goes, such as the databases, and the `config.json`.
+    -   By default, this directory does not exist. You can set it up by running `src/utils/setup_data.sh`.
+-   `src/public/`
+    -   **DO NOT** put any sensitive information in the `src/public/` folder as that folder is visable to everyone accessing the server.
     -   This is where things like stylesheets and assets go.
--   `routes/`
-    -   This is where the server side code goes for each page. These must be defined in `app.js` to be accessible from the browser.
--   `utils/`
+-   `src/routes/`
+    -   This is where the server side code goes for each page. These must be defined in `src/app.js` to be accessible from the browser.
+-   `src/utils/`
     -   This is where the utilities go, such as cron jobs, or javascript functions that are used in other files.
--   `views/`
+-   `src/views/`
     -   This is where the pug template files go, like the player profiles and navigation bar.
