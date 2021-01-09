@@ -1,6 +1,5 @@
 import compression from "compression";
 import cors from "cors";
-import csurf from "csurf";
 import express, {NextFunction, Request, Response} from "express";
 import minify from "express-minify";
 import rateLimit from "express-rate-limit";
@@ -9,7 +8,6 @@ import fs from "fs";
 import createError, {HttpError} from "http-errors";
 import logger from "morgan";
 import path from "path";
-import sqlite3 from "sqlite3";
 import xml from "xml";
 import {stringify} from "yaml";
 
@@ -26,7 +24,6 @@ try {
 
 const app = express();
 const config = JSON.parse(fs.readFileSync(path.join(__dirname, "data", "config.json"), "utf-8"));
-const leaderboard = new sqlite3.Database(path.join(__dirname, "data", "leaderboard.db"));
 const logger_options = {
 	stream: fs.createWriteStream(path.join(__dirname, "access.log"), {
 		flags: "a",
@@ -50,7 +47,6 @@ function parseError(req: Request, res: Response, err: HttpError) {
 			break;
 	}
 }
-app.set("leaderboard", leaderboard);
 
 // View engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -92,13 +88,11 @@ app.use((err: HttpError, req: Request, res: Response, _next: NextFunction) => {
 	res.locals.message = err.message;
 	res.locals.error = debug ? err : {};
 
-	if (req.path.includes("/api")) {
+	// Render the error page
+	if (req.path.includes("/api"))
 		parseError(req, res, err);
-	} else {
-		// Render the error page
-		res.status(err.status || 500);
-		res.render("error");
-	}
+	else
+		res.status(err.status || 500).render("error");
 });
 
 export default app;

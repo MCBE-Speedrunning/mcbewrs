@@ -185,6 +185,11 @@ try {
 	console.log("Javascript component blocked by the client. Continuing execution.");
 }
 
+window.onscroll = _ => {
+	if ((window.innerHeight + window.scrollY - 200) >= document.body.offsetHeight)
+		preferesNether();
+};
+
 // Use twemoji's
 window.addEventListener("load", () => {
 	if (screen.width >= 1079)
