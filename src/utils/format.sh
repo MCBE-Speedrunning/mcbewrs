@@ -15,7 +15,7 @@ done
 # executable again.
 for FILE in "$SCRIPT_PATH"/*.sh; do
 	echo Formatting "$FILE"
-	unexpand -t 4 "$FILE" >temp
+	unexpand -t 4 --first-only "$FILE" >temp
 	mv temp "$FILE"
 	chmod +x "$FILE"
 done
