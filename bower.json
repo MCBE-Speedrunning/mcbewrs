@@ -2,7 +2,7 @@
 	"name": "mcbewrs",
 	"description": "The world record history site for Minecraft: Bedrock Edition speedrunning",
 	"main": "server.js",
-	"license": "UNLICENSE",
+	"license": "Unlicense",
 	"homepage": "https://github.com/MCBE-Speedrunning/mcbewrs",
 	"private": true,
 	"ignore": [
