@@ -40,7 +40,7 @@ block content
 								a(href='/history/' + run.abbreviation)
 									b #{run.readable}
 							td
-								a(href=run.link, target="_blank")
+								a(href=run.link, target="_blank", rel="noreferrer")
 									b #{run.time}
 							td
 								b #{run.platform}
@@ -53,7 +53,7 @@ block content
 							td
 								a(href='/history/' + run.abbreviation) #{run.readable}
 							td
-								a(href=run.link, target="_blank") #{run.time}
+								a(href=run.link, target="_blank", rel="noreferrer") #{run.time}
 							td #{run.platform}
 							td #{run.version}
 							td #{run.duration}

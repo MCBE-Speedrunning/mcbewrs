@@ -22,7 +22,7 @@ block content
 						tr
 							td #{run.date}
 							td
-								a(href=run.link, target="_blank") #{run.time}
+								a(href=run.link, target="_blank", rel="noreferrer") #{run.time}
 							td
 								a(href='/profile/' + run.runner_id) #{run.name}
 							td #{run.nationality}

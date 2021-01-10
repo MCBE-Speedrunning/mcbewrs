@@ -21,7 +21,7 @@ block content
 					td
 						a(href='/history/' + run.abbreviation) #{run.readable}
 					td
-						a(href=run.link, target="_blank") #{run.time}
+						a(href=run.link, target="_blank", rel="noreferrer") #{run.time}
 					td
 						a(href='/profile/' + run.runner_id) #{run.name}
 					td #{run.nationality}

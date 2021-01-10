@@ -20,7 +20,12 @@ nav.navbar.navbar-expand-lg.navbar-dark.sticky-top
 								if !i.blank
 									a.nav-link(aria-current=i.name, href=i.link)= i.name
 								else
-									a.nav-link(aria-current=i.name, href=i.link, target="_blank")= i.name
+									a.nav-link(
+										aria-current=i.name,
+										href=i.link,
+										target="_blank",
+										rel="noreferrer"
+									)= i.name
 						else
 							li.nav-item
 								a.nav-link.disabled(href=i.link, tabindex="-1", aria-disabled="true")= i.name
@@ -28,5 +33,5 @@ nav.navbar.navbar-expand-lg.navbar-dark.sticky-top
 			.right.nav-item
 				a.switchA
 					label.switch
-						input#colorPreferance(type="checkbox")
+						input#colorPreferance(type="checkbox", for="theme")
 						span.slider.round(id=slider)
