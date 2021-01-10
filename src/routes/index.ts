@@ -179,11 +179,8 @@ router.get("/history/:cat?", async (req, res, next) => {
 				rows[i].nationality = getFlag(rows[i].nationality);
 			}
 
-			if (rows[i].duration === 0)
-				rows[i].duration = "<1";
-
 			rows[i].time = timeFormat(rows[i].time);
-			rows[i].duration = Math.trunc(rows[i].duration / 86400);
+			rows[i].duration = durationFormat(rows[i].duration);
 			rows[i].date = new Date(rows[i].date * 1000).toLocaleDateString(locale || "en-GB");
 		}
 

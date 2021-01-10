@@ -43,7 +43,9 @@ If you wish to host your own instance it's best to optimise a couple of stuff.
         #server_name wrs.mcbe.wtf;
         # Change the port to whatever you have in data/config.json
         location /cdn/ {
-        root /path/to/mcbewrs/public;
+            # Change the cache control depending on how often static files change
+            add_header Cache-Control max-age=696969;
+            root /path/to/mcbewrs/public;
         }
 
         location / {
