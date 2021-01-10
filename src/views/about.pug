@@ -1,5 +1,34 @@
 extends layout
 
+block Head
+	// Meta data that should be used everywhere else 
+	- const title = "About mcbewrs";
+	- const description = "About this website, it's creators and the project itself.";
+	- const url = full_url;
+	- const type = "website";
+	- const image = "/cdn/favicon.png";
+
+	title #{title}
+	
+	// Generic meta data
+	meta(name="title" content=title)/
+	meta(name="description" content=description)/
+	
+	// Open Graph / Facebook
+	// Used by many others such as discord
+	meta(property="og:title", content=title)/
+	meta(property="og:url", content=url)/
+	meta(property="og:type", content=type)/
+	meta(property="og:image", content=image)/
+	meta(property="og:description", content=description)/
+
+	// Twitter
+	meta(property="twitter:title", content=title)/
+	meta(property="twitter:url", content=url)/
+	meta(property="twitter:card", content=type)/
+	meta(property="twitter:image", content=image)/
+	meta(property="twitter:description", content=description)/
+
 block content
 	h1 #{pageName}
 	p

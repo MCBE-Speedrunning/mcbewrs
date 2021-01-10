@@ -76,6 +76,12 @@ app.use(session({
 	secret: config.db_secret,
 }));
 
+// Global variables to be accessed by pug templates
+app.use((req, res, next) => {
+	res.locals.full_url = req.url;
+	next();
+});
+
 app.use("/", indexRouter);
 app.use("/api", apiRouter);
 app.use("/admin", adminRouter);
