@@ -2,18 +2,18 @@ extends layout
 
 block Head
 	// Meta data that should be used everywhere else 
-	- const title = "MCBE WR History";
-	- const description = "World record history for Minecraft: Bedrock Edition";
+	- const title = 'MCBE WR History';
+	- const description = 'World record history for Minecraft: Bedrock Edition';
 	- const url = full_url;
-	- const type = "website";
-	- const image = "/cdn/favicon.png";
+	- const type = 'website';
+	- const image = '/cdn/favicon.png';
 
 	title #{title}
-	
+
 	// Generic meta data
-	meta(name="title" content=title)/
-	meta(name="description" content=description)/
-	
+	meta(name="title", content=title)/
+	meta(name="description", content=description)/
+
 	// Open Graph / Facebook
 	// Used by many others such as discord
 	meta(property="og:title", content=title)/
@@ -48,7 +48,7 @@ block content
 					h5.card-title Individual Levels
 					p.card-text Individual Levels WR History
 					p
-						a.btn.btn-primary(href="/catselect/il") View
+						a.btn.btn-primary(href="/catselect/il", disabled) View
 
 			.card.col-sm-6
 				img.card-img-top(
@@ -59,4 +59,4 @@ block content
 					h5.card-title Category Extensions
 					p.card-text Category Extensions WR History
 					p
-						a.btn.btn-primary(href="/catselect/catext") View
+						a.btn.btn-primary(href="/catselect/catext", disabled) View
