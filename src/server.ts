@@ -31,7 +31,7 @@ server.on("listening", onListening);
 /*
  * Normalize a port into a number, string, or false.
  */
-function normalizePort(val: string) {
+function normalizePort(val: string): string|number|false {
 	const port = parseInt(val, 10);
 
 	// Named pipe
@@ -48,6 +48,7 @@ function normalizePort(val: string) {
 /*
  * Event listener for HTTP server "error" event.
  */
+/* TODO: Fix this annoying typescript warning about errors type */
 function onError(error) {
 	if (error.syscall !== "listen")
 		throw error;
@@ -59,12 +60,10 @@ function onError(error) {
 		case "EACCES":
 			console.error(bind + " requires elevated privileges");
 			process.exit(1);
-			break;
 
 		case "EADDRINUSE":
 			console.error(bind + " is already in use");
 			process.exit(1);
-			break;
 
 		default:
 			throw error;
@@ -76,7 +75,7 @@ function onError(error) {
  */
 function onListening() {
 	const addr = server.address();
-	const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr?.port;
+	const bind = (typeof(addr) === "string") ? ("pipe " + addr) : ("port " + addr?.port);
 	try {
 		debug("Listening on " + bind);
 	} catch (e) { console.log("Started in production mode"); }
