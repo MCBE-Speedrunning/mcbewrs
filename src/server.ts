@@ -1,12 +1,11 @@
-#!/usr/bin/env node
-
 /*
  * Module dependencies.
  */
-import app from "./app";
-import http from "http";
 import fs from "fs";
+import http from "http";
 import path from "path";
+
+import app from "./app";
 
 if (process.env.NODE_ENV === "development")
 	var debug = require("debug")("mcbewrs:server");
@@ -75,7 +74,7 @@ function onError(error) {
  */
 function onListening() {
 	const addr = server.address();
-	const bind = (typeof(addr) === "string") ? ("pipe " + addr) : ("port " + addr?.port);
+	const bind = (typeof (addr) === "string") ? ("pipe " + addr) : ("port " + addr?.port);
 	try {
 		debug("Listening on " + bind);
 	} catch (e) { console.log("Started in production mode"); }
