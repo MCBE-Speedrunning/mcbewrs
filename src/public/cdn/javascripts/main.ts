@@ -43,7 +43,7 @@ function preferesDark() {
 	colorPreferance.checked = true;
 	// Add the dark mode css
 	colorScheme.innerHTML =
-		"<link rel=\"stylesheet\" type=\"text/css\" href=\"/cdn/stylesheets/dark.css\">";
+	    "<link rel=\"stylesheet\" type=\"text/css\" href=\"/cdn/stylesheets/dark.css\">";
 
 	tableClasses.forEach((el) => {
 		el.classList.remove("table-light");
@@ -73,7 +73,7 @@ function preferesLight() {
 	localStorage.setItem("colorMode", "Light");
 	colorPreferance.checked = false;
 	colorScheme.innerHTML =
-		"<link rel=\"stylesheet\" type=\"text/css\" href=\"/cdn/stylesheets/light.css\">";
+	    "<link rel=\"stylesheet\" type=\"text/css\" href=\"/cdn/stylesheets/light.css\">";
 
 	tableClasses.forEach((el) => {
 		el.classList.remove("table-dark");
@@ -100,7 +100,7 @@ function preferesNether() {
 	colorPreferance.checked = true;
 	// Add the dark mode css
 	colorScheme.innerHTML =
-		"<link rel=\"stylesheet\" type=\"text/css\" href=\"/cdn/stylesheets/nether.css\">";
+	    "<link rel=\"stylesheet\" type=\"text/css\" href=\"/cdn/stylesheets/nether.css\">";
 
 	tableClasses.forEach((el) => {
 		el.classList.remove("table-light");
@@ -127,7 +127,7 @@ function preferesChristmas() {
 	colorPreferance.checked = false;
 	// Add the dark mode css
 	colorScheme.innerHTML =
-		"<link rel=\"stylesheet\" type=\"text/css\" href=\"/cdn/stylesheets/christmas.css\">";
+	    "<link rel=\"stylesheet\" type=\"text/css\" href=\"/cdn/stylesheets/christmas.css\">";
 
 	tableClasses.forEach((el) => {
 		el.classList.remove("table-light");

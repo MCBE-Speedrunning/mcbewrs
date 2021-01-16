@@ -2,18 +2,18 @@ extends layout
 
 block Head
 	// Meta data that should be used everywhere else 
-	- const title = "An error has occured";
-	- const description = "Try a different URL";
+	- const title = 'An error has occured';
+	- const description = 'Try a different URL';
 	- const url = full_url;
-	- const type = "website";
-	- const image = "/cdn/favicon.png";
+	- const type = 'website';
+	- const image = '/cdn/favicon.png';
 
 	title Error
-	
+
 	// Generic meta data
-	meta(name="title" content=title)/
-	meta(name="description" content=description)/
-	
+	meta(name="title", content=title)/
+	meta(name="description", content=description)/
+
 	// Open Graph / Facebook
 	// Used by many others such as discord
 	meta(property="og:title", content=title)/

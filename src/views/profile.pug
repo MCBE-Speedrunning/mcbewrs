@@ -5,15 +5,15 @@ block Head
 	- const title = `${player}'s profile`;
 	- const description = `${player}'s world records`;
 	- const url = full_url;
-	- const type = "website";
-	- const image = "/cdn/favicon.png";
+	- const type = 'website';
+	- const image = '/cdn/favicon.png';
 
 	title #{title}
-	
+
 	// Generic meta data
-	meta(name="title" content=title)/
-	meta(name="description" content=description)/
-	
+	meta(name="title", content=title)/
+	meta(name="description", content=description)/
+
 	// Open Graph / Facebook
 	// Used by many others such as discord
 	meta(property="og:title", content=title)/
