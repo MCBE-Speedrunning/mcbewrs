@@ -158,23 +158,27 @@ mql.onchange = (event) => {
 };
 
 // If the user already has a preferance respect it
-if (preferedColorScheme == "Light")
-	preferesLight();
-else if (preferedColorScheme == "Nether")
-	preferesNether();
-else if (preferedColorScheme == "Christmas")
-	preferesChristmas();
-else
-	preferesDark();
+switch (preferedColorScheme) {
+	case "Light":
+		preferesLight();
+		break;
+	case "Nether":
+		preferesNether();
+		break;
+	case "Christmas":
+		preferesChristmas();
+		break;
+	default:
+		preferesDark();
+		break;
+}
 
 colorPreferance.addEventListener("click", colorChange, true);
 
 // Add active class to active link
-for (let i = 0; i < navLinks.length; i++) {
-	if (navLinks[i].getAttribute("href") === location.pathname) {
+for (let i = 0; i < navLinks.length; i++)
+	if (navLinks[i].getAttribute("href") === location.pathname)
 		navLinks[i].classList.add("active");
-	}
-}
 
 try {
 	// @ts-ignore window.keypress is defined in `../components/Keypress/`
