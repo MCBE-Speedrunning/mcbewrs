@@ -170,7 +170,6 @@ switch (preferedColorScheme) {
 		break;
 	default:
 		preferesDark();
-		break;
 }
 
 colorPreferance.addEventListener("click", colorChange, true);
