@@ -8,25 +8,17 @@ import {durationFormat, getFlag, timeFormat} from "../utils/functions";
 
 const router = express.Router();
 let db: Database<sqlite3.Database, sqlite3.Statement>;
-(async () => {// open the database
-     db = await open({
-	     filename: path.join(__dirname, "..", "data", "leaderboard.db"),
-	     driver: sqlite3.cached.Database
-     })})();
+
+// Open the database
+(async () => {db = await open({
+	filename: path.join(__dirname, "..", "data", "leaderboard.db"),
+	driver: sqlite3.cached.Database
+})})();
 
 /*
  * Home page
  */
 router.get("/", async (req, res, next) => {
-	/*
-	 * Get the 10 most recent world records for
-	 * each of the category types. Also this function
-	 * actually ends up returning an array that
-	 * contains strings and numbers, but it does so
-	 * with weird callback magic that I stole from
-	 * duckduckgo. In typical TypeScript fashion I
-	 * am now forced to lie about the true return type.
-	 */
 	async function getRecent(cat_type: string): Promise<any[]> {
 		const recent = await db.all(`SELECT
 				date, abbreviation, readable, link, time,
@@ -48,10 +40,11 @@ router.get("/", async (req, res, next) => {
 		]);
 
 		// For each run, format the date and time appropriately
-		for (let i = 0; i < recent.length; i++) {
+		for (let i = 0, len = recent.length; i < len; i++) {
 			if (recent[i] === undefined)
 				continue;
 
+			// Support coop runs
 			if (recent[i + 1] !== undefined && recent[i].link === recent[i + 1].link) {
 				recent[i].name = `${recent[i].name} & ${recent[i + 1].name}`;
 				recent[i].nationality =
@@ -121,12 +114,17 @@ router.get("/catselect/:type?", async (req, res, next) => {
 
 		// Set the title for the page
 		let runType: string;
-		if (req.params.type === "main")
-			runType = "Full Game";
-		else if (req.params.type === "il")
-			runType = "Individual Level";
-		else
-			runType = "Category Extension";
+		switch (req.params.type) {
+			case "il":
+				runType = "Individual Level";
+				break;
+			case "catext":
+				runType = "Category Extension";
+				break;
+			default: // Default to Full Game
+				runType = "Full Game";
+				break;
+		}
 
 		res.render("cat_select", {
 			type: runType,
