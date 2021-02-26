@@ -4,6 +4,7 @@ import path from "path";
 import {Database, open} from "sqlite";
 import sqlite3 from "sqlite3";
 
+import Runs from "../types/runs";
 import {durationFormat, getFlag, timeFormat} from "../utils/functions";
 
 const router = express.Router();
@@ -47,8 +48,8 @@ router.get("/", async (req, res, next) => {
 			// Support coop runs
 			if (recent[i + 1] !== undefined && recent[i].link === recent[i + 1].link) {
 				recent[i].name = `${recent[i].name} & ${recent[i + 1].name}`;
-				recent[i].nationality =
-				    `${getFlag(recent[i].nationality)} ${getFlag(recent[i + 1].nationality)}`;
+				recent[i].nationality = `${getFlag(recent[i].nationality)} ${
+					getFlag(recent[i + 1].nationality)}`;
 				delete recent[i + 1];
 			} else {
 				recent[i].nationality = getFlag(recent[i].nationality);
@@ -105,8 +106,7 @@ router.get("/catselect/:type?", async (req, res, next) => {
 			records[i].nationality = getFlag(records[i].nationality);
 			records[i].time = timeFormat(records[i].time);
 			records[i].duration = Math.trunc(records[i].duration / 86400);
-			records[i].date =
-			    new Date(records[i].date * 1000).toLocaleDateString(locale || "en-GB");
+			records[i].date = new Date(records[i].date * 1000).toLocaleDateString(locale || "en-GB");
 
 			if (records[i].duration === 0)
 				records[i].duration = "<1";
@@ -115,15 +115,15 @@ router.get("/catselect/:type?", async (req, res, next) => {
 		// Set the title for the page
 		let runType: string;
 		switch (req.params.type) {
-			case "il":
-				runType = "Individual Level";
-				break;
-			case "catext":
-				runType = "Category Extension";
-				break;
-			default: // Default to Full Game
-				runType = "Full Game";
-				break;
+		case "il":
+			runType = "Individual Level";
+			break;
+		case "catext":
+			runType = "Category Extension";
+			break;
+		default: // Default to Full Game
+			runType = "Full Game";
+			break;
 		}
 
 		res.render("cat_select", {
@@ -169,8 +169,8 @@ router.get("/history/:cat?", async (req, res, next) => {
 
 			if (rows[i + 1] !== undefined && rows[i].link === rows[i + 1].link) {
 				rows[i].name = `${rows[i].name} & ${rows[i + 1].name}`;
-				rows[i].nationality =
-				    `${getFlag(rows[i].nationality)} ${getFlag(rows[i + 1].nationality)}`;
+				rows[i].nationality = `${getFlag(rows[i].nationality)} ${
+					getFlag(rows[i + 1].nationality)}`;
 				delete rows[i + 1];
 				console.log(rows[i]);
 			} else {
@@ -214,7 +214,7 @@ router.get("/profile/:player?", async (req, res, next) => {
 	    req.params.player);
 	let current_wrs = 0;
 	let total_duration = 0;
-	let timestamps: {date: number; beg: number}[] = [];
+	let timestamps: Runs.Timestamp[] = [];
 
 	const locale = req.acceptsLanguages([
 		"en-GB",
@@ -225,12 +225,12 @@ router.get("/profile/:player?", async (req, res, next) => {
 
 	for (let i = 0, len = runs.length; i < len; i++) {
 		// Store the beginning and end of each wr
-		const beg = {
+		const beg: Runs.Timestamp = {
 			date: runs[i].date,
 			beg: 1,
 		};
 
-		const end = {
+		const end: Runs.Timestamp = {
 			date: runs[i].date + runs[i].duration,
 			beg: 0,
 		};
@@ -253,9 +253,10 @@ router.get("/profile/:player?", async (req, res, next) => {
 	timestamps.sort((a, b) => { return a.date - b.date; });
 
 	// https://canary.discord.com/channels/574267523869179904/574268036052156416/781707906428043264
-	let beg_time = 0, total_time: number|string = 0, beg_count = 0, end_count = 0;
+	let beg_time: number = 0, total_time: Runs.Duration = 0;
+	let beg_count: number = 0, end_count: number = 0;
 
-	for (let i = 0, len = timestamps.length; i < len; i++) {
+	for (let i in timestamps) {
 		if (timestamps[i].beg) {
 			if (beg_count++ === 0)
 				beg_time = timestamps[i].date;

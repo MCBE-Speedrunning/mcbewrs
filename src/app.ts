@@ -32,19 +32,19 @@ const logger_options = {
 
 function parseError(req: Request, res: Response, err: HttpError) {
 	switch (req.acceptsLanguages(["json", "xml", "yaml", "toml"])) {
-		case "xml":
-			res.set("Content-Type", "text/xml");
-			res.status(err.status).send(xml({error: err}));
-			break;
+	case "xml":
+		res.set("Content-Type", "text/xml");
+		res.status(err.status).send(xml({error: err}));
+		break;
 
-		case "yaml":
-			res.set("Content-Type", "text/yaml");
-			res.status(err.status).send(stringify({error: err}));
-			break;
+	case "yaml":
+		res.set("Content-Type", "text/yaml");
+		res.status(err.status).send(stringify({error: err}));
+		break;
 
-		default:
-			res.status(err.status).jsonp({error: err});
-			break;
+	default:
+		res.status(err.status).jsonp({error: err});
+		break;
 	}
 }
 

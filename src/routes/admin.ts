@@ -3,6 +3,7 @@ import csurf from "csurf";
 import express, {NextFunction, Request, Response} from "express";
 import createError from "http-errors";
 import path from "path";
+// @ts-ignore No declarations available for this module
 import hashFunc from "pbkdf2-password";
 import {Database, open} from "sqlite";
 import sqlite3 from "sqlite3";
@@ -52,16 +53,18 @@ async function authenticate(name: string, pass: string, fn: (err: Error|null, us
 	// Query the db for the given username
 	if (!user)
 		return fn(new Error("cannot find user"));
-	// Apply the same algorithm to the POSTed password, applying
-	// the hash against the pass / salt, if there is a match we
-	// found the user
-	hash({password: pass, salt: user.salt}, (err, _pass, _salt, hash) => {
-		if (err)
-			return fn(err);
-		if (hash === user.password)
-			return fn(null, user);
-		fn(new Error("invalid password"));
-	});
+	/*
+	 * Apply the same algorithm to the POSTed password, applying the hash against the pass / salt,
+	 * if there is a match we found the user.
+	 */
+	hash({password: pass, salt: user.salt},
+	    (err: Error|null, _pass: string, _salt: string, hash: string) => {
+		    if (err)
+			    return fn(err);
+		    if (hash === user.password)
+			    return fn(null, user);
+		    fn(new Error("invalid password"));
+	    });
 }
 
 router.use(csurf({cookie: false}));

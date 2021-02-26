@@ -3,6 +3,7 @@ import fs from "fs";
 import createError from "http-errors";
 import jwt from "jsonwebtoken";
 import path from "path";
+// @ts-ignore No declarations available for this module
 import hashFunc from "pbkdf2-password";
 import {Database, open} from "sqlite";
 import sqlite3 from "sqlite3";
@@ -13,6 +14,7 @@ const hash = hashFunc();
 const router = express.Router();
 let leaderboard: Database<sqlite3.Database, sqlite3.Statement>;
 let auth: Database<sqlite3.Database, sqlite3.Statement>;
+
 (async () => {
 	leaderboard = await open({
 		filename: path.join(__dirname, "..", "data", "leaderboard.db"),
@@ -21,22 +23,23 @@ let auth: Database<sqlite3.Database, sqlite3.Statement>;
 	auth = await open(
 	    {filename: path.join(__dirname, "..", "data", "auth.db"), driver: sqlite3.cached.Database});
 })();
-const config =
-    JSON.parse(fs.readFileSync(path.join(__dirname, "..", "data", "config.json"), "utf-8"));
+
+const config = JSON.parse(
+    fs.readFileSync(path.join(__dirname, "..", "data", "config.json"), "utf-8"));
+
 /*
- * username is in the form { username: "my cool username" }
- * ^^the above object structure is completely arbitrary
+ * `username` is in the form { username: "AnInternetTroll" }
+ * ^^ The above object structure is completely arbitrary
  */
-function generateAccessToken(username: string) {
-	// Expires after half and hour (1800 seconds = 30 minutes)
+function generateAccessToken(username: string): string {
 	return jwt.sign({username}, config.token_secret, {expiresIn: "1800s"});
 }
 
-function authenticateToken(req: Request, res: Response, next: NextFunction) {
+function authenticateToken(
+    req: Request, res: Response, next: NextFunction): Response<any>|undefined {
 	// Gather the jwt access token from the request header
 	const authHeader = req.headers["authorization"];
 	const token = authHeader && authHeader.split(" ")[1];
-	// If there isn't any token
 	if (token == null)
 		return res.sendStatus(401);
 
@@ -50,27 +53,30 @@ function authenticateToken(req: Request, res: Response, next: NextFunction) {
 }
 
 function parseData(req: Request, res: Response, rows: any) {
-	for (let i in rows)
-		for (let j in rows[i])
-			if (rows[i][j] === "-")
+	for (let i in rows) {
+		for (let j in rows[i]) {
+			if (rows[i][j] === "-") {
 				try {
 					rows[i][j] = null;
 				} catch (TypeError) {}
+			}
+		}
+	}
 
 	switch (req.acceptsLanguages(["json", "xml", "yaml", "toml"])) {
-		case "xml":
-			res.set("Content-Type", "text/xml");
-			res.send(xml({data: rows}));
-			break;
+	case "xml":
+		res.set("Content-Type", "text/xml");
+		res.send(xml({data: rows}));
+		break;
 
-		case "yaml":
-			res.set("Content-Type", "text/yaml");
-			res.send(stringify({data: rows}));
-			break;
+	case "yaml":
+		res.set("Content-Type", "text/yaml");
+		res.send(stringify({data: rows}));
+		break;
 
-		default:
-			res.jsonp({data: rows});
-			break;
+	default:
+		res.jsonp({data: rows});
+		break;
 	}
 }
 
@@ -99,9 +105,10 @@ router.post("/login", async (req, res, next) => {
 	// Query the db for the given username
 	if (!user)
 		return next(createError(403, "User not found"));
-	// Apply the same algorithm to the POSTed password, applying
-	// the hash against the pass / salt, if there is a match we
-	// found the user
+	/*
+	 * Apply the same algorithm to the POSTed password, applying the hash against the pass / salt,
+	 * if there is a match we found the user.
+	 */
 	hash({password: req.body.password, salt: user.salt},
 	    (err: Error, _pass: string, _salt: string, hash: string) => {
 		    if (err)
@@ -135,19 +142,16 @@ router.post("/run/add", authenticateToken, async (req, res, next) => {
 
 	await leaderboard.run(
 	    "INSERT INTO runs VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-
 	    run.category_id,
 	    run.date,
 	    run.time,
-	    // Run duration
-	    0,
+	    0, // Run duration
 	    run.platform,
 	    run.seed,
 	    run.version,
 	    run.input,
 	    run.link,
-	    // WR flag
-	    0,
+	    0, // WR flag
 	);
 
 	// Prevents DoS
@@ -180,8 +184,10 @@ router.post("/run/add", authenticateToken, async (req, res, next) => {
 						ORDER BY date ASC`,
 	    run.category_id);
 	for (let i = 0, len = rows.length; i < len; i++) {
-		// Check every newer record until a faster one is found
-		// Can't just check the very next because of ties
+		/*
+		 * Check every newer record until a faster one is found. Can't just check the very next
+		 * because of ties.
+		 */
 		for (let j = i + 1; j <= len; j++) {
 			// Check if the record is current
 			if (j === len) {

@@ -11,37 +11,25 @@ const cardClasses = document.querySelectorAll(".card");
 const navEl = document.querySelectorAll("nav");
 const navLinks = document.querySelectorAll(".nav-link");
 const documentClasses = document.documentElement.classList;
-/*
- * Color changing
- */
+
 function colorChange() {
-	if (colorPreferance.checked == true)
+	if (colorPreferance.checked)
 		preferesDark();
 	else
 		preferesLight();
 }
 
-/*
- * Fancy transition between dark mode and light mode
- */
+/* Fancy transition between dark mode and light mode */
 function trans() {
-	// Add class
 	documentClasses.add("transition");
 	// Wait for the animation to finish then remove the class
 	setTimeout(() => { documentClasses.remove("transition"); }, 1000);
 }
 
-/*
- * This function is used whenever dark preferance is used
- */
 function preferesDark() {
-	// Start the transition
 	trans();
-	// Save the preferance
 	localStorage.setItem("colorMode", "Dark");
-	// Check the box to make it look like dark mode is enabled
 	colorPreferance.checked = true;
-	// Add the dark mode css
 	colorScheme.innerHTML =
 	    "<link rel=\"stylesheet\" type=\"text/css\" href=\"/cdn/stylesheets/dark.css\">";
 
@@ -61,15 +49,8 @@ function preferesDark() {
 	});
 }
 
-/*
- * This function is used whenever
- * light preferance is used
- */
 function preferesLight() {
-	// Start the transition
 	trans();
-
-	// Save the preferance
 	localStorage.setItem("colorMode", "Light");
 	colorPreferance.checked = false;
 	colorScheme.innerHTML =
@@ -92,13 +73,9 @@ function preferesLight() {
 }
 
 function preferesNether() {
-	// Start the transition
 	trans();
-	// Save the preferance
 	localStorage.setItem("colorMode", "Nether");
-	// Check the box to make it look like dark mode is enabled
 	colorPreferance.checked = true;
-	// Add the dark mode css
 	colorScheme.innerHTML =
 	    "<link rel=\"stylesheet\" type=\"text/css\" href=\"/cdn/stylesheets/nether.css\">";
 
@@ -119,13 +96,9 @@ function preferesNether() {
 }
 
 function preferesChristmas() {
-	// Start the transition
 	trans();
-	// Save the preferance
 	localStorage.setItem("colorMode", "Christmas");
-	// Check the box to make it look like light mode is enabled
 	colorPreferance.checked = false;
-	// Add the dark mode css
 	colorScheme.innerHTML =
 	    "<link rel=\"stylesheet\" type=\"text/css\" href=\"/cdn/stylesheets/christmas.css\">";
 
@@ -146,8 +119,7 @@ function preferesChristmas() {
 }
 
 /*
- * When the user changes their native
- * color scheme make sure to change too
+ * When the user changes their native color scheme make sure to change too.
  */
 const mql = matchMedia("(prefers-color-scheme: dark)");
 mql.onchange = (event) => {
@@ -159,17 +131,17 @@ mql.onchange = (event) => {
 
 // If the user already has a preferance respect it
 switch (preferedColorScheme) {
-	case "Light":
-		preferesLight();
-		break;
-	case "Nether":
-		preferesNether();
-		break;
-	case "Christmas":
-		preferesChristmas();
-		break;
-	default:
-		preferesDark();
+case "Light":
+	preferesLight();
+	break;
+case "Nether":
+	preferesNether();
+	break;
+case "Christmas":
+	preferesChristmas();
+	break;
+default:
+	preferesDark();
 }
 
 colorPreferance.addEventListener("click", colorChange, true);
@@ -188,7 +160,7 @@ try {
 	console.log("Javascript component blocked by the client. Continuing execution.");
 }
 
-window.onscroll = _ => {
+window.onscroll = () => {
 	if ((window.innerHeight + window.scrollY - 200) >= document.body.offsetHeight)
 		preferesNether();
 };
