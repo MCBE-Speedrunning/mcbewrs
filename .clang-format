@@ -19,7 +19,7 @@ ColumnLimit:                            100
 ContinuationIndentWidth:                4
 DeriveLineEnding:                       true
 IndentCaseBlocks:                       false
-IndentCaseLabels:                       true
+IndentCaseLabels:                       false
 IndentWidth:                            4
 InsertTrailingCommas:                   None
 JavaScriptQuotes:                       Double
@@ -42,3 +42,7 @@ SpacesInSquareBrackets:                 false
 TabWidth:                               4
 UseCRLF:                                false
 UseTab:                                 ForIndentation
+
+# Taken from git's rules (Except PenaltyBreakAssignment)
+PenaltyBreakAssignment:					100
+PenaltyExcessCharacter:					100
