@@ -54,7 +54,7 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variables file
+# Dotenv environment variables file
 .env
 
 # next.js build output
@@ -80,5 +80,8 @@ backup/
 src/data/
 dist/
 
-# nodemon output
+# Nodemon output
 output.log
+
+# Sass cache
+.sass-cache/
