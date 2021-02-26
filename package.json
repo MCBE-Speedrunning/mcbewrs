@@ -27,8 +27,7 @@
 		"postinstall": "bower install",
 		"start": "NODE_ENV=development nodemon ./dist/server.js",
 		"start-production": "NODE_ENV=production node ./dist/server.js",
-		"format": "prettier --write ./src/views/*.pug && ./src/utils/format.sh",
-		"build": "./src/utils/build.sh"
+		"format": "prettier --write ./src/views/*.pug && ./src/utils/format.sh"
 	},
 	"dependencies": {
 		"bower": "^1.8.8",
