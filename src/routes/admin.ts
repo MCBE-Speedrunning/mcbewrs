@@ -119,32 +119,55 @@ router.get("/add", restrict, async (req, res, _next) => {
 
 router.post("/add", restrict, async (req, res, next) => {
 	const run = req.body;
-	// Multiple runners can be input by seperating them with ,
+	const categories = await leaderboard.all("SELECT * FROM categories");
+
+	/*
+	 * Multiple runners can be input by seperating them with ','. We also need to make
+	 * sure they exist before doing anything.
+	 */
 	run.runners = run.runners.trim().split(",");
-	// Convert html date format to epoch ms then convert to seconds
+	for (const runner of run.runners) {
+		const check = await leaderboard.all("SELECT * FROM runners WHERE name=?", runner);
+		if (!check.length) {
+			res.render("admin_add", {
+				banner: {
+					text: `Runner ${runner} does not exist. Please add the runner first.`,
+					status: "danger",
+					csrfToken: req.csrfToken(),
+				},
+				categories: categories,
+				csrfToken: req.csrfToken(),
+			});
+			return;
+		}
+	}
+
+	/* Convert HTML date format to seconds from epoch */
 	run.date = new Date(run.date).valueOf() / 1000;
 
-	// All input from the client comes as a string, so everything must be parsed as an int
+	/* All input from the client comes as a string, so everything must be parsed as an int */
 	run.time = parseInt(run.hour, 10) * 60 * 60 + parseInt(run.minutes, 10) * 60
 	           + parseInt(run.seconds, 10);
 
-	// Add 0.0001 to the end of runs that time with milliseconds
-	// This ensures that the site will display 3 significant figures
+	/*
+	 * Add 0.0001 to the end of runs that time with milliseconds. This ensures that the
+	 * site will display 3 significant figures.
+	 */
 	if (parseInt(run.milliseconds, 10))
 		run.time += parseInt(run.milliseconds, 10) / 1000 + 0.0001;
 
 	await leaderboard.run("INSERT INTO runs VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 	    run.category_id, run.date, run.time,
-	    // Run duration
+	    /* Run duration */
 	    0, run.platform, run.seed, run.version, run.input, run.link,
-	    // WR flag
-	    0)
+	    /* WR flag */
+	    0);
 
-	// Prevents DoS
+	/* Prevents DoS according to GitHub */
 	if (!(run.runners instanceof Array))
-	return [];
+		return [];
 
-	// Insert the run/runner pairs
+	/* Insert the run/runner pairs */
 	for (const runner of run.runners)
 		await leaderboard.run(`INSERT INTO pairs VALUES(
 						(SELECT MAX(id) FROM runs),
@@ -152,7 +175,7 @@ router.post("/add", restrict, async (req, res, next) => {
 						)`,
 		    runner);
 
-	// Update the WR flags
+	/* Update the WR flags */
 	await leaderboard.run(`UPDATE runs
 						SET wr = CASE WHEN time = (
 								SELECT time FROM runs
@@ -163,16 +186,18 @@ router.post("/add", restrict, async (req, res, next) => {
 						END`,
 	    run.category_id);
 
-	// Calculate the duration of each run in the category just updated
+	/* Calculate the duration of each run in the category just updated */
 	const rows = await leaderboard.all(`SELECT id, date, time FROM runs
 						WHERE category_id = ?
 						ORDER BY date ASC`,
 	    run.category_id);
 	for (let i = 0, len = rows.length; i < len; i++) {
-		// Check every newer record until a faster one is found
-		// Can't just check the very next because of ties
+		/*
+		 * Check every newer record until a faster one is found. You can't just
+		 * check the very next run because of the possibility of ties.
+		 */
 		for (let j = i + 1; j <= len; j++) {
-			// Check if the record is current
+			/* Check if the record is current */
 			if (j === len) {
 				rows[i].duration = Date.now() / 1000 - rows[i].date;
 			} else if (rows[j].time != rows[i].time) {
@@ -181,12 +206,11 @@ router.post("/add", restrict, async (req, res, next) => {
 			}
 		}
 
-		// Add the runs duration to the DB
+		/* Add the runs duration to the DB */
 		await leaderboard.run(
 		    `UPDATE runs SET duration = ? WHERE id = ?`, rows[i].duration, rows[i].id);
 	}
 
-	const categories = await leaderboard.all("SELECT * FROM categories");
 	res.render("admin_add", {
 		banner: {
 			text: "Run added succesfully",
