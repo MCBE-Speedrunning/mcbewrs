@@ -14,7 +14,7 @@ all:
 	find ./dist/ -name '*.ts' -type f -delete
 	sass --update dist/public/cdn/stylesheets/
 
-.PHONY: clean format run
+.PHONY: clean run
 clean:
 	rm -rf $(DIST) .sass-cache/ cache/
 
