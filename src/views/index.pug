@@ -1,7 +1,7 @@
 extends layout
 
 block Head
-	// Meta data that should be used everywhere else 
+	// Meta data that should be used everywhere else
 	- const title = 'Recent World Records';
 	- const description = 'Recent world records for Minecraft: Bedrock Editions';
 	- const url = full_url;
@@ -53,56 +53,57 @@ block content
 								a(href='/history/' + run.abbreviation) #{run.abbreviation}
 							td(row="Time")
 								a(href=run.link, target="_blank", rel="noreferrer") #{run.time}
-							td(row="Player") 
+							td(row="Player")
 								a(href='/profile/' + run.runner_id) #{run.name}
 							td(row="Nation") #{run.nationality}
 
-		h3 Individual Level
-		table.table.table-hover.table-sm.table-striped
-			thead
-				tr
-					th(scope="col", row="Date") Date
-					th(scope="col", row="Category") Category
-					th(scope="col", row="Abbreviation") Category
-					th(scope="col", row="Time") Time
-					th(scope="col", row="Player") Player
-					th(scope="col", row="Nation") Nation
-			tbody
-				each run in il
-					if run !== undefined
-						tr
-							td(row="Date") #{run.date}
-							td(row="Category")
-								a(href='/history/' + run.abbreviation) #{run.readable}
-							td(row="Abbreviation")
-								a(href='/history/' + run.abbreviation) #{run.abbreviation}
-							td(row="Time")
-								a(href=run.link, target="_blank", rel="noreferrer") #{run.time}
-							td(row="Player") 
-								a(href='/profile/' + run.runner_id) #{run.name}
-							td(row="Nation") #{run.nationality}
-
-		h3 Category Extensions
-		table.table.table-hover.table-sm.table-striped
-			thead
-				tr
-					th(scope="col", row="Date") Date
-					th(scope="col", row="Category") Category
-					th(scope="col", row="Abbreviation") Category
-					th(scope="col", row="Time") Time
-					th(scope="col", row="Player") Player
-					th(scope="col", row="Nation") Nation
-			tbody
-				each run in catext
-					if run !== undefined
-						tr
-							td(row="Date") #{run.date}
-							td(row="Category")
-								a(href='/history/' + run.abbreviation) #{run.readable}
-							td(row="Abbreviation")
-								a(href='/history/' + run.abbreviation) #{run.abbreviation}
-							td(row="Time")
-								a(href=run.link, target="_blank", rel="noreferrer") #{run.time}
-							td(row="Player") 
-								a(href='/profile/' + run.runner_id) #{run.name}
-							td(row="Nation") #{run.nationality}
+//-				TODO: Add ILs and Category Extensions!
+//-		h3 Individual Level
+//-		table.table.table-hover.table-sm.table-striped
+//-			thead
+//-				tr
+//-					th(scope="col", row="Date") Date
+//-					th(scope="col", row="Category") Category
+//-					th(scope="col", row="Abbreviation") Category
+//-					th(scope="col", row="Time") Time
+//-					th(scope="col", row="Player") Player
+//-					th(scope="col", row="Nation") Nation
+//-			tbody
+//-				each run in il
+//-					if run !== undefined
+//-						tr
+//-							td(row="Date") #{run.date}
+//-							td(row="Category")
+//-								a(href='/history/' + run.abbreviation) #{run.readable}
+//-							td(row="Abbreviation")
+//-								a(href='/history/' + run.abbreviation) #{run.abbreviation}
+//-							td(row="Time")
+//-								a(href=run.link, target="_blank", rel="noreferrer") #{run.time}
+//-							td(row="Player")
+//-								a(href='/profile/' + run.runner_id) #{run.name}
+//-							td(row="Nation") #{run.nationality}
+//-
+//-		h3 Category Extensions
+//-		table.table.table-hover.table-sm.table-striped
+//-			thead
+//-				tr
+//-					th(scope="col", row="Date") Date
+//-					th(scope="col", row="Category") Category
+//-					th(scope="col", row="Abbreviation") Category
+//-					th(scope="col", row="Time") Time
+//-					th(scope="col", row="Player") Player
+//-					th(scope="col", row="Nation") Nation
+//-			tbody
+//-				each run in catext
+//-					if run !== undefined
+//-						tr
+//-							td(row="Date") #{run.date}
+//-							td(row="Category")
+//-								a(href='/history/' + run.abbreviation) #{run.readable}
+//-							td(row="Abbreviation")
+//-								a(href='/history/' + run.abbreviation) #{run.abbreviation}
+//-							td(row="Time")
+//-								a(href=run.link, target="_blank", rel="noreferrer") #{run.time}
+//-							td(row="Player")
+//-								a(href='/profile/' + run.runner_id) #{run.name}
+//-							td(row="Nation") #{run.nationality}
