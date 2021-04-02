@@ -75,62 +75,60 @@ router.get("/home", (_req, res) => { res.redirect("/"); });
  * Category select
  */
 router.get("/catselect/:type?", async (req, res, next) => {
-	// If no type is specified, go to the history home page
-	if (typeof req.params.type === "undefined") {
-		res.render("history_home");
-	} else {
-		// Query all the records for the specified cat type
-		const records = await db.all(`SELECT
-				abbreviation, readable, link, time,
-				runner_id, name, nationality, date,
-				platform, input, version, seed, duration
-			FROM runs
-			INNER JOIN
-				pairs ON pairs.run_id = runs.id
-			INNER JOIN
-				runners ON runners.id = pairs.runner_id
-			INNER JOIN
-				categories ON categories.id = runs.category_id
-				AND categories.type = ?
-			WHERE wr = 1
-			ORDER BY corder`,
-		    req.params.type);
-		const locale = req.acceptsLanguages([
-			"en-GB",
-			"en-US",
-			"es-ES",
-			"en",
-		]);
-
-		for (let i = 0, len = records.length; i < len; i++) {
-			records[i].nationality = getFlag(records[i].nationality);
-			records[i].time = timeFormat(records[i].time);
-			records[i].duration = Math.trunc(records[i].duration / 86400);
-			records[i].date = new Date(records[i].date * 1000).toLocaleDateString(locale || "en-GB");
-
-			if (records[i].duration === 0)
-				records[i].duration = "<1";
-		}
-
-		// Set the title for the page
-		let runType: string;
-		switch (req.params.type) {
-		case "il":
-			runType = "Individual Level";
-			break;
-		case "catext":
-			runType = "Category Extension";
-			break;
-		default: // Default to Full Game
-			runType = "Full Game";
-			break;
-		}
-
-		res.render("cat_select", {
-			type: runType,
-			records: records,
-		});
+	let runType: string;
+	let runTypeTitle: string;
+	switch (req.params.type) {
+	case "il":
+		runType = "il";
+		runTypeTitle = "Individual Level";
+		break;
+	case "catext":
+		runType = "catext";
+		runTypeTitle = "Category Extension";
+		break;
+	default: // Default to Full Game
+		runType = "main";
+		runTypeTitle = "Full Game";
+		break;
 	}
+
+	// Query all the records for the specified cat type
+	const records = await db.all(`SELECT
+			abbreviation, readable, link, time,
+			runner_id, name, nationality, date,
+			platform, input, version, seed, duration
+		FROM runs
+		INNER JOIN
+			pairs ON pairs.run_id = runs.id
+		INNER JOIN
+			runners ON runners.id = pairs.runner_id
+		INNER JOIN
+			categories ON categories.id = runs.category_id
+			AND categories.type = ?
+		WHERE wr = 1
+		ORDER BY corder`,
+	    runType);
+	const locale = req.acceptsLanguages([
+		"en-GB",
+		"en-US",
+		"es-ES",
+		"en",
+	]);
+
+	for (let i = 0, len = records.length; i < len; i++) {
+		records[i].nationality = getFlag(records[i].nationality);
+		records[i].time = timeFormat(records[i].time);
+		records[i].duration = Math.trunc(records[i].duration / 86400);
+		records[i].date = new Date(records[i].date * 1000).toLocaleDateString(locale || "en-GB");
+
+		if (records[i].duration === 0)
+			records[i].duration = "<1";
+	}
+
+	res.render("cat_select", {
+		pageTitle: runTypeTitle,
+		records: records,
+	});
 });
 
 /*
