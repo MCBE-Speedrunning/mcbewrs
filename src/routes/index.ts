@@ -315,6 +315,12 @@ router.get("/profile/:player?", async (req, res, next) => {
 		runs: runs,
 	});
 });
+
+/*
+ * Admin page
+ */
+router.get("/admin", (req, res) => { res.redirect("/admin/portal"); });
+
 /*
  * About page
  */

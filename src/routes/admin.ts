@@ -100,6 +100,9 @@ router.get("/logout", (req, res) => {
 	req.session.destroy(() => { res.redirect("/admin/login"); });
 });
 
+router.get("/portal", restrict,
+    (req, res) => { res.render("admin_portal", {csrfToken: req.csrfToken()}); });
+
 router.get(
     "/register", restrict, (req, res) => { res.render("register", {csrfToken: req.csrfToken()}); });
 
