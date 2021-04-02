@@ -27,10 +27,6 @@ html(lang="en")
 				media="(prefers-color-scheme: light)"
 			)/
 	body
-		.alert.alert-danger.alert-dismissible.fade.show(role="alert") This website is in beta
-			button.close(type="button", data-dismiss="alert", aria-label="Close")
-				span(aria-hidden="true") &times;
-
 		if banner
 			.alert.alert-dismissible.fade.show(class=`alert-${banner.status}`, role="alert")= banner.text
 				button.close(type="button", data-dismiss="alert", aria-label="Close")
