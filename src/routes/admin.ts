@@ -109,7 +109,7 @@ router.post("/register", restrict, (req, res) => {
 	res.render("login", {session: req.session, csrfToken: req.csrfToken()});
 });
 
-router.get("/add", restrict, async (req, res, next) => {
+router.get("/add", restrict, async (req, res, _next) => {
 	const rows = await leaderboard.all("SELECT * FROM categories");
 	res.render("admin_add", {
 		categories: rows,
@@ -198,6 +198,12 @@ router.post("/add", restrict, async (req, res, next) => {
 	});
 });
 
+router.get("/new_user", restrict, async (req, res, next) => {
+	res.render("admin_newuser", {
+		csrfToken: req.csrfToken(),
+	});
+});
+
 router.post("/new_user", restrict, async (req, res, next) => {
 	let username: string;
 	if (req.body.name)
@@ -205,8 +211,9 @@ router.post("/new_user", restrict, async (req, res, next) => {
 	else
 		return createError(405, "No name provided");
 	const nationality = req.body.nationality || null;
-	await db.run(`INSERT INTO runners (name, nationality) VALUES(?, ?)`, username, nationality);
-	res.render("new_user", {
+	await leaderboard.run(`INSERT INTO runners (name, nationality) VALUES(?, ?)`, username,
+	    nationality.toUpperCase());
+	res.render("admin_newuser", {
 		banner: {
 			text: "Runner added succesfully",
 			status: "success",

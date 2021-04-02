@@ -1,0 +1,11 @@
+extends layout
+
+block content
+	.home
+		h1 Add a new runner
+		.form-group
+			form(action="/admin/new_user", method="POST")
+				input(name="name", placeholder="Runner's name")
+				input(name="nationality", placeholder="Two letter country code")
+				input(type="hidden", name="_csrf", value=csrfToken)
+				button#add.btn.btn-primary(type="submit") Submit
